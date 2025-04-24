@@ -13,10 +13,27 @@
 	// "features": {},
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
-	// "forwardPorts": [],
-
+	"forwardPorts": [
+		4321,
+		5432,
+		35729
+	],
+	"portsAttributes": {
+		"4321": {
+			"protocol": "https",
+			"label": "Manifest",
+			"onAutoForward": "silent",
+			"requireLocalPort": true
+		},
+		"35729": {
+			"protocol": "https",
+			"label": "LiveReload",
+			"onAutoForward": "silent",
+			"requireLocalPort": true
+		}
+	},
 	// Use 'postCreateCommand' to run commands after the container is created.
-	"postCreateCommand": "npm install",
+	"postCreateCommand": "bash .devcontainer/spfx-setup-env.sh",
 
 	// Configure tool-specific properties.
 	"customizations": {
