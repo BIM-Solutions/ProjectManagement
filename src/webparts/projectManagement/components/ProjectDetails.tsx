@@ -8,6 +8,16 @@ interface ProjectDetailsProps {
   onDelete?: () => void;
 }
 
+/**
+ * A component that displays the details of a project.
+ * If the project is undefined, it displays a message to select a project.
+ * Otherwise, it displays the project number, name, sector, and information manager, and provides
+ * buttons to edit or delete the project.
+ * The component also provides a pivot to navigate to other components related to the project.
+ * @param project The project to display, or undefined if no project is selected.
+ * @param onEdit A callback to call when the 'Edit' button is clicked.
+ * @param onDelete A callback to call when the 'Delete' button is clicked.
+ */
 const ProjectDetails: React.FC<ProjectDetailsProps> = ({ project, onEdit, onDelete }) => {
   if (project === undefined) {
     return <Text>Select a project to view details.</Text>;
@@ -15,10 +25,10 @@ const ProjectDetails: React.FC<ProjectDetailsProps> = ({ project, onEdit, onDele
 
   return (
     <Stack tokens={{ childrenGap: 10 }} styles={{ root: { padding: 10 } }}>
-      <Text variant="xLarge">{project.Title}</Text>
-      <Text><strong>Project Number:</strong> {project.ProjectNumber}</Text>
+      <Text variant="xLarge">{project.ProjectNumber}</Text>
+      <Text><strong>Project Name:</strong> {project.ProjectName}</Text>
       <Text><strong>Sector:</strong> {project.Sector}</Text>
-      <Text><strong>Key Personnel:</strong> {project.KeyPersonnel}</Text>
+      <Text><strong>Information Manager:</strong> {project.Manager}</Text>
 
       <Stack horizontal tokens={{ childrenGap: 10 }}>
         <PrimaryButton text="Edit" iconProps={{ iconName: 'Edit' }} onClick={onEdit} />
