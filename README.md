@@ -46,11 +46,11 @@ This SharePoint Framework (SPFx) web part provides a robust solution for managin
 
 1. Clone this repository:
    ```bash
-   git clone [repository-url]
+   git clone https://github.com/BIM-Solutions/ProjectManagement.git
    ```
 2. Navigate to the solution folder:
    ```bash
-   cd [solution-folder-name]
+   cd ProjectManagement
    ```
 3. Run the following commands:
    ```bash
