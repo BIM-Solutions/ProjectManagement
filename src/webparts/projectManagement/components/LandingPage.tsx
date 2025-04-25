@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { useState } from 'react';
-import { Pivot, PivotItem, Stack } from '@fluentui/react';
+import {  Stack, Dialog, DialogType, PrimaryButton, DialogFooter, DefaultButton } from '@fluentui/react';
 import CreateProjectForm from './CreateProjectForm';
 import ProjectList from './ProjectList';
 import { WebPartContext } from '@microsoft/sp-webpart-base';
+
 
 interface ILandingPageProps {
   context: WebPartContext;
@@ -17,18 +18,45 @@ interface ILandingPageProps {
  * @param props The properties of the component, including the WebPartContext.
  */
 const LandingPage: React.FC<ILandingPageProps> = ({ context }) => {
-  const [selectedKey, setSelectedKey] = useState<string>('view');
+  // const [selectedKey, setSelectedKey] = useState<string>('view');
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   return (
     <Stack tokens={{ padding: 20 }} styles={{ root: { width: '100%' } }}>
-      <Pivot selectedKey={selectedKey} onLinkClick={(item) => setSelectedKey(item?.props.itemKey || 'view')}>
-        <PivotItem headerText="📋 View Projects" itemKey="view">
-          <ProjectList />
-        </PivotItem>
-        <PivotItem headerText="➕ Create Project" itemKey="create">
-          <CreateProjectForm onSuccess={() => setSelectedKey('view')} context={context} />
-        </PivotItem>
-      </Pivot>
+      
+      <PrimaryButton text="➕ Add Project" onClick={() => setIsDialogOpen(true)} style={{ marginBottom: 10 }} />
+      <ProjectList />
+        
+
+      <Dialog
+        minWidth={740}
+        maxWidth={1000}
+        hidden={!isDialogOpen}
+        onDismiss={() => setIsDialogOpen(false)}
+        dialogContentProps={{
+          type: DialogType.largeHeader,
+          title: 'Create New Project',
+        }}
+        modalProps={{
+          isBlocking: false,
+          styles: {
+            main: {
+              selectors: {
+                ['@media (min-width: 480px)']: {
+                  width: 650,
+                  minWidth: 650,
+                  maxWidth: '1000px'
+                }
+              }
+            }
+          }
+        }}
+      >
+        <CreateProjectForm onSuccess={() => setIsDialogOpen(false)} context={context} />
+        <DialogFooter>
+          <DefaultButton text="Cancel" onClick={() => setIsDialogOpen(false)} />
+        </DialogFooter>
+      </Dialog>
     </Stack>
   );
 };

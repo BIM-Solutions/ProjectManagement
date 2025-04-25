@@ -24,18 +24,18 @@ const statusOptions: IDropdownOption[] = [
   { key: 'Inactive', text: 'Inactive' }
 ];
 
-import { SPFI } from '@pnp/sp';
+// import { SPFI } from '@pnp/sp';
 
-/**
- * Ensures that a user exists in SharePoint and returns their ID.
- * @param sp The SharePoint context to use.
- * @param email The email address of the user to ensure.
- * @returns A promise that resolves with the ID of the user in SharePoint.
- */
-const ensureUserId = async (sp: SPFI, email: string): Promise<number> => {
-  const user = await sp.web.ensureUser(email);
-  return user.Id;
-};
+// /**
+//  * Ensures that a user exists in SharePoint and returns their ID.
+//  * @param sp The SharePoint context to use.
+//  * @param email The email address of the user to ensure.
+//  * @returns A promise that resolves with the ID of the user in SharePoint.
+//  */
+// const ensureUserId = async (sp: SPFI, email: string): Promise<number> => {
+//   const user = await sp.web.ensureUser(email);
+//   return user.Id;
+// };
 
 interface ICreateProjectFormProps {
   onSuccess?: () => void; // Callback function to be called on successful project creation
@@ -84,6 +84,23 @@ const CreateProjectForm: React.FC<ICreateProjectFormProps> = ({ onSuccess, conte
   };
 
   /**
+   * Ensures that a user exists in SharePoint and returns their ID.
+   * If the user does not exist or there is an error, it returns null.
+   * @param email The email address of the user to ensure.
+   * @returns A promise that resolves with the ID of the user in SharePoint, or null.
+   */
+  const safeEnsureUserId = async (email: string): Promise<number | null> => {
+    if (!email) return null;
+    try {
+      const user = await sp.web.ensureUser(email);
+      return user.Id;
+    } catch (e) {
+      console.warn(`Could not resolve user: ${email}`, e);
+      return null;
+    }
+  };
+
+  /**
    * Handles the form submission by adding a new project item to the
    * "9719_ProjectInformationDatabase" list in SharePoint.
    * If the submission is successful, it resets the form fields and
@@ -98,12 +115,13 @@ const CreateProjectForm: React.FC<ICreateProjectFormProps> = ({ onSuccess, conte
       return;
     }
 
+    const pmId = await safeEnsureUserId(pm);
+    const managerId = await safeEnsureUserId(manager);
+    const checkerId = await safeEnsureUserId(checker);
+    const approverId = await safeEnsureUserId(approver);
+
     try {
-      const pmId = await ensureUserId(sp, pm);
-      const managerId = await ensureUserId(sp, manager);
-      const checkerId = await ensureUserId(sp, checker);
-      const approverId = await ensureUserId(sp, approver);
-    
+      // Add the new project item to the SharePoint list
       await sp.web.lists.getByTitle("9719_ProjectInformationDatabase").items.add({
         Title: title,
         ProjectName: projectName,
@@ -118,7 +136,7 @@ const CreateProjectForm: React.FC<ICreateProjectFormProps> = ({ onSuccess, conte
         DeltekSubCodes: subCodes,
         ClientContact: clientContact
       });
-
+      
       setMessage({ type: MessageBarType.success, text: 'Project created successfully!' });
       setProjectNumber('');
       setProjectName('');
@@ -136,19 +154,22 @@ const CreateProjectForm: React.FC<ICreateProjectFormProps> = ({ onSuccess, conte
       if (onSuccess) onSuccess();
     } catch (err) {
       console.error(err);
-      setMessage({ type: MessageBarType.error, text: 'Failed to create project.' });
+      setMessage({ type: MessageBarType.error, text: err.message || 'An error occurred while creating the project.' });
     }
   };
 
   return (
-    <Stack tokens={{ childrenGap: 10, padding: 20 }} styles={{ root: { maxWidth: 600 } }}>
+    <Stack tokens={{ childrenGap: 10, padding: 20 }} >
       <h2>Create New Project</h2>
       {message && <MessageBar messageBarType={message.type}>{message.text}</MessageBar>}
-
-      <TextField label="Project Number" required value={title} onChange={(_, v) => setProjectNumber(v || '')} />
-      <TextField label="Project Name" required value={projectName} onChange={(_, v) => setProjectName(v || '')} />
-      <Dropdown label="Sector" options={sectorOptions} selectedKey={sector} required onChange={(_, o) => setSector(o?.key as string)} />
-      <Dropdown label="Status" options={statusOptions} selectedKey={status} required onChange={(_, o) => setStatus(o?.key as string)} />
+      <Stack horizontal tokens={{ childrenGap: 10 }}>
+        <TextField label="Project Number" required value={title} onChange={(_, v) => setProjectNumber(v || '')} styles={{ root: { flexGrow: 1 } }} />
+        <TextField label="Project Name" required value={projectName} onChange={(_, v) => setProjectName(v || '')} styles={{ root: { flexGrow: 1 } }}/>
+      </Stack>
+      <Stack horizontal tokens={{ childrenGap: 10 }}>
+        <Dropdown label="Sector" options={sectorOptions} selectedKey={sector} required onChange={(_, o) => setSector(o?.key as string)} styles={{ root: { flexGrow: 1 } }}/>
+        <Dropdown label="Status" options={statusOptions} selectedKey={status} required onChange={(_, o) => setStatus(o?.key as string)} styles={{ root: { flexGrow: 1 } }}/>
+      </Stack>
       <TextField label="Client" value={client} onChange={(_, v) => setClient(v || '')} />
       <PeoplePicker
         context={peoplePickerContext}
@@ -158,10 +179,30 @@ const CreateProjectForm: React.FC<ICreateProjectFormProps> = ({ onSuccess, conte
         onChange={(items) => setManager(items[0]?.secondaryText || '')}
         required={false}
       />
-      <TextField label="Project Manager" value={pm} onChange={(_, v) => setPM(v || '')} />
-      <TextField label="Manager" value={manager} onChange={(_, v) => setManager(v || '')} />
-      <TextField label="Checker" value={checker} onChange={(_, v) => setChecker(v || '')} />
-      <TextField label="Approver" value={approver} onChange={(_, v) => setApprover(v || '')} />
+      <PeoplePicker
+        context={peoplePickerContext}
+        titleText="Project Manager"
+        personSelectionLimit={1}
+        principalTypes={[PrincipalType.User]}
+        onChange={(items) => setPM(items[0]?.secondaryText || '')}
+        required={false}
+      />
+      <PeoplePicker
+        context={peoplePickerContext}
+        titleText="Checker"
+        personSelectionLimit={1}
+        principalTypes={[PrincipalType.User]}
+        onChange={(items) => setChecker(items[0]?.secondaryText || '')}
+        required={false}
+      />
+      <PeoplePicker
+        context={peoplePickerContext}
+        titleText="Approver"
+        personSelectionLimit={1}
+        principalTypes={[PrincipalType.User]}        
+        onChange={(items) => setApprover(items[0]?.secondaryText || '')}
+        required={false}
+      />
       <TextField label="Project Description" multiline rows={3} value={description} onChange={(_, v) => setDescription(v || '')} />
       <TextField label="Deltek SubCodes" multiline rows={2} value={subCodes} onChange={(_, v) => setSubCodes(v || '')} />
       <TextField label="Client Contact" multiline rows={2} value={clientContact} onChange={(_, v) => setClientContact(v || '')} />

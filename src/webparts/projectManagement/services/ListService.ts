@@ -27,6 +27,24 @@ export class ListService {
 
   /**
    * Ensures that all the required lists and their fields are provisioned on the site.
+   * This method is called when the web part is initialized to ensure that the necessary lists are available.
+   * It calls individual methods to ensure each list and its fields are created or updated as needed.
+   * The lists include:
+   * - ProjectInformationDatabase
+   * - ProjectTasks
+   * - ProjectFees
+   * - ProjectDocuments
+   * - ChangeControl
+   * - ProjectStages
+   */
+  public async ensureFirstListSchema(): Promise<boolean> {
+    const listCreated = await this.ensureProjectInformationExists();
+
+    return listCreated;
+  }
+
+  /**
+   * Ensures that all the required lists and their fields are provisioned on the site.
    * @returns A promise that resolves when all the lists have been provisioned.
    */
   public async ensureListSchema(): Promise<void> {
@@ -155,6 +173,23 @@ export class ListService {
     }
   }
 
+  /**
+   * Checks if the "ProjectInformationDatabase" list exists on the site.
+   * If the list does not exist, it will not be created.
+   * @returns A promise that resolves with a boolean indicating whether the list exists.
+   */
+  private async ensureProjectInformationExists(): Promise<boolean> {
+    let listCreated = false;
+    try {
+      await this.sp.web.lists.getByTitle("9719_ProjectInformationDatabase")();
+      listCreated = true;
+    } catch (error) {
+      console.error("List does not exist:", error);
+      listCreated = false;
+    }
+    return listCreated;
+  }
+
 
 /**
  * Ensures that the "ProjectInformationDatabase" list exists and is configured with the required fields.
@@ -177,7 +212,7 @@ export class ListService {
     await this.ensureMultiLineField(list, "ProjectDescription");
     await this.ensureMultiLineField(list, "DeltekSubCodes");
     await this.ensureTextField(list, "Client");
-    await this.ensureTextField(list, "PM");
+    await this.ensureUserField(list, "PM");
     await this.ensureUserField(list, "Manager");
     await this.ensureUserField(list, "Checker");
     await this.ensureUserField(list, "Approver");

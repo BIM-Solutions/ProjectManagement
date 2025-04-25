@@ -17,7 +17,7 @@ import { ListService } from './services/ListService';
 
 import { SPProvider } from './SPContext';
 import LandingPage from './components/LandingPage';
-
+import { PropertyPaneButton, PropertyPaneButtonType } from '@microsoft/sp-property-pane';
 export interface IProjectManagementWebPartProps {
   description: string;
 }
@@ -36,7 +36,11 @@ export default class ProjectManagementWebPart extends BaseClientSideWebPart<IPro
   public async onInit(): Promise<void> {
     const sp = spfi().using(SPFx(this.context));
     const listService = new ListService(sp);
-    await listService.ensureListSchema();
+    const firstListAvailable = await listService.ensureFirstListSchema();
+    if (!firstListAvailable) {
+      console.warn("First required list is missing.");
+      // Optionally store this in a global flag or react state via a context or callback to LandingPage
+    }
 
     return this._getEnvironmentMessage().then(message => {
       this._environmentMessage = message;
@@ -160,6 +164,16 @@ export default class ProjectManagementWebPart extends BaseClientSideWebPart<IPro
               groupFields: [
                 PropertyPaneTextField('description', {
                   label: strings.DescriptionFieldLabel
+                }),
+                PropertyPaneButton('verifyLists', {
+                  text: "Check & Create Lists",
+                  buttonType: PropertyPaneButtonType.Primary,
+                  onClick: async () => {
+                    const sp = spfi().using(SPFx(this.context));
+                    const listService = new ListService(sp);
+                    await listService.ensureListSchema();
+                    alert("List check and creation complete.");
+                  }
                 })
               ]
             }
