@@ -5,17 +5,30 @@ import {
     DetailsListLayoutMode, SelectionMode
   } from '@fluentui/react';
 import { SPContext } from '../SPContext';
-import ProjectDetails from './ProjectDetails';
- export interface IProjectInfo {
+import { Project, ProjectSelectionService } from '../../common/services/ProjectSelectionServices';
+
+
+
+
+export interface IUserField {
   Id: number;
+  Title: string;
+  Email: string;
+  JobTitle?: string;
+  Department?: string;
+}
+
+export interface IProjectInfo {
+  Id: string;
   ProjectNumber: string;
   ProjectName: string;
   Status: string;
   Client: string;
-  PM: string;
-  Manager: string;
+  PM?: IUserField;
+  Manager?: IUserField;
   Sector: string;
 }
+
 
 const columns: IColumn[] = [
   { key: 'col1', name: 'Project Number', fieldName: 'ProjectNumber', minWidth: 150, isResizable: true },
@@ -23,8 +36,18 @@ const columns: IColumn[] = [
   { key: 'col3', name: 'Sector', fieldName: 'Sector', minWidth: 100, isResizable: true },
   { key: 'col4', name: 'Status', fieldName: 'Status', minWidth: 100, isResizable: true },
   { key: 'col5', name: 'Client', fieldName: 'Client', minWidth: 100, isResizable: true },
-  { key: 'col6', name: 'Project Manager', fieldName: 'PM', minWidth: 100, isResizable: true },
-  { key: 'col7', name: 'Information Manager', fieldName: 'Manager', minWidth: 100, isResizable: true },
+  {
+    key: 'col6',
+    name: 'Project Manager',
+    minWidth: 150,
+    onRender: item => <span>{item.PM?.Title || '—'}</span>
+  },
+  {
+    key: 'col7',
+    name: 'Information Manager',
+    minWidth: 150,
+    onRender: item => <span>{item.Manager?.Title || '—'}</span>
+  }
 ];
 
 
@@ -41,7 +64,6 @@ const ProjectList: React.FC = () => {
   const sp = useContext(SPContext);
   const [items, setItems] = useState<IProjectInfo[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedProject, setSelectedProject] = useState<IProjectInfo | null>(null);
   const [searchNumber, setSearchNumber] = useState('');
   const [searchName, setSearchName] = useState('');
   const [filterSector, setFilterSector] = useState('');
@@ -51,26 +73,56 @@ const ProjectList: React.FC = () => {
 
 
   useEffect(() => {
+/**
+ * Fetches project items from the "9719_ProjectInformationDatabase" list in SharePoint.
+ * It retrieves and expands related user fields such as PM, Manager, Checker, and Approver.
+ * The fetched data is then formatted into an array of IProjectInfo objects and stored
+ * in the state using setItems. If an error occurs during the fetch, it logs the error
+ * to the console. The loading state is updated after the fetch is complete.
+ */
+
     const fetchItems = async (): Promise<void> => {
       try {
-        const data: { Id: number; Title: string; ProjectName: string; Status: string; Sector: string; Client: string; PM?: { Title: string }; Manager?: { Title: string }; Checker?: { Title: string }; Approver?: { Title: string } }[] = await sp.web.lists
+        const data: { Id: number; Title: string; ProjectName: string; Status: string; Sector: string; Client: string; PM?: { Id: number, Title: string, EMail: string, JobTitle?: string, Department?: string }; Manager?: { Id: number, Title: string, EMail: string, JobTitle?: string, Department?: string  }; Checker?: { Title: string }; Approver?: { Title: string } }[] = await sp.web.lists
           .getByTitle("9719_ProjectInformationDatabase")
           .items
-          .expand("PM", "Manager", "Checker", "Approver")
-          .select("Id", "Title", "ProjectName", "Status", "Sector", "Client", 
-                  "PM/Title", "Manager/Title", "Checker/Title", "Approver/Title")
+          .expand("PM", "Manager")
+          .select(
+            "Id", "Title", "ProjectName", "Status", "Sector", "Client",
+            "PM/Id", "PM/Title", "PM/EMail", "PM/JobTitle", "PM/Department",
+            "Manager/Id", "Manager/Title", "Manager/EMail", "Manager/JobTitle", "Manager/Department",
+          )
           ();
+          console.log("Raw item sample:", data[0]); // to check the full structure
 
-        const formattedData: IProjectInfo[] = data.map(item => ({
-          Id: item.Id,
-          ProjectNumber: item.Title,
-          ProjectName: item.ProjectName,
-          Status: item.Status,
-          Client: item.Client,
-          Sector: item.Sector,
-          PM: item.PM?.Title || "",
-          Manager: item.Manager?.Title || "",
-        }));
+            data.forEach((item, index) => {
+              console.log(`PM for item ${index}:`, item.PM);
+              console.log(`Manager for item ${index}:`, item.Manager);
+            });
+
+          const formattedData: IProjectInfo[] = data.map(item => ({
+            Id: item.Id.toString(),
+            ProjectNumber: item.Title,
+            ProjectName: item.ProjectName,
+            Status: item.Status,
+            Client: item.Client,
+            Sector: item.Sector,
+            PM: item.PM ? {
+              Id: item.PM.Id,
+              Title: item.PM.Title,
+              Email: item.PM.EMail,
+              JobTitle: item.PM.JobTitle,
+              Department: item.PM.Department
+            } : undefined,
+            Manager: item.Manager ? {
+              Id: item.Manager.Id,
+              Title: item.Manager.Title,
+              Email: item.Manager.EMail,
+              JobTitle: item.Manager.JobTitle,
+              Department: item.Manager.Department
+            } : undefined
+          }))
+        
         setItems(formattedData);
       } catch (error) {
         console.error("Failed to load project list items", error);
@@ -85,7 +137,7 @@ const ProjectList: React.FC = () => {
   }, []);
 
   return (
-    <Stack tokens={{ childrenGap: 20 }} styles={{ root: { width: '100%', height: '100vh' } }}>
+    <Stack tokens={{ childrenGap: 20 }} styles={{ root: { width: '100%', height: '50vh' } }}>
       <Stack
         horizontal
         wrap
@@ -165,11 +217,7 @@ const ProjectList: React.FC = () => {
             }}
             primary
             styles={{
-              root: {
-                backgroundColor: '#b2531a', // Your theme color (e.g., same as your + Add Project button)
-                borderColor: '#b2531a',
-                color: 'white'
-              },
+              
               rootHovered: {
                 backgroundColor: '#934311', // darker on hover
                 borderColor: '#934311'
@@ -198,17 +246,21 @@ const ProjectList: React.FC = () => {
             setKey="items"
             layoutMode={DetailsListLayoutMode.fixedColumns}
             selectionMode={SelectionMode.none}
-            onActiveItemChanged={(item) => setSelectedProject(item)}
+            onActiveItemChanged={(item) => {
+              const selected: Project = {
+                id: item.Id,
+                number: item.ProjectNumber,
+                name: item.ProjectName,
+                status: item.Status,
+                client: item.Client,
+                sector: item.Sector,
+                pm: item.PM,
+                manager: item.Manager,
+              };
+              ProjectSelectionService.setSelectedProject(selected);
+            }}
           />
         )}
-      </Stack>
-
-      <Stack styles={{ root: { width: '40%', background: '#f3f2f1', padding: 10, borderRadius: 4 } }}>
-        <ProjectDetails
-          project={selectedProject ?? undefined}
-          onEdit={() => console.log("Edit not implemented yet")}
-          onDelete={() => console.log("Delete not implemented yet")}
-        />
       </Stack>
     </Stack>
   );
