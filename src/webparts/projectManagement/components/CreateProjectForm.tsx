@@ -1,12 +1,13 @@
 import * as React from 'react';
 import { useContext, useState } from 'react';
 import { PeoplePicker, PrincipalType, IPeoplePickerContext} from "@pnp/spfx-controls-react/lib/PeoplePicker";
-
+import { FilePicker, IFilePickerResult } from '@pnp/spfx-controls-react/lib/FilePicker';
 import {
   TextField, Dropdown, IDropdownOption, Stack,
   PrimaryButton, MessageBar, MessageBarType
 } from '@fluentui/react';
-import { SPContext } from '../SPContext';
+import { Image, ImageFit } from '@fluentui/react/lib/Image';
+import { SPContext } from '../../common/SPContext';
 import { WebPartContext } from '@microsoft/sp-webpart-base';
 
 const sectorOptions: IDropdownOption[] = [
@@ -42,8 +43,6 @@ interface ICreateProjectFormProps {
   context: WebPartContext; // Context from SharePoint
 }
 
-
-
 /**
  * CreateProjectForm component allows users to create a new project by filling out a form.
  * The form includes fields for project name, project number, sector, status, client,
@@ -65,6 +64,7 @@ const CreateProjectForm: React.FC<ICreateProjectFormProps> = ({ onSuccess, conte
 
   const [title, setProjectNumber] = useState('');
   const [projectName, setProjectName] = useState('');
+  const [projectImage, setProjectImage] = useState<{ fileName: string; serverRelativeUrl: string } | null>(null);
   const [sector, setSector] = useState<string | undefined>();
   const [status, setStatus] = useState<string | undefined>();
   const [client, setClient] = useState('');
@@ -119,7 +119,7 @@ const CreateProjectForm: React.FC<ICreateProjectFormProps> = ({ onSuccess, conte
     const managerId = await safeEnsureUserId(manager);
     const checkerId = await safeEnsureUserId(checker);
     const approverId = await safeEnsureUserId(approver);
-
+    
     try {
       // Add the new project item to the SharePoint list
       await sp.web.lists.getByTitle("9719_ProjectInformationDatabase").items.add({
@@ -134,7 +134,9 @@ const CreateProjectForm: React.FC<ICreateProjectFormProps> = ({ onSuccess, conte
         ApproverId: approverId,
         ProjectDescription: description,
         DeltekSubCodes: subCodes,
-        ClientContact: clientContact
+        ClientContact: clientContact,
+        ProjectImage: projectImage ? JSON.stringify(projectImage) : undefined
+
       });
       
       setMessage({ type: MessageBarType.success, text: 'Project created successfully!' });
@@ -150,6 +152,7 @@ const CreateProjectForm: React.FC<ICreateProjectFormProps> = ({ onSuccess, conte
       setDescription('');
       setSubCodes('');
       setClientContact('');
+      setProjectImage(null);
 
       if (onSuccess) onSuccess();
     } catch (err) {
@@ -166,6 +169,48 @@ const CreateProjectForm: React.FC<ICreateProjectFormProps> = ({ onSuccess, conte
         <TextField label="Project Number" required value={title} onChange={(_, v) => setProjectNumber(v || '')} styles={{ root: { flexGrow: 1 } }} />
         <TextField label="Project Name" required value={projectName} onChange={(_, v) => setProjectName(v || '')} styles={{ root: { flexGrow: 1 } }}/>
       </Stack>
+      <FilePicker
+        context={context}
+        buttonLabel="Upload Project Image"
+        hideStockImages={true}
+        hideLinkUploadTab={true}
+        hideOneDriveTab={true}
+        hideSiteFilesTab={false}
+        onSave={async (results: IFilePickerResult[]) => {
+          const result = results[0];
+
+          try {
+            const blob: Blob = await result.downloadFileContent();
+
+            const arrayBuffer = await blob.arrayBuffer(); // ← native API
+
+            const upload = await sp.web
+              .getFolderByServerRelativePath("/sites/DevelopmentSite/SiteAssets/ProjectImages")
+              .files.addUsingPath(result.fileName, arrayBuffer, { Overwrite: true });
+
+            const serverRelativeUrl = upload.ServerRelativeUrl;
+
+            setProjectImage({
+              fileName: result.fileName,
+              serverRelativeUrl
+            });
+          } catch (err) {
+            console.error("Image upload failed", err);
+            setMessage({ type: MessageBarType.error, text: "Image upload failed." });
+          }
+        }}
+        onCancel={() => console.log("Cancelled image selection")}
+      />
+
+
+      {projectImage && (
+        <Image
+          imageFit={ImageFit.contain}
+          src={`${context.pageContext.web.absoluteUrl}${projectImage.serverRelativeUrl}`}
+          alt="Uploaded Project"
+          style={{ height: 200, width: 400, marginTop: 10 }}
+        />
+      )}
       <Stack horizontal tokens={{ childrenGap: 10 }}>
         <Dropdown label="Sector" options={sectorOptions} selectedKey={sector} required onChange={(_, o) => setSector(o?.key as string)} styles={{ root: { flexGrow: 1 } }}/>
         <Dropdown label="Status" options={statusOptions} selectedKey={status} required onChange={(_, o) => setStatus(o?.key as string)} styles={{ root: { flexGrow: 1 } }}/>

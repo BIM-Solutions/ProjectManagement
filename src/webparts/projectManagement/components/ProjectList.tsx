@@ -2,32 +2,14 @@ import * as React from 'react';
 import { useEffect, useState, useContext } from 'react';
 import {
     DetailsList, IColumn, Stack, Text, TextField, Dropdown, ComboBox, DefaultButton,
-    DetailsListLayoutMode, SelectionMode
+    DetailsListLayoutMode, SelectionMode, Spinner, SpinnerSize
   } from '@fluentui/react';
-import { SPContext } from '../SPContext';
+import { SPContext } from '../../common/SPContext';
 import { Project, ProjectSelectionService } from '../../common/services/ProjectSelectionServices';
+import { useLoading } from '../services/LoadingContext';
 
+const DEBUG = true; // Set to false in production
 
-
-
-export interface IUserField {
-  Id: number;
-  Title: string;
-  Email: string;
-  JobTitle?: string;
-  Department?: string;
-}
-
-export interface IProjectInfo {
-  Id: string;
-  ProjectNumber: string;
-  ProjectName: string;
-  Status: string;
-  Client: string;
-  PM?: IUserField;
-  Manager?: IUserField;
-  Sector: string;
-}
 
 
 const columns: IColumn[] = [
@@ -62,51 +44,59 @@ const columns: IColumn[] = [
  */
 const ProjectList: React.FC = () => {
   const sp = useContext(SPContext);
-  const [items, setItems] = useState<IProjectInfo[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [items, setItems] = useState<Project[]>([]);
+  // Removed unused loading state
   const [searchNumber, setSearchNumber] = useState('');
   const [searchName, setSearchName] = useState('');
   const [filterSector, setFilterSector] = useState('');
   const [filterStatus, setFilterStatus] = useState('');
   const [filterClient, setFilterClient] = useState('');
+  const { isLoading, setIsLoading } = useLoading();
 
 
 
   useEffect(() => {
-/**
- * Fetches project items from the "9719_ProjectInformationDatabase" list in SharePoint.
- * It retrieves and expands related user fields such as PM, Manager, Checker, and Approver.
- * The fetched data is then formatted into an array of IProjectInfo objects and stored
- * in the state using setItems. If an error occurs during the fetch, it logs the error
- * to the console. The loading state is updated after the fetch is complete.
- */
+
 
     const fetchItems = async (): Promise<void> => {
       try {
-        const data: { Id: number; Title: string; ProjectName: string; Status: string; Sector: string; Client: string; PM?: { Id: number, Title: string, EMail: string, JobTitle?: string, Department?: string }; Manager?: { Id: number, Title: string, EMail: string, JobTitle?: string, Department?: string  }; Checker?: { Title: string }; Approver?: { Title: string } }[] = await sp.web.lists
+        const data: { Id: number; Title: string; ProjectName: string; Status: string; Sector: string; Client: string;
+                ProjectDescription?: string; DeltekSubCodes?: string; SubCodes?: string; ClientContact?: string; ProjectImage?: string;
+               PM?: { Id: number, Title: string, EMail: string, JobTitle?: string, Department?: string }; 
+               Manager?: { Id: number, Title: string, EMail: string, JobTitle?: string, Department?: string  }; 
+               Checker?: { Id: number, Title: string, EMail: string, JobTitle?: string, Department?: string }; 
+               Approver?: { Id: number, Title: string, EMail: string, JobTitle?: string, Department?: string} }[] = await sp.web.lists
           .getByTitle("9719_ProjectInformationDatabase")
           .items
-          .expand("PM", "Manager")
+          .expand("PM", "Manager", "Checker", "Approver")
           .select(
-            "Id", "Title", "ProjectName", "Status", "Sector", "Client",
+            "Id", "Title", "ProjectName", "Status", "Sector", "Client","ProjectImage", "ProjectDescription", "DeltekSubCodes", "ClientContact",
             "PM/Id", "PM/Title", "PM/EMail", "PM/JobTitle", "PM/Department",
             "Manager/Id", "Manager/Title", "Manager/EMail", "Manager/JobTitle", "Manager/Department",
+            "Checker/Id", "Checker/Title", "Checker/EMail", "Checker/JobTitle", "Checker/Department",
+            "Approver/Id", "Approver/Title", "Approver/EMail", "Approver/JobTitle", "Approver/Department"
           )
           ();
-          console.log("Raw item sample:", data[0]); // to check the full structure
+          // console.log("Raw item sample:", data[0]); // to check the full structure
 
-            data.forEach((item, index) => {
-              console.log(`PM for item ${index}:`, item.PM);
-              console.log(`Manager for item ${index}:`, item.Manager);
-            });
+            // data.forEach((item, index) => {
+            //   console.log(`PM for item ${index}:`, item.PM);
+            //   console.log(`Manager for item ${index}:`, item.Manager);
+            // });
 
-          const formattedData: IProjectInfo[] = data.map(item => ({
-            Id: item.Id.toString(),
+            const formattedData = data.map<Project>(item => ({
+            id: item.Id,
             ProjectNumber: item.Title,
             ProjectName: item.ProjectName,
             Status: item.Status,
             Client: item.Client,
             Sector: item.Sector,
+            ProjectDescription: item.ProjectDescription || 'No Project Description',
+            DeltekSubCodes: item.DeltekSubCodes || 'Deltek Sub Codes',
+            // SubCodes: item.SubCodes || 'Sub Codes',
+            ClientContact: item.ClientContact || 'Client Contact',
+            ProjectImage: item.ProjectImage || 'Project Image',
+            
             PM: item.PM ? {
               Id: item.PM.Id,
               Title: item.PM.Title,
@@ -120,14 +110,29 @@ const ProjectList: React.FC = () => {
               Email: item.Manager.EMail,
               JobTitle: item.Manager.JobTitle,
               Department: item.Manager.Department
-            } : undefined
+            } : undefined,
+            Checker: item.Checker ? {
+              Id: item.Checker.Id,
+              Title: item.Checker.Title,
+              Email: item.Checker.EMail,
+              JobTitle: item.Checker.JobTitle,
+              Department: item.Checker.Department
+            } : undefined,
+            Approver: item.Approver ? {
+              Id: item.Approver.Id,
+              Title: item.Approver.Title,
+              Email: item.Approver.EMail,
+              JobTitle: item.Approver.JobTitle,
+              Department: item.Approver.Department
+            }
+            : undefined
           }))
         
         setItems(formattedData);
       } catch (error) {
         console.error("Failed to load project list items", error);
       } finally {
-        setLoading(false);
+        setIsLoading(false);
       }
     };
 
@@ -137,7 +142,7 @@ const ProjectList: React.FC = () => {
   }, []);
 
   return (
-    <Stack tokens={{ childrenGap: 20 }} styles={{ root: { width: '100%', height: '50vh' } }}>
+    <Stack tokens={{ childrenGap: 20 }} styles={{ root: { width: '100%', height: '40%' } }}>
       <Stack
         horizontal
         wrap
@@ -227,10 +232,10 @@ const ProjectList: React.FC = () => {
         </Stack.Item>
       </Stack>
 
-      <Stack styles={{ root: { width: '100%' } }}>
+      <Stack styles={{ root: { width: '100%', height: '500px', overflowY: 'auto' } }}>
         <Text variant="xLarge">📁 All Projects</Text>
-        {loading ? (
-          <Text>Loading...</Text>
+        {isLoading ? (
+           <Spinner label="Updating SharePoint Lists..." size={SpinnerSize.medium} />
         ) : (
           
           <DetailsList
@@ -245,18 +250,33 @@ const ProjectList: React.FC = () => {
             columns={columns}
             setKey="items"
             layoutMode={DetailsListLayoutMode.fixedColumns}
-            selectionMode={SelectionMode.none}
+            checkButtonAriaLabel="select row"
+            selectionMode={SelectionMode.single}
             onActiveItemChanged={(item) => {
+              if (DEBUG) {
+                console.log("Active item changed:", item); // to check the active item
+              }
+
               const selected: Project = {
-                id: item.Id,
-                number: item.ProjectNumber,
-                name: item.ProjectName,
-                status: item.Status,
-                client: item.Client,
-                sector: item.Sector,
-                pm: item.PM,
-                manager: item.Manager,
+                id: item.id,
+                ProjectNumber: item.ProjectNumber,
+                ProjectName: item.ProjectName,
+                ProjectDescription: item.ProjectDescription || '',
+                DeltekSubCodes: item.DeltekSubCodes || '',
+                SubCodes: item.SubCodes || '',
+                ClientContact: item.ClientContact || '',
+                Status: item.Status,
+                Client: item.Client,
+                Sector: item.Sector,
+                PM: item.PM,
+                Manager: item.Manager,
+                Checker: item.Checker,
+                Approver: item.Approver,
+                ProjectImage: item.ProjectImage || ''
               };
+              if (DEBUG) {
+                console.log("Selected project:", selected); // to check the selected project
+              }
               ProjectSelectionService.setSelectedProject(selected);
             }}
           />

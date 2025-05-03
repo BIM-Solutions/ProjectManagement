@@ -14,10 +14,11 @@ import * as strings from 'ProjectManagementWebPartStrings';
 import { spfi } from "@pnp/sp";
 import { SPFx } from "@pnp/sp/presets/all";
 import { ListService } from './services/ListService';
-
-import { SPProvider } from './SPContext';
+// import { LoadingProvider } from './services/LoadingContext';
+import { SPProvider } from '../common/SPContext';
 import LandingPage from './components/LandingPage';
 import { PropertyPaneButton, PropertyPaneButtonType } from '@microsoft/sp-property-pane';
+import { LoadingProvider } from './services/LoadingContext';
 export interface IProjectManagementWebPartProps {
   description: string;
 }
@@ -57,7 +58,9 @@ export default class ProjectManagementWebPart extends BaseClientSideWebPart<IPro
   public render(): void {
     const element = (
       <SPProvider context={this.context}>
-        <LandingPage context={this.context} />
+        <LoadingProvider>
+          <LandingPage context={this.context} />
+        </LoadingProvider>
       </SPProvider>
     );
 
@@ -171,7 +174,17 @@ export default class ProjectManagementWebPart extends BaseClientSideWebPart<IPro
                   onClick: async () => {
                     const sp = spfi().using(SPFx(this.context));
                     const listService = new ListService(sp);
+
+                    // get loading setter from DOM
+                    interface CustomWindow extends Window {
+                      __setListLoading?: (isLoading: boolean) => void;
+                    }
+                    const loadingSetter = (window as CustomWindow).__setListLoading;
+                    if (loadingSetter) loadingSetter(true);
+
                     await listService.ensureListSchema();
+
+                    if (loadingSetter) loadingSetter(false);
                     alert("List check and creation complete.");
                   }
                 })

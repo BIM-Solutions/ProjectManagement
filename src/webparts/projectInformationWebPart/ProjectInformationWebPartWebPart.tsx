@@ -10,9 +10,11 @@ import { IReadonlyTheme } from '@microsoft/sp-component-base';
 
 // Removed unused SPProvider import and corrected the path
 import * as strings from 'ProjectInformationWebPartWebPartStrings';
-import ProjectInformationWebPart from './components/ProjectInformationWebPart'; // Ensure this path is correct
-import { IProjectInformationWebPartProps } from './components/IProjectInformationWebPartProps';
+import ProjectDetails from './components/ProjectDetails';
 
+
+// import { LoadingProvider } from './services/LoadingContext';
+import { SPProvider } from '../common/SPContext';
 export interface IProjectInformationWebPartWebPartProps {
   description: string;
   isDarkTheme: boolean;
@@ -23,19 +25,14 @@ export interface IProjectInformationWebPartWebPartProps {
 
 export default class ProjectInformationWebPartWebPart extends BaseClientSideWebPart<IProjectInformationWebPartWebPartProps> {
 
-  private _isDarkTheme: boolean = false;
-  private _environmentMessage: string = '';
+  public _isDarkTheme: boolean = false;
+  public _environmentMessage: string = '';
 
   public render(): void {
-    const element: React.ReactElement<IProjectInformationWebPartProps> = React.createElement(
-      ProjectInformationWebPart,
-      {
-        description: this.properties.description ?? '',
-        isDarkTheme: this._isDarkTheme,
-        environmentMessage: this._environmentMessage,
-        hasTeamsContext: !!this.context.sdks.microsoftTeams,
-        userDisplayName: this.context.pageContext.user.displayName
-      }
+    const element = (
+      <SPProvider context={this.context}>
+        <ProjectDetails context={this.context}  />
+      </SPProvider>
     );
   
     ReactDom.render(element, this.domElement);
@@ -43,6 +40,7 @@ export default class ProjectInformationWebPartWebPart extends BaseClientSideWebP
   
 
   protected onInit(): Promise<void> {
+    
     return this._getEnvironmentMessage().then(message => {
       this._environmentMessage = message;
     });

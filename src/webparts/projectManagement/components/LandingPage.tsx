@@ -1,14 +1,21 @@
 import * as React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {  Stack, Dialog, DialogType, PrimaryButton, DialogFooter, DefaultButton } from '@fluentui/react';
 import CreateProjectForm from './CreateProjectForm';
 import ProjectList from './ProjectList';
 import { WebPartContext } from '@microsoft/sp-webpart-base';
+import { useLoading } from '../services/LoadingContext';
+// import { LoadingProvider } from '../services/LoadingContext'; // new import
 
 
 interface ILandingPageProps {
   context: WebPartContext;
 }
+
+interface CustomWindow {
+  __setListLoading?: (isLoading: boolean) => void;
+}
+
 
 /**
  * A component that displays a pivot control with two items: "View Projects" and "Create Project".
@@ -20,13 +27,18 @@ interface ILandingPageProps {
 const LandingPage: React.FC<ILandingPageProps> = ({ context }) => {
   // const [selectedKey, setSelectedKey] = useState<string>('view');
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-
+  const { setIsLoading } = useLoading();
+  useEffect(() => {
+    (window as CustomWindow).__setListLoading = setIsLoading;
+    return () => { delete (window as CustomWindow).__setListLoading; };
+  }, [setIsLoading]);
   return (
-    <Stack tokens={{ padding: 20 }} styles={{ root: { width: '100%' } }}>
+    <Stack tokens={{ padding: 20 }} styles={{ root: { width: '100%' , height: 'auto' } }}>
       
       <PrimaryButton text="➕ Add Project" onClick={() => setIsDialogOpen(true)} style={{ marginBottom: 10 }} />
+
       <ProjectList />
-        
+     
 
       <Dialog
         minWidth={740}

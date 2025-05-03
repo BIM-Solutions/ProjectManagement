@@ -173,6 +173,15 @@ export class ListService {
     }
   }
 
+  private async ensureImageField(list: IList, title: string): Promise<void> {
+    try {
+      await list.fields.getByTitle(title)();
+    } catch {
+      await list.fields.addImageField(title);
+      await list.defaultView.fields.add(title);
+    }
+  }
+
   /**
    * Checks if the "ProjectInformationDatabase" list exists on the site.
    * If the list does not exist, it will not be created.
@@ -189,7 +198,6 @@ export class ListService {
     }
     return listCreated;
   }
-
 
 /**
  * Ensures that the "ProjectInformationDatabase" list exists and is configured with the required fields.
@@ -219,6 +227,7 @@ export class ListService {
     await this.ensureChoiceField(list, "Status",  { Choices: ["Enquiry", "Active", "Complete", "Lost", "Cancelled", "Inactive"] });
     await this.ensureChoiceField(list, "Sector",  { Choices: ["Public", "Defence", "Power"] });
     await this.ensureMultiLineField(list, "ClientContact");
+    await this.ensureImageField(list, "ProjectImage");
   }
 
   /**

@@ -1,29 +1,30 @@
 
-export interface Project {
-  id: string;
-  name: string;
-  number: string;
-  status: string;
-  client?: string;
-  sector?: string;
 
-  // Raw user fields from SharePoint
-  pm?: {
-    Id: number;
-    Title: string;
-    Email: string;
-    JobTitle?: string;
-    Department?: string;
-  };
-
-  manager?: {
-    Id: number;
-    Title: string;
-    Email: string;
-    JobTitle?: string;
-    Department?: string;
-  };
+interface IUserField {
+  Id: number;
+  Title: string;
+  Email: string;
+  JobTitle?: string;
+  Department?: string;
 }
+export interface Project {
+  id: number;
+  ProjectNumber: string;
+  ProjectName: string;
+  Status: string;
+  Client: string;
+  ClientContact?: string; 
+  ProjectDescription?: string;
+  DeltekSubCodes?: string;
+  SubCodes?: string;
+  Sector?: string;
+  PM?: IUserField;
+  Manager?: IUserField;
+  Checker?: IUserField;
+  Approver?: IUserField;
+  ProjectImage?: string;
+}
+
 
   
   type Listener = (project: Project | undefined) => void;
@@ -46,7 +47,7 @@ export interface Project {
   
   export class ProjectSelectionService {
     public static setSelectedProject(project: Project | undefined): void {
-      console.log("Setting selected project (global):", project);
+      // console.log("Setting selected project (global):", project);
       window.__sharedProjectSelection.selectedProject = project;
       window.__sharedProjectSelection.listeners.forEach(l => l(project));
     }
