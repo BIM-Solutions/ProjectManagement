@@ -1,6 +1,6 @@
 
 
-interface IUserField {
+export interface IUserField {
   Id: number;
   Title: string;
   Email: string;

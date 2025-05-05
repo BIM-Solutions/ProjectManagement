@@ -4,39 +4,28 @@ import { useContext, useEffect, useState } from 'react';
 import { PeoplePicker, PrincipalType, IPeoplePickerContext } from "@pnp/spfx-controls-react/lib/PeoplePicker";
 import { FilePicker, IFilePickerResult } from '@pnp/spfx-controls-react/lib/FilePicker';
 import {
-  TextField, Dropdown, IDropdownOption, Stack,
+  TextField, Dropdown,  Stack,
   PrimaryButton, MessageBar, MessageBarType
 } from '@fluentui/react';
 import { Image, ImageFit } from '@fluentui/react/lib/Image';
 import { SPContext } from '../SPContext';
 import { WebPartContext } from '@microsoft/sp-webpart-base';
-import { Project } from '../services/ProjectSelectionServices';
+import { Project, ProjectSelectionService } from '../services/ProjectSelectionServices';
+import { DEBUG } from '../DevVariables';
+import { EventService } from '../services/EventService';
+import { projectStatusOptions, sectorOptions } from '../../projectManagement/services/ListService';
 
-const Debug = true; // Set to false in production
 
-const sectorOptions: IDropdownOption[] = [
-  { key: 'Public', text: 'Public' },
-  { key: 'Defence', text: 'Defence' },
-  { key: 'Power', text: 'Power' }
-];
-
-const statusOptions: IDropdownOption[] = [
-  { key: 'Enquiry', text: 'Enquiry' },
-  { key: 'Active', text: 'Active' },
-  { key: 'Complete', text: 'Complete' },
-  { key: 'Lost', text: 'Lost' },
-  { key: 'Cancelled', text: 'Cancelled' },
-  { key: 'Inactive', text: 'Inactive' }
-];
 
 interface IProjectFormProps {
   context: WebPartContext;
   mode: 'create' | 'edit';
   project?: Project;
   onSuccess?: () => void;
+  onCancel?: () => void;
 }
 
-const ProjectForm: React.FC<IProjectFormProps> = ({ context, mode, project, onSuccess }) => {
+const ProjectForm: React.FC<IProjectFormProps> = ({ context, mode, project, onSuccess, onCancel }) => {
   const sp = useContext(SPContext);
   const [title, setTitle] = useState('');
   const [projectName, setProjectName] = useState('');
@@ -107,7 +96,7 @@ const ProjectForm: React.FC<IProjectFormProps> = ({ context, mode, project, onSu
     DeltekSubCodes: string;
     ClientContact: string;
     ProjectImage?: string;
-  }
+  }  
 
   const handleSubmit = async (): Promise<void> => {
     if (!title || !projectName || !sector || !status) {
@@ -132,18 +121,76 @@ const ProjectForm: React.FC<IProjectFormProps> = ({ context, mode, project, onSu
     };
 
     try {
-      if (Debug) {
+      if (!DEBUG) {
         console.log('Debug mode: Project payload', payload);
         console.log('Debug mode: Project id', project?.id);
       }
       
       if (mode === 'edit' && project?.id) {
         await sp.web.lists.getByTitle("9719_ProjectInformationDatabase").items.getById(project.id).update(payload);
+        const updatedProject = await sp.web.lists
+          .getByTitle("9719_ProjectInformationDatabase")
+          .items
+          .getById(project.id)
+          .expand("PM", "Manager", "Checker", "Approver")
+          .select(
+            "Id", "Title", "ProjectName", "Status", "Sector", "Client", "ProjectImage", "ProjectDescription", "DeltekSubCodes", "ClientContact",
+            "PM/Id", "PM/Title", "PM/EMail", "PM/JobTitle", "PM/Department",
+            "Manager/Id", "Manager/Title", "Manager/EMail", "Manager/JobTitle", "Manager/Department",
+            "Checker/Id", "Checker/Title", "Checker/EMail", "Checker/JobTitle", "Checker/Department",
+            "Approver/Id", "Approver/Title", "Approver/EMail", "Approver/JobTitle", "Approver/Department"
+          )
+          ();
+
+        ProjectSelectionService.setSelectedProject({
+          id: updatedProject.Id,
+          ProjectNumber: updatedProject.Title,
+          ProjectName: updatedProject.ProjectName,
+          Status: updatedProject.Status,
+          Sector: updatedProject.Sector,
+          Client: updatedProject.Client,
+          ProjectImage: updatedProject.ProjectImage,
+          ProjectDescription: updatedProject.ProjectDescription || '',
+          DeltekSubCodes: updatedProject.DeltekSubCodes || '',
+          ClientContact: updatedProject.ClientContact || '',
+          PM: updatedProject.PM ? {
+            Id: updatedProject.PM.Id,
+            Title: updatedProject.PM.Title,
+            Email: updatedProject.PM.EMail,
+            JobTitle: updatedProject.PM.JobTitle,
+            Department: updatedProject.PM.Department
+          } : undefined,
+          Manager: updatedProject.Manager ? {
+            Id: updatedProject.Manager.Id,
+            Title: updatedProject.Manager.Title,
+            Email: updatedProject.Manager.EMail,
+            JobTitle: updatedProject.Manager.JobTitle,
+            Department: updatedProject.Manager.Department
+          } : undefined,
+          Checker: updatedProject.Checker ? {
+            Id: updatedProject.Checker.Id,
+            Title: updatedProject.Checker.Title,
+            Email: updatedProject.Checker.EMail,
+            JobTitle: updatedProject.Checker.JobTitle,
+            Department: updatedProject.Checker.Department
+          } : undefined,
+          Approver: updatedProject.Approver ? {
+            Id: updatedProject.Approver.Id,
+            Title: updatedProject.Approver.Title,
+            Email: updatedProject.Approver.EMail,
+            JobTitle: updatedProject.Approver.JobTitle,
+            Department: updatedProject.Approver.Department
+          } : undefined
+        });
+
+
       } else {
         await sp.web.lists.getByTitle("9719_ProjectInformationDatabase").items.add(payload);
+        
       }
       setMessage({ type: MessageBarType.success, text: `Project ${mode === 'edit' ? 'updated' : 'created'} successfully!` });
       if (onSuccess) onSuccess();
+      EventService.publishProjectUpdated();
     
       } catch (err: unknown) {
         if (err instanceof Error) {
@@ -185,24 +232,42 @@ const ProjectForm: React.FC<IProjectFormProps> = ({ context, mode, project, onSu
       {projectImage && (
         <Image
           imageFit={ImageFit.contain}
-          src={`${context.pageContext.web.absoluteUrl}${projectImage.serverRelativeUrl}`}
-          alt="Project Image"
-          style={{ height: 200, width: 400 }}
+          src={projectImage.serverRelativeUrl}
+          alt={projectImage.fileName}
+          style={{ height: 200, width: 'auto' }}
         />
       )}
       <Stack horizontal tokens={{ childrenGap: 10 }}>
         <Dropdown label="Sector" options={sectorOptions} selectedKey={sector} required onChange={(_, o) => setSector(o?.key as string)} styles={{ root: { flexGrow: 1 } }} />
-        <Dropdown label="Status" options={statusOptions} selectedKey={status} required onChange={(_, o) => setStatus(o?.key as string)} styles={{ root: { flexGrow: 1 } }} />
+        <Dropdown label="Status" options={projectStatusOptions} selectedKey={status} required onChange={(_, o) => setStatus(o?.key as string)} styles={{ root: { flexGrow: 1 } }} />
       </Stack>
       <TextField label="Client" value={client} onChange={(_, v) => setClient(v || '')} />
-      <PeoplePicker context={peoplePickerContext} titleText="Information Manager" personSelectionLimit={1} principalTypes={[PrincipalType.User]} onChange={(items) => setManager(items[0]?.secondaryText || '')} />
-      <PeoplePicker context={peoplePickerContext} titleText="Project Manager" personSelectionLimit={1} principalTypes={[PrincipalType.User]} onChange={(items) => setPM(items[0]?.secondaryText || '')} />
-      <PeoplePicker context={peoplePickerContext} titleText="Checker" personSelectionLimit={1} principalTypes={[PrincipalType.User]} onChange={(items) => setChecker(items[0]?.secondaryText || '')} />
-      <PeoplePicker context={peoplePickerContext} titleText="Approver" personSelectionLimit={1} principalTypes={[PrincipalType.User]} onChange={(items) => setApprover(items[0]?.secondaryText || '')} />
+      <PeoplePicker context={peoplePickerContext} titleText="Information Manager" personSelectionLimit={1} defaultSelectedUsers={[manager]} principalTypes={[PrincipalType.User]} onChange={(items) => setManager(items[0]?.secondaryText || '')} />
+      <PeoplePicker context={peoplePickerContext} titleText="Project Manager" personSelectionLimit={1} defaultSelectedUsers={[pm]} principalTypes={[PrincipalType.User]} onChange={(items) => setPM(items[0]?.secondaryText || '')} />
+      <PeoplePicker context={peoplePickerContext} titleText="Checker" personSelectionLimit={1} defaultSelectedUsers={[checker]} principalTypes={[PrincipalType.User]} onChange={(items) => setChecker(items[0]?.secondaryText || '')} />
+      <PeoplePicker context={peoplePickerContext} titleText="Approver" personSelectionLimit={1} defaultSelectedUsers={[approver]}  principalTypes={[PrincipalType.User]} onChange={(items) => setApprover(items[0]?.secondaryText || '')} />
       <TextField label="Project Description" multiline rows={3} value={description} onChange={(_, v) => setDescription(v || '')} />
       <TextField label="Deltek SubCodes" multiline rows={2} value={subCodes} onChange={(_, v) => setSubCodes(v || '')} />
       <TextField label="Client Contact" multiline rows={2} value={clientContact} onChange={(_, v) => setClientContact(v || '')} />
+      <Stack horizontal tokens={{ childrenGap: 10 }} styles={{ root: { marginTop: 20, alignItems: 'center' } }}>
+        {mode !== 'create' && <PrimaryButton text="Cancel" onClick={onCancel} styles={{ root: { marginRight: 10 } }} />}
+        <PrimaryButton text="Reset" onClick={() => {
+          setTitle('');
+          setProjectName('');
+          setSector(undefined);
+          setStatus(undefined);
+          setClient('');
+          setManager('');
+          setPM('');
+          setChecker('');
+          setApprover('');
+          setDescription('');
+          setSubCodes('');
+          setClientContact('');
+          setProjectImage(null);
+        }} styles={{ root: { marginRight: 10 } }} />
       <PrimaryButton text={mode === 'edit' ? 'Update Project' : 'Create Project'} onClick={handleSubmit} />
+      </Stack>
     </Stack>
   );
 };

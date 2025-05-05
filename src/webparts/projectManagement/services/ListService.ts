@@ -13,6 +13,61 @@ import {
   AddUserProps,
   AddCurrencyProps
 } from '@pnp/sp/fields/types';
+import { IDropdownOption } from "@fluentui/react";
+
+export const taskStatusOptions: IDropdownOption[] = [
+  { key: 'Not Started', text: 'Not Started' },
+  { key: 'In Progress', text: 'In Progress' },
+  { key: 'Complete', text: 'Complete' },
+  { key: 'Cancelled', text: 'Cancelled' },
+  { key: 'On Hold', text: 'On Hold' },
+  { key: 'Postponed', text: 'Postponed' }
+];
+
+export const taskPriorityOptions: IDropdownOption[] = [
+  { key: 'High', text: 'High' },
+  { key: 'Medium', text: 'Medium' },
+  { key: 'Low', text: 'Low' },
+  { key: 'Critical', text: 'Critical' },
+  { key: 'Urgent', text: 'Urgent' }
+];
+
+export const taskTypeOptions: IDropdownOption[] = [
+  { key: 'Task', text: 'Task' },
+  { key: 'Meeting', text: 'Meeting' },
+  { key: 'DocumentWorkflow', text: 'DOcument Workflow' },
+  { key: 'Reporting', text: 'Reporting' },
+]
+
+export const changeTypeOptions: IDropdownOption[] = [
+  { key: 'Scope', text: 'Scope' },
+  { key: 'Schedule', text: 'Schedule' },
+  { key: 'Cost', text: 'Cost' },
+  { key: 'Risk', text: 'Risk' },
+]
+
+export const changeStatusOptions: IDropdownOption[] = [
+  { key: 'Approved', text: 'Approved' },
+  { key: 'Pending', text: 'Pending' },
+  { key: 'Rejected', text: 'Rejected' },
+]
+
+
+export const sectorOptions: IDropdownOption[] = [
+  { key: 'Public', text: 'Public' },
+  { key: 'Defence', text: 'Defence' },
+  { key: 'Power', text: 'Power' }
+];
+
+export const projectStatusOptions: IDropdownOption[] = [
+  { key: 'Enquiry', text: 'Enquiry' },
+  { key: 'Active', text: 'Active' },
+  { key: 'Complete', text: 'Complete' },
+  { key: 'Lost', text: 'Lost' },
+  { key: 'Cancelled', text: 'Cancelled' },
+  { key: 'Inactive', text: 'Inactive' }
+];
+
 
 export class ListService {
   private sp: SPFI;
@@ -224,8 +279,8 @@ export class ListService {
     await this.ensureUserField(list, "Manager");
     await this.ensureUserField(list, "Checker");
     await this.ensureUserField(list, "Approver");
-    await this.ensureChoiceField(list, "Status",  { Choices: ["Enquiry", "Active", "Complete", "Lost", "Cancelled", "Inactive"] });
-    await this.ensureChoiceField(list, "Sector",  { Choices: ["Public", "Defence", "Power"] });
+    await this.ensureChoiceField(list, "Status",  { Choices: projectStatusOptions.map(option => option.text) });
+    await this.ensureChoiceField(list, "Sector",  { Choices: sectorOptions.map(option => option.text) });
     await this.ensureMultiLineField(list, "ClientContact");
     await this.ensureImageField(list, "ProjectImage");
   }
@@ -249,14 +304,14 @@ export class ListService {
   private async ensureProjectTasks(): Promise<void> {
     const { list } = await this.sp.web.lists.ensure("9719_ProjectTasks", "Stores project tasks");
     await this.ensureTextField(list, "TaskName");
-    await this.ensureChoiceField(list, "Status",  { Choices: ["Not Started", "In Progress", "Complete"]});
+    await this.ensureChoiceField(list, "Status",  { Choices: taskStatusOptions.map(option => option.text) });
     await this.ensureDateTimeField(list, "DueDate");
     await this.ensureDateTimeField(list, "StartDate");
     await this.ensureUserField(list, "AssignedTo");
     await this.ensureMultiLineField(list, "Description");
     await this.ensureMultiLineField(list, "Comments");
-    await this.ensureChoiceField(list, "Priority",  { Choices: ["High", "Medium", "Low"] });
-    await this.ensureChoiceField(list, "TaskType",  { Choices: ["Reports", "Document Checking", "Project Review", "Admin"] });
+    await this.ensureChoiceField(list, "Priority",  { Choices: taskPriorityOptions.map(option => option.text) });
+    await this.ensureChoiceField(list, "TaskType",  { Choices: taskTypeOptions.map(option => option.text) });
     await this.ensureUserField(list, "CreatedBy");
     await this.ensureDateTimeField(list, "CreatedDate");
     await this.ensureUserField(list, "ModifiedBy");

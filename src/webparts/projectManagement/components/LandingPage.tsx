@@ -1,11 +1,14 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
 import {  Stack, Dialog, DialogType, PrimaryButton, DialogFooter, DefaultButton } from '@fluentui/react';
-import CreateProjectForm from './CreateProjectForm';
+// import CreateProjectForm from './CreateProjectForm';
 import ProjectList from './ProjectList';
 import { WebPartContext } from '@microsoft/sp-webpart-base';
 import { useLoading } from '../services/LoadingContext';
-// import { LoadingProvider } from '../services/LoadingContext'; // new import
+import ProjectForm from '../../common/components/ProjectForm';
+import { ProjectSelectionService } from '../../common/services/ProjectSelectionServices';
+import { Project } from '../../common/services/ProjectSelectionServices';
+import ProjectDetails from './ProjectDetails';
 
 
 interface ILandingPageProps {
@@ -28,14 +31,35 @@ const LandingPage: React.FC<ILandingPageProps> = ({ context }) => {
   // const [selectedKey, setSelectedKey] = useState<string>('view');
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { setIsLoading } = useLoading();
+  const [selectedProject, setSelectedProject] = useState<Project | undefined>();
+
+  useEffect(() => {
+    const service = ProjectSelectionService;
+    const listener = (selected: Project | undefined): void => {
+      setSelectedProject(selected);
+    };
+    service.subscribe(listener);
+    return () => {
+      service.unsubscribe(listener);
+    };
+  }, []);
   useEffect(() => {
     (window as CustomWindow).__setListLoading = setIsLoading;
     return () => { delete (window as CustomWindow).__setListLoading; };
   }, [setIsLoading]);
   return (
-    <Stack tokens={{ padding: 20 }} styles={{ root: { width: '100%' , height: 'auto' } }}>
+    <div>
+      {selectedProject && (
+        <ProjectDetails
+          
+          context={context}
+          
+        />
+      )}
+
+      <Stack tokens={{ padding: 20 }} styles={{ root: { width: '100%' , height: 'auto' } }}>
       
-      <PrimaryButton text="➕ Add Project" onClick={() => setIsDialogOpen(true)} style={{ marginBottom: 10 }} />
+      <PrimaryButton text="Add Project" iconProps={{ iconName: 'Add' }} onClick={() => setIsDialogOpen(true)} style={{ marginBottom: 10, width : '250px'}} />
 
       <ProjectList />
      
@@ -64,12 +88,14 @@ const LandingPage: React.FC<ILandingPageProps> = ({ context }) => {
           }
         }}
       >
-        <CreateProjectForm onSuccess={() => setIsDialogOpen(false)} context={context} />
+        <ProjectForm onSuccess={() => setIsDialogOpen(false)} context={context} mode="create"/>
+        {/* <CreateProjectForm onSuccess={() => setIsDialogOpen(false)} context={context} /> */}
         <DialogFooter>
           <DefaultButton text="Cancel" onClick={() => setIsDialogOpen(false)} />
         </DialogFooter>
       </Dialog>
     </Stack>
+    </div>
   );
 };
 

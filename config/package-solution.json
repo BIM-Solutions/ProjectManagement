@@ -3,7 +3,7 @@
   "solution": {
     "name": "project-management-client-side-solution_proof of concept",
     "id": "053276ca-380e-44ae-b168-6d9c9bcc9ed8",
-    "version": "1.1.0.0",
+    "version": "1.2.1.2",
     "includeClientSideAssets": true,
     "skipFeatureDeployment": true,
     "isDomainIsolated": false,
