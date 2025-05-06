@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Text, Stack, Separator } from '@fluentui/react';
 import { Image } from '@fluentui/react/lib/Image';
-import { Project } from '../../../common/services/ProjectSelectionServices';
+import { Project } from '../../services/ProjectSelectionServices';
 
 
 interface ProjectOverviewProps {

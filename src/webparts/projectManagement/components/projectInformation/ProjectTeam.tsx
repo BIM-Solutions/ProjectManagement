@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Text, Stack} from '@fluentui/react';
-import { Project } from '../../../common/services/ProjectSelectionServices';
+import { Project } from '../../services/ProjectSelectionServices';
 import UserPanel from './UserPanel';
 interface ProjectTeamProps {
   project: Project;

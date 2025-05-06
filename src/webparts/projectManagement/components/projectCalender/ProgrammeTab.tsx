@@ -5,11 +5,11 @@ import {
   DefaultButton,  Modal, TextField, DatePicker,
   Dropdown
 } from '@fluentui/react';
-import { SPContext } from '../../../common/SPContext';
+import { SPContext } from '../common/SPContext';
 import { PrincipalType } from '@pnp/spfx-controls-react/lib/PeoplePicker';
 import { WebPartContext } from '@microsoft/sp-webpart-base';
 
-import { Project } from '../../../common/services/ProjectSelectionServices';
+import { Project } from '../../services/ProjectSelectionServices';
 import  TaskCalendar  from './TaskCalendar';
 import './react-big-calendar.css';
 import { taskPriorityOptions, taskStatusOptions, taskTypeOptions } from '../../services/ListService';

@@ -7,18 +7,21 @@ import {
 } from '@microsoft/sp-property-pane';
 import { BaseClientSideWebPart } from '@microsoft/sp-webpart-base';
 import { IReadonlyTheme } from '@microsoft/sp-component-base';
-
 import * as strings from 'ProjectManagementWebPartStrings';
-// import { IProjectManagementProps } from './components/IProjectManagementProps';
-
 import { spfi } from "@pnp/sp";
 import { SPFx } from "@pnp/sp/presets/all";
 import { ListService } from './services/ListService';
-// import { LoadingProvider } from './services/LoadingContext';
-import { SPProvider } from '../common/SPContext';
+import { SPProvider } from './components/common/SPContext';
 import LandingPage from './components/LandingPage';
 import { PropertyPaneButton, PropertyPaneButtonType } from '@microsoft/sp-property-pane';
 import { LoadingProvider } from './services/LoadingContext';
+import {
+  FluentProvider,
+  webLightTheme
+} from "@fluentui/react-components";
+
+
+
 export interface IProjectManagementWebPartProps {
   description: string;
 }
@@ -57,11 +60,13 @@ export default class ProjectManagementWebPart extends BaseClientSideWebPart<IPro
    */
   public render(): void {
     const element = (
-      <SPProvider context={this.context}>
-        <LoadingProvider>
-          <LandingPage context={this.context} />
-        </LoadingProvider>
-      </SPProvider>
+      <FluentProvider theme={webLightTheme}>
+        <SPProvider context={this.context}>
+          <LoadingProvider>
+            <LandingPage context={this.context} />
+          </LoadingProvider>
+        </SPProvider>
+      </FluentProvider>
     );
 
     ReactDom.render(element, this.domElement);

@@ -12,10 +12,12 @@
     "test": "gulp test",
     "serve": "gulp serve",
     "ship package": "gulp package-solution --ship",
-    "ship build": "gulp bundle --ship"
+    "ship build": "gulp bundle --ship",
+    "package-solution": "gulp clean && gulp build && gulp bundle --ship && gulp package-solution --ship"
   },
   "dependencies": {
-    "@fluentui/react": "^8.106.4",
+    "@fluentui/react-components": "^9.63.0",
+    "@fluentui/react-nav-preview": "^0.13.7",
     "@microsoft/sp-component-base": "1.20.0",
     "@microsoft/sp-core-library": "1.20.0",
     "@microsoft/sp-lodash-subset": "1.20.0",

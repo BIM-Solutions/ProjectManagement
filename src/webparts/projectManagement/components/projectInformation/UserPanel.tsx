@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Text, Stack, Separator, Persona, PersonaSize } from '@fluentui/react';
-import { IUserField } from '../../../common/services/ProjectSelectionServices';
+import { IUserField } from '../../services/ProjectSelectionServices';
 interface UserPanelProps {
     title: string;
     user: IUserField;

@@ -8,12 +8,12 @@ import {
   PrimaryButton, MessageBar, MessageBarType
 } from '@fluentui/react';
 import { Image, ImageFit } from '@fluentui/react/lib/Image';
-import { SPContext } from '../SPContext';
+import { SPContext } from './SPContext';
 import { WebPartContext } from '@microsoft/sp-webpart-base';
-import { Project, ProjectSelectionService } from '../services/ProjectSelectionServices';
-import { DEBUG } from '../DevVariables';
-import { EventService } from '../services/EventService';
-import { projectStatusOptions, sectorOptions } from '../../projectManagement/services/ListService';
+import { Project, ProjectSelectionService } from '../../services/ProjectSelectionServices';
+import { DEBUG } from './DevVariables';
+import { EventService } from '../../services/EventService';
+import { projectStatusOptions, sectorOptions } from '../..//services/ListService';
 
 
 

@@ -9,7 +9,7 @@ import "@pnp/sp/webs";
 import "@pnp/sp/lists";
 import "@pnp/sp/items";
 
-import { Project } from '../../../common/services/ProjectSelectionServices';
+import { Project } from '../../services/ProjectSelectionServices';
 
 interface StagesTabProps {
   project: Project;

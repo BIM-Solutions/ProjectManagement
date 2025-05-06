@@ -4,11 +4,11 @@ import {
   DetailsList, IColumn, Stack, Text, TextField, Dropdown, ComboBox, DefaultButton,
   DetailsListLayoutMode, SelectionMode, Spinner, SpinnerSize
 } from '@fluentui/react';
-import { SPContext } from '../../common/SPContext';
-import { Project, ProjectSelectionService } from '../../common/services/ProjectSelectionServices';
+import { SPContext } from './common/SPContext';
+import { Project, ProjectSelectionService } from '../services/ProjectSelectionServices';
 import { useLoading } from '../services/LoadingContext';
-import { DEBUG } from '../../common/DevVariables';
-import { EventService } from '../../common/services/EventService';
+import { DEBUG } from './common/DevVariables';
+import { EventService } from '../services/EventService';
 import { projectStatusOptions, sectorOptions } from '../services/ListService';
 
 
@@ -170,7 +170,7 @@ const ProjectList: React.FC = () => {
   }, []);
 
   return (
-    <Stack tokens={{ childrenGap: 20 }} styles={{ root: { width: '100%', height: 'auto' } }}>
+    <Stack tokens={{ childrenGap: 20 }} styles={{ root: { width: 'auto', height: 'auto' } }}>
       <Stack
         horizontal
         wrap

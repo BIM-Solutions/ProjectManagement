@@ -8,7 +8,7 @@ import { SPFx } from '@pnp/sp/presets/all';
 import "@pnp/sp/webs";
 import "@pnp/sp/lists";
 import "@pnp/sp/items";
-import { Project } from '../../../common/services/ProjectSelectionServices';
+import { Project } from '../../services/ProjectSelectionServices';
 import { FieldTypes } from '@pnp/sp/fields/types';
 interface DocumentsTabProps {
   project: Project;

@@ -2,11 +2,11 @@ import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { Text, Stack } from '@fluentui/react';
 import { WebPartContext } from '@microsoft/sp-webpart-base';
-import { Project, ProjectSelectionService } from '../../common/services/ProjectSelectionServices';
-import ProjectForm from '../../common/components/ProjectForm';
+import { Project, ProjectSelectionService } from '../services/ProjectSelectionServices';
+import ProjectForm from './common/ProjectForm';
 import ProjectTabs from './projectInformation/ProjectTabs';
-import { DEBUG } from '../../common/DevVariables';
-import { EventService } from '../../common/services/EventService';
+import { DEBUG } from './common/DevVariables';
+import { EventService } from '../services/EventService';
 
 
 interface ProjectDetailsProps {
@@ -14,11 +14,12 @@ interface ProjectDetailsProps {
   onSave?: () => void;
   onEdit?: () => void;
   onDelete?: () => void;
+  onTabChange?: (tab: string) => void;
 }
 
 
 
-const ProjectDetails: React.FC<ProjectDetailsProps> = ({ context, onEdit, onDelete }) => {
+const ProjectDetails: React.FC<ProjectDetailsProps> = ({ context, onEdit, onDelete, onTabChange }) => {
   const [project, setProject] = useState<Project | undefined>();
   const [isEditing, setIsEditing] = useState(false);
 
@@ -47,13 +48,14 @@ const ProjectDetails: React.FC<ProjectDetailsProps> = ({ context, onEdit, onDele
   if (!DEBUG) console.log('ProjectDetails - project:', project);
 
   return (
-    <Stack tokens={{ childrenGap: 20 }} styles={{ root: { padding: 20, marginTop: 20, height: 'auto', minHeight: '50vh', overflowY: 'auto' } }}>
+    <Stack tokens={{ childrenGap: 20 }} styles={{ root: { padding: 20, marginTop: 20, height: 'auto', minHeight: '50vh', overflowY: 'auto', backgroundColor: '#f1f0ef' } }}>
       {!isEditing ? (
         <ProjectTabs
           context={context}
           project={project}
           onEdit={() => setIsEditing(true)}
           onDelete={onDelete || (() => {})}
+          onTabChange={onTabChange}
         />
       ) : (
         <ProjectForm
