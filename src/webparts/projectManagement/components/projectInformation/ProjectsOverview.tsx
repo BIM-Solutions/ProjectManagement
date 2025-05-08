@@ -1,44 +1,108 @@
 import * as React from 'react';
-import { Text, Stack, Separator } from '@fluentui/react';
+import {
+  Divider,
+  makeStyles,
+  Body1,
+  Body1Strong
+} from '@fluentui/react-components';
 import { Image } from '@fluentui/react/lib/Image';
 import { Project } from '../../services/ProjectSelectionServices';
-
 
 interface ProjectOverviewProps {
   project: Project;
 }
 
+const useStyles = makeStyles({
+  container: {
+    display: 'flex',
+    flexDirection: 'column',
+    rowGap: '16px',
+    width: '100%',
+  },
+  imageContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    marginBottom: '16px',
+  },
+  grid: {
+    display: 'grid',
+    gridTemplateColumns: '1fr 1fr',
+    columnGap: '24px',
+    rowGap: '12px',
+  },
+  fullRow: {
+    gridColumn: '1 / -1',
+  },
+  fieldBlock: {
+    display: 'flex',
+    flexDirection: 'column',
+  }
+});
+
 const ProjectOverview: React.FC<ProjectOverviewProps> = ({ project }) => {
+  const styles = useStyles();
+
   let projectImageElement = null;
   if (project.ProjectImage) {
     try {
       const image = JSON.parse(project.ProjectImage);
       projectImageElement = (
-        <Image
-          src={image.serverRelativeUrl}
-          alt={image.fileName}
-          style={{ height: 200, width: 'auto', marginBottom: 20 }}
-        />
+        <div className={styles.imageContainer}>
+          <Image
+            src={image.serverRelativeUrl}
+            alt={image.fileName}
+            style={{ height: 200, width: 'auto', objectFit: 'contain' }}
+          />
+        </div>
       );
-    } catch (e) {
-      console.warn('Invalid ProjectImage JSON:', e);
+    } catch {
+      // ignore malformed image JSON
     }
   }
 
   return (
-    <Stack tokens={{ childrenGap: 8 }}>
+    <div className={styles.container}>
       {projectImageElement}
-      <Text variant="large"><strong>Status:</strong> {project.Status}</Text>
-      <Text variant="large"><strong>Project Name:</strong> {project.ProjectName}</Text>
-      <Text variant="large"><strong>Project Number:</strong> {project.ProjectNumber}</Text>
-      <Text variant="large"><strong>Project Description:</strong> {project.ProjectDescription}</Text>
-      <Text variant="large"><strong>Sector:</strong> {project.Sector}</Text>
-      <Text variant="large"><strong>Deltek Code:</strong> {project.DeltekSubCodes}</Text>
-      <Text variant="large"><strong>Sub Codes:</strong> {project.SubCodes}</Text>
-      <Text variant="large"><strong>Client:</strong> {project.Client}</Text>
-      <Text variant="large"><strong>Client Contact:</strong> {project.ClientContact}</Text>
-      <Separator />
-    </Stack>
+      <div className={styles.grid}>
+        <div className={styles.fieldBlock}>
+          <Body1Strong>Status</Body1Strong>
+          <Body1>{project.Status}</Body1>
+        </div>
+        <div className={styles.fieldBlock}>
+          <Body1Strong>Sector</Body1Strong>
+          <Body1>{project.Sector}</Body1>
+        </div>
+        <div className={styles.fieldBlock}>
+          <Body1Strong>Project Number</Body1Strong>
+          <Body1>{project.ProjectNumber}</Body1>
+        </div>
+        <div className={styles.fieldBlock}>
+          <Body1Strong>Project Name</Body1Strong>
+          <Body1>{project.ProjectName}</Body1>
+        </div>
+        <div className={styles.fieldBlock}>
+          <Body1Strong>Deltek Code</Body1Strong>
+          <Body1>{project.DeltekSubCodes}</Body1>
+        </div>
+        <div className={styles.fieldBlock}>
+          <Body1Strong>Sub Codes</Body1Strong>
+          <Body1>{project.SubCodes || '-'}</Body1>
+        </div>
+        <div className={styles.fieldBlock}>
+          <Body1Strong>Client</Body1Strong>
+          <Body1>{project.Client}</Body1>
+        </div>
+        <div className={styles.fieldBlock}>
+          <Body1Strong>Client Contact</Body1Strong>
+          <Body1>{project.ClientContact}</Body1>
+        </div>
+        <div className={styles.fullRow}>
+          <Body1Strong>Project Description</Body1Strong>
+          <Body1>{project.ProjectDescription}</Body1>
+        </div>
+      </div>
+      <Divider />
+    </div>
   );
 };
 

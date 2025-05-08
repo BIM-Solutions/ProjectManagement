@@ -36,31 +36,44 @@ const ProgrammeTaskDetails: React.FC<Props> = ({
   reloadTasks,
 }) => {
   const styles = useStyles();
-
+  const [detailsExpanded, setDetailsExpanded] = React.useState(true);
+  
   return (
     <div className={styles.container}>
-      <Text weight="semibold" size={400}>Task List</Text>
-      {tasks.map((task) => (
-        <Button key={task.Id} appearance="secondary" onClick={() => setSelectedTask(task)}>
-          {task.Title} ({task.StartDate})
-        </Button>
-      ))}
+      <div>
+        <Text weight="semibold" size={400}>
+          Task Details
+          <Button size="small" appearance="transparent" onClick={() => setDetailsExpanded(!detailsExpanded)}>
+            {detailsExpanded ? 'Hide' : 'Show'}
+          </Button>
+        </Text>
 
-      <Text weight="semibold" size={400}>Task Details</Text>
-      {selectedTask ? (
-        <div>
-          <Text><strong>Title:</strong> {selectedTask.Title}</Text>
-          <Text><strong>Description:</strong> {selectedTask.Description}</Text>
-          <Text><strong>Start:</strong> {selectedTask.StartDate}</Text>
-          <Text><strong>End:</strong> {selectedTask.DueDate}</Text>
-          <Text><strong>Assigned To:</strong> {selectedTask.AssignToId}</Text>
-          <Text><strong>Progress:</strong> {selectedTask.Progress}</Text>
-          <Text><strong>Created By:</strong> {selectedTask.CreatedBy}</Text>
-        </div>
-      ) : (
-        <Text>No task selected.</Text>
-      )}
+        {detailsExpanded && selectedTask ? (
+          <>
+            <Text><strong>Title:</strong> {selectedTask.Title}</Text>
+            <Text><strong>Description:</strong> {selectedTask.Description}</Text>
+            <Text><strong>Start:</strong> {selectedTask.StartDate}</Text>
+            <Text><strong>End:</strong> {selectedTask.DueDate}</Text>
+            <Text><strong>Assigned To:</strong> {selectedTask.AssignToId}</Text>
+            <Text><strong>Progress:</strong> {selectedTask.Progress}</Text>
+            <Text><strong>Created By:</strong> {selectedTask.CreatedBy}</Text>
+          </>
+        ) : (
+          !detailsExpanded ? null : <Text>No task selected.</Text>
+        )}
+      </div>
+
+
+      <div>
+        <Text weight="semibold" size={400} style={{ marginTop: 16 }}>Task List</Text>
+        {tasks.map((task) => (
+          <Button key={task.Id} appearance="secondary" onClick={() => setSelectedTask(task)} style={{ width: '100%', justifyContent: 'start' }}>
+            {task.Title} ({task.StartDate})
+          </Button>
+        ))}
+      </div>
     </div>
+
   );
 };
 

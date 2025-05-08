@@ -22,9 +22,9 @@ import ProjectForm from './common/ProjectForm';
 import { ProjectSelectionService } from '../services/ProjectSelectionServices';
 import { Project } from '../services/ProjectSelectionServices';
 import ProjectDetails from './ProjectDetails';
-import ProgrammeView from './projectCalender/ProgrammeView';
+import TaskCalendar from './projectCalender/TaskCalendar';
 import Navigation from './common/Navigation';
-
+import { TaskItem } from './projectCalender/ProgrammeTab';
 
 const useStyles = makeStyles({
   root: {
@@ -32,16 +32,39 @@ const useStyles = makeStyles({
     display: 'flex',
     flex: 1,
     minHeight: 0, 
+    backgroundColor: tokens.colorNeutralBackground1,
+    color: tokens.colorNeutralForeground1,
   },
   nav: {
-    minWidth: '200px',
+    height: '100vh',
+    borderRight: `1px solid ${tokens.colorNeutralStroke1}`,
+    padding: '12px',
+    backgroundColor: tokens.colorNeutralBackground2,
   },
   content: {
-    flex: '1',
-    padding: '16px',
-    display: 'grid',
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start',
+    flex: '1 1 0',
+    minWidth: '400px',  // Prevents center collapse
+    padding: '24px',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '16px',
+    overflowX: 'auto',
+    height: '100vh',
+  },
+  rightPanel: {
+    flex: '0 0 30%',
+    minWidth: '280px',
+    maxWidth: '30%',
+    height: '100vh',
+    overflowY: 'auto',
+    padding: '20px',
+    borderLeft: `1px solid ${tokens.colorNeutralStroke1}`,
+    backgroundColor: tokens.colorNeutralBackground2,
+    //remove this for production
+    '@media (max-width: 2600px)': {
+      
+      maxWidth: '100%'
+    },
   },
   field: {
     display: 'flex',
@@ -50,18 +73,8 @@ const useStyles = makeStyles({
     flexDirection: 'column',
     gridRowGap: tokens.spacingVerticalS,
   },
-  rightPanel: {
-    flex: '1 1 300px',
-    minWidth: '250px',
-    maxWidth: '100%',
-    height: '100%',
-    overflowY: 'auto',
-    boxSizing: 'border-box',
-    padding: '16px',
-    '@media (min-width: 900px)': {
-      flex: '0 0 30%',
-    },
-  },
+
+  
 });
 
 interface ILandingPageProps {
@@ -78,6 +91,8 @@ const LandingPage: React.FC<ILandingPageProps> = ({ context }) => {
 
   const styles = useStyles();
   const [tab, setTab] = useState<string>('overview');
+  const [tasks, setTasks] = useState<TaskItem[]>([]);
+  const [selectedTask, setSelectedTask] = useState<TaskItem | undefined>();
 
   // const linkDestination = 'https://contoso.sharepoint.com/sites/ContosoHR/Pages/Home.aspx';
 
@@ -117,31 +132,25 @@ const LandingPage: React.FC<ILandingPageProps> = ({ context }) => {
         }}
       >
         {/* Left Panel - Navigation Drawer */}
-        <Navigation />
+        <nav className={styles.nav}>
+          <Navigation />
+        </nav>
 
         {/* Center Panel */}
-        <div
-          style={{
-            flex: '1 1 400px',
-            height: '100%',
-            overflowY: 'auto',
-            minWidth: '300px',
-            maxWidth: '100%',
-            boxSizing: 'border-box',
-            padding: '16px',
-          }}
-        >
+        <div className={styles.content}>
           <Dialog modalType="modal">
             <DialogTrigger disableButtonEnhancement>
-              <Button
-                appearance="primary"
-                icon={<AddRegular />}
-                iconPosition="before"
-                data-trigger="AddRegular"
-                style={{ marginBottom: 10, width: '250px' }}
-              >
-                Add Project
-              </Button>
+              <div style={{ marginBottom: '24px' }}>
+                <Button
+                  appearance="primary"
+                  icon={<AddRegular />}
+                  iconPosition="before"
+                  data-trigger="AddRegular"
+                  style={{ width: '250px', fontWeight: '600' }}
+                >
+                  Add Project
+                </Button>
+              </div>
             </DialogTrigger>
             <DialogSurface style={{ width: '100%' }} aria-hidden="true">
               <DialogBody>
@@ -163,26 +172,19 @@ const LandingPage: React.FC<ILandingPageProps> = ({ context }) => {
               </DialogBody>
             </DialogSurface>
           </Dialog>
-
-          {tab === 'programme' ? <ProgrammeView context={context} project={selectedProject!} /> : <ProjectList />}
+          {tab === 'programme' ? <TaskCalendar tasks={tasks} onTaskClick={setSelectedTask} /> : <ProjectList />}
         </div>
 
         {/* Right Panel - Project Details */}
-        <div
-          style={{
-            flex: '1 1 30%',
-            height: '100%',
-            overflowY: 'auto',
-            minWidth: '250px',
-            maxWidth: '100%',
-            boxSizing: 'border-box',
-            padding: '16px',
-          }}
-        >
+        <div className={styles.rightPanel}>
           {selectedProject && (
             <ProjectDetails
               context={context}
               onTabChange={(newTab) => setTab(newTab)}
+              tasks={tasks}
+              setTasks={setTasks}
+              selectedTask={selectedTask}
+              setSelectedTask={setSelectedTask}
             />
           )}
         </div>

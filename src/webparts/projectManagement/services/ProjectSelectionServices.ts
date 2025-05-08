@@ -6,6 +6,7 @@ export interface IUserField {
   Email: string;
   JobTitle?: string;
   Department?: string;
+  Presence?: string;
 }
 export interface Project {
   id: number;

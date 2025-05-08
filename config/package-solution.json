@@ -32,6 +32,12 @@
         "id": "a48aded2-0c6e-4278-a87d-bb0fee818891",
         "version": "1.0.0.0"
       }
+    ],
+    "webApiPermissionRequests": [
+      {
+        "resource": "Microsoft Graph",
+        "scope": "Presence.Read.All"
+      }
     ]
   },
   "paths": {

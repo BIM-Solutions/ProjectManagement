@@ -12,7 +12,9 @@ import {
   Select,
   Button,
   makeStyles,
-  Persona
+  Persona,
+  tokens,
+  mergeClasses
 
 } from '@fluentui/react-components';
 import { SPContext } from './common/SPContext';
@@ -29,6 +31,8 @@ const useStyles = makeStyles({
     flexDirection: 'column',
     rowGap: '16px',
     width: '100%',
+    overflowX: 'auto',
+    overflowY: 'auto'
   },
   filters: {
     display: 'flex',
@@ -38,8 +42,40 @@ const useStyles = makeStyles({
   },
   tableContainer: {
     overflow: 'auto',
-    border: `1px solid #e0e0e0`,
+    border: `1px solid ${tokens.colorNeutralStroke1}`,
     borderRadius: '8px',
+    backgroundColor: tokens.colorNeutralBackground1,
+    tableLayout: 'auto'
+  },
+  
+  tableHeader: {
+    borderBottom: `1px solid ${tokens.colorNeutralStroke1}`,
+    backgroundColor: tokens.colorNeutralBackground2,
+  },
+  
+  tableRow: {
+    borderBottom: `1px solid ${tokens.colorNeutralStroke1}`,
+  },
+  
+  tableCell: {
+    borderRight: `1px solid ${tokens.colorNeutralStroke1}`,
+    padding: '8px',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    fontSize: '14px',
+  },
+  clickableRow: {
+    cursor: 'pointer',
+    '&:hover': {
+      backgroundColor: tokens.colorNeutralBackground2Hover,
+    },
+  },
+  selectedRow: {
+    backgroundColor: tokens.colorBrandBackground2,
+    '&:hover': {
+      backgroundColor: tokens.colorBrandBackground2Hover,
+    },
   },
 });
 
@@ -54,8 +90,26 @@ const ProjectList: React.FC = () => {
   const [filterStatus, setFilterStatus] = useState<string>('');
   const [sortField, setSortField] = useState<keyof Project>('ProjectNumber');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
+  const [selectedProjectId, setSelectedProjectId] = useState<number | null>(null);
 
-
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent): void => {
+      // Don't deselect if focused on an input or textarea or select
+      const target = e.target as HTMLElement;
+      const tag = target?.tagName?.toLowerCase();
+      const isTypingField = tag === 'input' || tag === 'textarea' || tag === 'select';
+  
+      if (e.key === 'Escape' && !isTypingField) {
+        setSelectedProjectId(null);
+        ProjectSelectionService.setSelectedProject(undefined);
+      }
+    };
+  
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
 
   useEffect(() => {
     const fetchItems = async (): Promise<void> => {
@@ -211,6 +265,8 @@ const ProjectList: React.FC = () => {
             setSearchName('');
             setFilterSector('');
             setFilterStatus('');
+            ProjectSelectionService.setSelectedProject(undefined);
+            setSelectedProjectId(null);
           }}
         >
           Clear Filters
@@ -221,39 +277,50 @@ const ProjectList: React.FC = () => {
         <Spinner label="Loading projects..." />
       ) : (
         <div className={styles.tableContainer}>
-          <Table sortable>
-            <TableHeader>
-              <TableRow>
-                <TableHeaderCell onClick={() => handleSort('ProjectNumber')}>
+          <Table style={{ tableLayout: 'auto' }} sortable>
+            <TableHeader className={styles.tableHeader}>
+              <TableRow >
+                <TableHeaderCell style={{ minWidth: '150px', maxWidth: '300px' }} onClick={() => handleSort('ProjectNumber')}>
                   Project Number {sortField === 'ProjectNumber' ? (sortDirection === 'asc' ? '↑' : '↓') : ''}
                 </TableHeaderCell>
-                <TableHeaderCell onClick={() => handleSort('ProjectName')}>
+                <TableHeaderCell style={{ minWidth: '150px', maxWidth: '300px' }} onClick={() => handleSort('ProjectName')}>
                   Project Name {sortField === 'ProjectName' ? (sortDirection === 'asc' ? '↑' : '↓') : ''}
                 </TableHeaderCell>
-                <TableHeaderCell onClick={() => handleSort('Sector')}>
+                <TableHeaderCell style={{ minWidth: '100px', maxWidth: '150px' }} onClick={() => handleSort('Sector')}>
                   Sector {sortField === 'Sector' ? (sortDirection === 'asc' ? '↑' : '↓') : ''}
                 </TableHeaderCell>
-                <TableHeaderCell onClick={() => handleSort('Status')}>
+                <TableHeaderCell style={{ minWidth: '100px', maxWidth: '150px' }} onClick={() => handleSort('Status')}>
                   Status {sortField === 'Status' ? (sortDirection === 'asc' ? '↑' : '↓') : ''}
                 </TableHeaderCell>
-                <TableHeaderCell onClick={() => handleSort('Client')}>
+                <TableHeaderCell style={{ minWidth: '100px', maxWidth: '150px' }} onClick={() => handleSort('Client')}>
                   Client {sortField === 'Client' ? (sortDirection === 'asc' ? '↑' : '↓') : ''}
                 </TableHeaderCell>
-                <TableHeaderCell>Project Manager</TableHeaderCell>
-                <TableHeaderCell>Information Manager</TableHeaderCell>
-                <TableHeaderCell>Checker</TableHeaderCell>
-                <TableHeaderCell>Approver</TableHeaderCell>
+                <TableHeaderCell style={{ minWidth: '110px', maxWidth: '250px' }}>Project Manager</TableHeaderCell>
+                <TableHeaderCell style={{ minWidth: '110px', maxWidth: '250px' }}>Information Manager</TableHeaderCell>
+                <TableHeaderCell style={{ minWidth: '110px', maxWidth: '250px' }}>Checker</TableHeaderCell>
+                <TableHeaderCell style={{ minWidth: '110px', maxWidth: '250px' }}>Approver</TableHeaderCell>
               </TableRow>
             </TableHeader>
             <TableBody>
               {sortedItems.map(project => (
-                <TableRow key={project.id} onClick={() => ProjectSelectionService.setSelectedProject(project)}>
-                  <TableCell>{project.ProjectNumber}</TableCell>
-                  <TableCell>{project.ProjectName}</TableCell>
-                  <TableCell>{project.Sector}</TableCell>
-                  <TableCell>{project.Status}</TableCell>
-                  <TableCell>{project.Client}</TableCell>
-                  <TableCell>
+                <TableRow
+                  key={project.id}
+                  className={mergeClasses(
+                    styles.tableRow,
+                    styles.clickableRow,
+                    selectedProjectId === project.id ? styles.selectedRow : ''
+                  )}
+                  onClick={() => {
+                    ProjectSelectionService.setSelectedProject(project);
+                    setSelectedProjectId(project.id);
+                  }}
+                >
+                  <TableCell className={styles.tableCell} style={{ minWidth: '150px', maxWidth: '300px' }}>{project.ProjectNumber}</TableCell>
+                  <TableCell className={styles.tableCell} style={{ minWidth: '150px', maxWidth: '300px' }}>{project.ProjectName}</TableCell>
+                  <TableCell className={styles.tableCell} style={{ minWidth: '100px', maxWidth: '150px' }} >{project.Sector}</TableCell>
+                  <TableCell className={styles.tableCell} style={{ minWidth: '100px', maxWidth: '150px' }} >{project.Status}</TableCell>
+                  <TableCell className={styles.tableCell} style={{ minWidth: '100px', maxWidth: '150px' }} >{project.Client}</TableCell>
+                  <TableCell className={styles.tableCell} style={{ minWidth: '110px', maxWidth: '250px' }}>
                     <Persona
                       size="small"
                       name={project.PM?.Title}
@@ -266,7 +333,7 @@ const ProjectList: React.FC = () => {
                   />
                   </TableCell>
 
-                  <TableCell>
+                  <TableCell className={styles.tableCell} style={{ minWidth: '110px', maxWidth: '250px' }}>
                     <Persona
                       size="small"
                       name={project.Manager?.Title}
@@ -279,7 +346,7 @@ const ProjectList: React.FC = () => {
                   />
                   </TableCell>
 
-                  <TableCell>
+                  <TableCell className={styles.tableCell} style={{ minWidth: '110px', maxWidth: '250px' }}>
                     <Persona
                       size="small"
                       name={project.Checker?.Title}
@@ -292,7 +359,7 @@ const ProjectList: React.FC = () => {
                   />
                   </TableCell>
 
-                  <TableCell>
+                  <TableCell className={styles.tableCell} style={{ minWidth: '110px', maxWidth: '250px' }}>
                     <Persona
                       size="small"
                       name={project.Approver?.Title}

@@ -7,7 +7,6 @@ import { WebPartContext } from '@microsoft/sp-webpart-base';
 import { Project } from '../../services/ProjectSelectionServices';
 import { SPContext } from '../common/SPContext';
 import { TaskItem } from './ProgrammeTab';
-import TaskCalendar from './TaskCalendar';
 import ProgrammeTaskDetails from './ProgrammeTaskDetails';
 import { makeStyles, tokens } from '@fluentui/react-components';
 
@@ -58,10 +57,7 @@ const ProgrammeView: React.FC<ProgrammeProps> = ({ context, project }) => {
 
   return (
     <div className={styles.container}>
-      <div className={styles.middlePanel}>
-        <TaskCalendar tasks={tasks} onTaskClick={setSelectedTask} />
-      </div>
-      <div className={styles.rightPanel}>
+      
         <ProgrammeTaskDetails
           tasks={tasks}
           selectedTask={selectedTask}
@@ -71,7 +67,7 @@ const ProgrammeView: React.FC<ProgrammeProps> = ({ context, project }) => {
           reloadTasks={fetchTasks}
         />
       </div>
-    </div>
+
   );
 };
 

@@ -4,9 +4,16 @@ import { useContext, useEffect, useState } from 'react';
 import { PeoplePicker, PrincipalType, IPeoplePickerContext } from "@pnp/spfx-controls-react/lib/PeoplePicker";
 import { FilePicker, IFilePickerResult } from '@pnp/spfx-controls-react/lib/FilePicker';
 import {
-  TextField, Dropdown,  Stack,
-  PrimaryButton, MessageBar, MessageBarType
-} from '@fluentui/react';
+  Button,
+   Dropdown, 
+   Field, 
+   Input, 
+   MessageBar,
+   MessageBarIntent,
+   Textarea,
+   makeStyles,
+  //  useId
+} from '@fluentui/react-components';
 import { Image, ImageFit } from '@fluentui/react/lib/Image';
 import { SPContext } from './SPContext';
 import { WebPartContext } from '@microsoft/sp-webpart-base';
@@ -16,7 +23,6 @@ import { EventService } from '../../services/EventService';
 import { projectStatusOptions, sectorOptions } from '../..//services/ListService';
 
 
-
 interface IProjectFormProps {
   context: WebPartContext;
   mode: 'create' | 'edit';
@@ -24,6 +30,32 @@ interface IProjectFormProps {
   onSuccess?: () => void;
   onCancel?: () => void;
 }
+
+const useStyles = makeStyles({
+  container: {
+    gap: '10',
+    childrenGap: '10', 
+    padding: '20'
+  },
+  rowArea: {
+    gap: '10'
+  },
+  button: {
+    marginRight: '10'
+  },
+  buttonRow: {
+    display: 'flex',
+    justifyContent: 'center',
+    gap: '16px',
+    marginTop: '24px',
+  },
+  
+  labelsRow: {
+    gap: '10'
+  }
+
+
+})
 
 const ProjectForm: React.FC<IProjectFormProps> = ({ context, mode, project, onSuccess, onCancel }) => {
   const sp = useContext(SPContext);
@@ -40,7 +72,9 @@ const ProjectForm: React.FC<IProjectFormProps> = ({ context, mode, project, onSu
   const [description, setDescription] = useState('');
   const [subCodes, setSubCodes] = useState('');
   const [clientContact, setClientContact] = useState('');
-  const [message, setMessage] = useState<{ type: MessageBarType; text: string } | null>(null);
+  const [message, setMessage] = useState<{ type: MessageBarIntent; text: string } | null>(null);
+  const styles = useStyles();
+  // const dropdownId = useId("dropdown");
 
   const peoplePickerContext: IPeoplePickerContext = {
     spHttpClient: context.spHttpClient,
@@ -100,7 +134,7 @@ const ProjectForm: React.FC<IProjectFormProps> = ({ context, mode, project, onSu
 
   const handleSubmit = async (): Promise<void> => {
     if (!title || !projectName || !sector || !status) {
-      setMessage({ type: MessageBarType.error, text: 'Please fill in all required fields.' });
+      setMessage({ type: 'error', text: 'Please fill in all required fields.' });
       return;
     }
 
@@ -188,29 +222,41 @@ const ProjectForm: React.FC<IProjectFormProps> = ({ context, mode, project, onSu
         await sp.web.lists.getByTitle("9719_ProjectInformationDatabase").items.add(payload);
         
       }
-      setMessage({ type: MessageBarType.success, text: `Project ${mode === 'edit' ? 'updated' : 'created'} successfully!` });
+      setMessage({ type: 'success', text: `Project ${mode === 'edit' ? 'updated' : 'created'} successfully!` });
       if (onSuccess) onSuccess();
       EventService.publishProjectUpdated();
     
       } catch (err: unknown) {
         if (err instanceof Error) {
           console.error(err);
-          setMessage({ type: MessageBarType.error, text: err.message || 'Submission failed.' });
+          setMessage({ type: 'error', text: err.message || 'Submission failed.' });
         } else {
           console.error('Unknown error:', err);
-          setMessage({ type: MessageBarType.error, text: 'An unknown error occurred.' });
+          setMessage({ type: 'error', text: 'An unknown error occurred.' });
         }
       }
   };
 
   return (
-    <Stack tokens={{ childrenGap: 10, padding: 20 }}>
+    <div className={styles.container}>
       <h2>{mode === 'edit' ? 'Edit Project' : 'Create New Project'}</h2>
-      {message && <MessageBar messageBarType={message.type}>{message.text}</MessageBar>}
-      <Stack horizontal tokens={{ childrenGap: 10 }}>
-        <TextField label="Project Number" required value={title} onChange={(_, v) => setTitle(v || '')} styles={{ root: { flexGrow: 1 } }} />
-        <TextField label="Project Name" required value={projectName} onChange={(_, v) => setProjectName(v || '')} styles={{ root: { flexGrow: 1 } }} />
-      </Stack>
+      {message && <MessageBar intent={message.type}>{message.text}</MessageBar>}
+      <div className={styles.labelsRow}>
+      <Field label="Project Number" required>
+        <Input
+          value={title}
+          onChange={(event) => setTitle((event.target as HTMLInputElement).value || '')}
+          style={{ flexGrow: 1 }}
+        />
+      </Field>
+      <Field label="Project Name" required>
+        <Input
+          value={projectName}
+          onChange={(event) => setProjectName((event.target as HTMLInputElement).value || '')}
+          style={{ flexGrow: 1}}
+          />
+      </Field>
+      </div>
       <FilePicker
         context={context}
         buttonLabel="Upload Project Image"
@@ -237,21 +283,68 @@ const ProjectForm: React.FC<IProjectFormProps> = ({ context, mode, project, onSu
           style={{ height: 200, width: 'auto' }}
         />
       )}
-      <Stack horizontal tokens={{ childrenGap: 10 }}>
-        <Dropdown label="Sector" options={sectorOptions} selectedKey={sector} required onChange={(_, o) => setSector(o?.key as string)} styles={{ root: { flexGrow: 1 } }} />
-        <Dropdown label="Status" options={projectStatusOptions} selectedKey={status} required onChange={(_, o) => setStatus(o?.key as string)} styles={{ root: { flexGrow: 1 } }} />
-      </Stack>
-      <TextField label="Client" value={client} onChange={(_, v) => setClient(v || '')} />
+      <div className={styles.rowArea}>
+      <Field label="Sector" required>
+        <Dropdown
+          value={sector}
+          onOptionSelect={(_, data) => setSector(data.optionValue)}
+        >
+          {sectorOptions.map((option) => (
+            <option key={option.key} value={option.key}>
+              {option.text}
+            </option>
+          ))}
+        </Dropdown>
+      </Field>
+
+      <Field label="Status" required>
+        <Dropdown
+          value={status}
+          onOptionSelect={(_, data) => setStatus(data.optionValue)}
+        >
+          {projectStatusOptions.map((option) => (
+            <option key={option.key} value={option.key}>
+              {option.text}
+            </option>
+          ))}
+        </Dropdown>
+      </Field>
+      </div>
+      <Field label="Client" required>
+        <Input
+          value={client}
+          onChange={(event) => setProjectName((event.target as HTMLInputElement).value || '')}
+          style={{ flexGrow: 1}}
+          />
+      </Field>
       <PeoplePicker context={peoplePickerContext} titleText="Information Manager" personSelectionLimit={1} defaultSelectedUsers={[manager]} principalTypes={[PrincipalType.User]} onChange={(items) => setManager(items[0]?.secondaryText || '')} />
       <PeoplePicker context={peoplePickerContext} titleText="Project Manager" personSelectionLimit={1} defaultSelectedUsers={[pm]} principalTypes={[PrincipalType.User]} onChange={(items) => setPM(items[0]?.secondaryText || '')} />
       <PeoplePicker context={peoplePickerContext} titleText="Checker" personSelectionLimit={1} defaultSelectedUsers={[checker]} principalTypes={[PrincipalType.User]} onChange={(items) => setChecker(items[0]?.secondaryText || '')} />
       <PeoplePicker context={peoplePickerContext} titleText="Approver" personSelectionLimit={1} defaultSelectedUsers={[approver]}  principalTypes={[PrincipalType.User]} onChange={(items) => setApprover(items[0]?.secondaryText || '')} />
-      <TextField label="Project Description" multiline rows={3} value={description} onChange={(_, v) => setDescription(v || '')} />
-      <TextField label="Deltek SubCodes" multiline rows={2} value={subCodes} onChange={(_, v) => setSubCodes(v || '')} />
-      <TextField label="Client Contact" multiline rows={2} value={clientContact} onChange={(_, v) => setClientContact(v || '')} />
-      <Stack horizontal tokens={{ childrenGap: 10 }} styles={{ root: { marginTop: 20, alignItems: 'center' } }}>
-        {mode !== 'create' && <PrimaryButton text="Cancel" onClick={onCancel} styles={{ root: { marginRight: 10 } }} />}
-        <PrimaryButton text="Reset" onClick={() => {
+      <Field label="Project Decription" required>
+        <Textarea
+          value={description}
+          onChange={(event) => setDescription((event.target as HTMLTextAreaElement).value || '')}
+          style={{ flexGrow: 1}}
+          />
+      </Field>
+      <Field label="Deltek SubCodes" required>
+        <Textarea
+          value={subCodes}
+          onChange={(event) => setSubCodes((event.target as HTMLTextAreaElement).value || '')}
+          style={{ flexGrow: 1}}
+          />
+      </Field>
+      <Field label="Client Contact" required>
+        <Input
+          value={clientContact}
+          onChange={(event) => setClientContact((event.target as HTMLInputElement).value || '')}
+          style={{ flexGrow: 1}}
+          />
+      </Field>
+      <div className={styles.buttonRow}>
+        {mode !== 'create' && <Button appearance='primary' onClick={onCancel} className={styles.button}>Cancel</Button>}
+        <Button appearance='primary' onClick={() => {
           setTitle('');
           setProjectName('');
           setSector(undefined);
@@ -265,10 +358,10 @@ const ProjectForm: React.FC<IProjectFormProps> = ({ context, mode, project, onSu
           setSubCodes('');
           setClientContact('');
           setProjectImage(null);
-        }} styles={{ root: { marginRight: 10 } }} />
-      <PrimaryButton text={mode === 'edit' ? 'Update Project' : 'Create Project'} onClick={handleSubmit} />
-      </Stack>
-    </Stack>
+        }} className={styles.button}>Reset</Button>
+      <Button appearance='primary'  onClick={handleSubmit} >{mode === 'edit' ? 'Update Project' : 'Create Project'}</Button>
+      </div>
+    </div>
   );
 };
 

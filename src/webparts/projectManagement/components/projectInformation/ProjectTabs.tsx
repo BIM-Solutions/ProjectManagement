@@ -7,6 +7,7 @@ import {
   Text,
   Button,
   Divider,
+  tokens
 } from '@fluentui/react-components';
 import {
   Edit24Regular,
@@ -26,12 +27,14 @@ import DocumentsTab from '../projectDocuments/DocumentsTab';
 import StagesTab from '../projectStages/StagesTab';
 import FeesTab from '../projectFees/FeesTab';
 import { WebPartContext } from '@microsoft/sp-webpart-base';
+import { TaskItem } from '../projectCalender/ProgrammeTab';
 
 const useStyles = makeStyles({
   root: {
     display: 'flex',
     flexDirection: 'column',
     rowGap: '24px',
+    margin: '24px'
   },
   layout: {
     display: 'flex',
@@ -48,6 +51,19 @@ const useStyles = makeStyles({
     gap: '16px',
     marginTop: '24px',
   },
+  rightPanel: {
+    width: '40%',
+    padding: '16px',
+    backgroundColor: tokens.colorNeutralBackground2,
+    border: `1px solid ${tokens.colorNeutralStroke1}`,
+    borderRadius: '8px',
+  },
+  verticalDivider: {
+    height: 'auto',
+    alignSelf: 'stretch',
+    borderLeft: `1px solid ${tokens.colorNeutralStroke2}`,
+    margin: '0 12px',
+  },
 });
 
 interface ProjectTabsProps {
@@ -56,9 +72,13 @@ interface ProjectTabsProps {
   onEdit: () => void;
   onDelete: () => void;
   onTabChange?: (tab: TabValue) => void;
+  tasks: TaskItem[];
+  setTasks: React.Dispatch<React.SetStateAction<TaskItem[]>>;
+  selectedTask: TaskItem | undefined;
+  setSelectedTask: (task: TaskItem | undefined) => void;
 }
 
-const ProjectTabs: React.FC<ProjectTabsProps> = ({ context, project, onEdit, onDelete, onTabChange }) => {
+const ProjectTabs: React.FC<ProjectTabsProps> = ({ context, project, onEdit, onDelete, onTabChange, tasks, setTasks, selectedTask, setSelectedTask }) => {
   const styles = useStyles();
   const [selectedValue, setSelectedValue] = React.useState<TabValue>('overview');
 
@@ -69,14 +89,17 @@ const ProjectTabs: React.FC<ProjectTabsProps> = ({ context, project, onEdit, onD
           <>
             <div className={styles.layout}>
               <div className={styles.leftColumn}>
-                <Text size={700} weight="bold">
+                <Text size={600} weight="bold" style={{margin: '12px'}}>
                   {project.ProjectNumber} - {project.ProjectName}
                 </Text>
                 <Divider />
                 <ProjectOverview project={project} />
               </div>
-              <Divider vertical />
-              <ProjectTeam project={project} />
+              <div className={styles.verticalDivider} />
+              <div className={styles.rightPanel}>
+                <ProjectTeam project={project} context={context} />
+              </div>
+
             </div>
             <div className={styles.buttonRow}>
               <Button icon={<Edit24Regular />} onClick={onEdit} appearance="primary">
@@ -89,7 +112,7 @@ const ProjectTabs: React.FC<ProjectTabsProps> = ({ context, project, onEdit, onD
           </>
         );
       case 'programme':
-        return <ProgrammeTab project={project} context={context} />;
+        return <ProgrammeTab project={project} context={context}  tasks={tasks} setSelectedTask={setSelectedTask} setTasks={setTasks} selectedTask={selectedTask}/>;
       case 'stages':
         return <StagesTab project={project} context={context} />;
       case 'documents':

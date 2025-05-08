@@ -1,12 +1,13 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { Text, Stack } from '@fluentui/react';
+import { Text,  makeStyles } from '@fluentui/react-components';
 import { WebPartContext } from '@microsoft/sp-webpart-base';
 import { Project, ProjectSelectionService } from '../services/ProjectSelectionServices';
 import ProjectForm from './common/ProjectForm';
 import ProjectTabs from './projectInformation/ProjectTabs';
 import { DEBUG } from './common/DevVariables';
 import { EventService } from '../services/EventService';
+import { TaskItem } from './projectCalender/ProgrammeTab';
 
 
 interface ProjectDetailsProps {
@@ -15,14 +16,31 @@ interface ProjectDetailsProps {
   onEdit?: () => void;
   onDelete?: () => void;
   onTabChange?: (tab: string) => void;
+  tasks: TaskItem[];
+  setTasks: React.Dispatch<React.SetStateAction<TaskItem[]>>;
+  selectedTask: TaskItem | undefined;
+  setSelectedTask: (task: TaskItem | undefined) => void;
 }
 
+const useStyles = makeStyles({
+  root: {
+    gap: '20',
+    padding: '20',
+    marginTop: '20',
+    height: 'auto', 
+    minHeight: '50vh', 
+    overflowY: 'auto', 
+    backgroundColor: '#f1f0ef'
+  },
 
 
-const ProjectDetails: React.FC<ProjectDetailsProps> = ({ context, onEdit, onDelete, onTabChange }) => {
+
+})
+
+const ProjectDetails: React.FC<ProjectDetailsProps> = ({ context, onEdit, onDelete, onTabChange, tasks, setTasks, selectedTask, setSelectedTask }) => {
   const [project, setProject] = useState<Project | undefined>();
   const [isEditing, setIsEditing] = useState(false);
-
+  const styles = useStyles();
   useEffect(() => {
     const service = ProjectSelectionService;
     const listener = (selected: Project | undefined): void => {
@@ -48,7 +66,7 @@ const ProjectDetails: React.FC<ProjectDetailsProps> = ({ context, onEdit, onDele
   if (!DEBUG) console.log('ProjectDetails - project:', project);
 
   return (
-    <Stack tokens={{ childrenGap: 20 }} styles={{ root: { padding: 20, marginTop: 20, height: 'auto', minHeight: '50vh', overflowY: 'auto', backgroundColor: '#f1f0ef' } }}>
+    <div className={styles.root}>
       {!isEditing ? (
         <ProjectTabs
           context={context}
@@ -56,6 +74,10 @@ const ProjectDetails: React.FC<ProjectDetailsProps> = ({ context, onEdit, onDele
           onEdit={() => setIsEditing(true)}
           onDelete={onDelete || (() => {})}
           onTabChange={onTabChange}
+          tasks={tasks}
+          setTasks={setTasks}
+          selectedTask={selectedTask}
+          setSelectedTask={setSelectedTask}
         />
       ) : (
         <ProjectForm
@@ -72,7 +94,7 @@ const ProjectDetails: React.FC<ProjectDetailsProps> = ({ context, onEdit, onDele
           onCancel={() => setIsEditing(false)}
         />
       )}
-    </Stack>
+    </div>
   );
 };
 
