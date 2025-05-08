@@ -1,38 +1,68 @@
 import * as React from 'react';
 import { useEffect, useState, useContext } from 'react';
 import {
-  DetailsList, IColumn, Stack, Text, TextField, Dropdown, ComboBox, DefaultButton,
-  DetailsListLayoutMode, SelectionMode, Spinner, SpinnerSize
-} from '@fluentui/react';
+  Input,
+  Spinner,
+  Table,
+  TableBody,
+  TableCell,
+  TableHeader,
+  TableHeaderCell,
+  TableRow,
+  Select,
+  Button,
+  makeStyles,
+  Persona
+
+} from '@fluentui/react-components';
 import { SPContext } from './common/SPContext';
 import { Project, ProjectSelectionService } from '../services/ProjectSelectionServices';
 import { useLoading } from '../services/LoadingContext';
-import { DEBUG } from './common/DevVariables';
+// import { DEBUG } from './common/DevVariables';
 import { EventService } from '../services/EventService';
 import { projectStatusOptions, sectorOptions } from '../services/ListService';
 
 
+const useStyles = makeStyles({
+  root: {
+    display: 'flex',
+    flexDirection: 'column',
+    rowGap: '16px',
+    width: '100%',
+  },
+  filters: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: '12px',
+    alignItems: 'flex-end',
+  },
+  tableContainer: {
+    overflow: 'auto',
+    border: `1px solid #e0e0e0`,
+    borderRadius: '8px',
+  },
+});
 
 const ProjectList: React.FC = () => {
+  const styles = useStyles();
   const sp = useContext(SPContext);
-  const allItemsRef = React.useRef<Project[]>([]);
-
+  const { isLoading, setIsLoading } = useLoading();
   const [items, setItems] = useState<Project[]>([]);
-  const [allItems, setAllItems] = useState<Project[]>([]); // ✅ master list
   const [searchNumber, setSearchNumber] = useState('');
   const [searchName, setSearchName] = useState('');
-  const [filterSector, setFilterSector] = useState('');
-  const [filterStatus, setFilterStatus] = useState('');
-  const [filterClient, setFilterClient] = useState('');
-  const { isLoading, setIsLoading } = useLoading();
-  const [columns, setColumns] = useState<IColumn[]>([]);
+  const [filterSector, setFilterSector] = useState<string>('');
+  const [filterStatus, setFilterStatus] = useState<string>('');
+  const [sortField, setSortField] = useState<keyof Project>('ProjectNumber');
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
+
+
 
   useEffect(() => {
     const fetchItems = async (): Promise<void> => {
+      setIsLoading(true);
       try {
-        const data = await sp.web.lists
-          .getByTitle("9719_ProjectInformationDatabase")
-          .items
+        const data = await sp.web.lists.getByTitle("9719_ProjectInformationDatabase").items
+          .select("Id", "Title", "ProjectName", "Status", "Sector", "Client", "PM", "Manager", "Checker", "Approver")
           .expand("PM", "Manager", "Checker", "Approver")
           .select(
             "Id", "Title", "ProjectName", "Status", "Sector", "Client", "ProjectImage", "ProjectDescription", "DeltekSubCodes", "ClientContact",
@@ -42,50 +72,50 @@ const ProjectList: React.FC = () => {
             "Approver/Id", "Approver/Title", "Approver/EMail", "Approver/JobTitle", "Approver/Department"
           )();
 
-        const formattedData = data.map<Project>(item => ({
-          id: item.Id,
-          ProjectNumber: item.Title,
-          ProjectName: item.ProjectName,
-          Status: item.Status,
-          Client: item.Client,
-          Sector: item.Sector,
-          ProjectDescription: item.ProjectDescription || 'No Project Description',
-          DeltekSubCodes: item.DeltekSubCodes || 'Deltek Sub Codes',
-          ClientContact: item.ClientContact || 'Client Contact',
-          ProjectImage: item.ProjectImage || 'Project Image',
-          PM: item.PM ? {
-            Id: item.PM.Id,
-            Title: item.PM.Title,
-            Email: item.PM.EMail,
-            JobTitle: item.PM.JobTitle,
-            Department: item.PM.Department
-          } : undefined,
-          Manager: item.Manager ? {
-            Id: item.Manager.Id,
-            Title: item.Manager.Title,
-            Email: item.Manager.EMail,
-            JobTitle: item.Manager.JobTitle,
-            Department: item.Manager.Department
-          } : undefined,
-          Checker: item.Checker ? {
-            Id: item.Checker.Id,
-            Title: item.Checker.Title,
-            Email: item.Checker.EMail,
-            JobTitle: item.Checker.JobTitle,
-            Department: item.Checker.Department
-          } : undefined,
-          Approver: item.Approver ? {
-            Id: item.Approver.Id,
-            Title: item.Approver.Title,
-            Email: item.Approver.EMail,
-            JobTitle: item.Approver.JobTitle,
-            Department: item.Approver.Department
-          } : undefined
-        }));
+          const formatted = data.map<Project>(item => ({
+            id: item.Id,
+            ProjectNumber: item.Title,
+            ProjectName: item.ProjectName,
+            Status: item.Status,
+            Client: item.Client,
+            Sector: item.Sector,
+            ProjectDescription: item.ProjectDescription || 'No Project Description',
+            DeltekSubCodes: item.DeltekSubCodes || 'Deltek Sub Codes',
+            ClientContact: item.ClientContact || 'Client Contact',
+            ProjectImage: item.ProjectImage || 'Project Image',
+            PM: item.PM ? {
+              Id: item.PM.Id,
+              Title: item.PM.Title,
+              Email: item.PM.EMail,
+              JobTitle: item.PM.JobTitle,
+              Department: item.PM.Department
+            } : undefined,
+            Manager: item.Manager ? {
+              Id: item.Manager.Id,
+              Title: item.Manager.Title,
+              Email: item.Manager.EMail,
+              JobTitle: item.Manager.JobTitle,
+              Department: item.Manager.Department
+            } : undefined,
+            Checker: item.Checker ? {
+              Id: item.Checker.Id,
+              Title: item.Checker.Title,
+              Email: item.Checker.EMail,
+              JobTitle: item.Checker.JobTitle,
+              Department: item.Checker.Department
+            } : undefined,
+            Approver: item.Approver ? {
+              Id: item.Approver.Id,
+              Title: item.Approver.Title,
+              Email: item.Approver.EMail,
+              JobTitle: item.Approver.JobTitle,
+              Department: item.Approver.Department
+            } : undefined
+          }));
 
-        // Sort initially by ProjectNumber ascending
+          // Sort initially by ProjectNumber ascending
         const defaultSortField: keyof Project = 'ProjectNumber';
-        const sortedData = [...formattedData].sort((a, b) => {
+        const sortedData = [...formatted].sort((a, b) => {
           const aVal = a[defaultSortField];
           const bVal = b[defaultSortField];
           if (aVal === null || bVal === null) return 0;
@@ -93,177 +123,195 @@ const ProjectList: React.FC = () => {
         });
 
         setItems(sortedData);
-        setAllItems(sortedData);
-        allItemsRef.current = sortedData; // Store the master list in the ref
-        const builtColumns: IColumn[] = [];
-        const createColumn = (key: string, name: string, fieldName: keyof Project): IColumn => ({
-          key,
-          name,
-          fieldName,
-          minWidth: 150,
-          isResizable: true,
-          isSorted: fieldName === 'ProjectNumber', // Default sort by ProjectNumber
-          isSortedDescending: false,
-          onColumnClick: (_, col) => {
-            if (!DEBUG) console.log("Column clicked:", col);
-            if (!DEBUG) console.log("BuiltColumns:", builtColumns);
-            const isSortedDescending = !col.isSortedDescending;
-            const newCols = builtColumns.map(c => ({
-              ...c,
-              isSorted: c.key === col.key,
-              isSortedDescending: c.key === col.key ? isSortedDescending : false,
-            }));
-            if (!DEBUG) console.log("All items:", allItems);
-            const sorted = [...allItemsRef.current].sort((a, b) => {
-              const aVal = a[fieldName];
-              const bVal = b[fieldName];
-              if (!DEBUG) console.log("Sorting:", aVal, bVal);
-              if (aVal === null || bVal === null || aVal === undefined || bVal === undefined) return 0;
-              return isSortedDescending ? (aVal < bVal ? 1 : -1) : (aVal > bVal ? 1 : -1);
-            });
-            if (!DEBUG) console.log("Sorted items:", sorted);
-            if (!DEBUG) console.log("Sorted columns:", newCols);
-            setItems(sorted);
-            setAllItems(sorted);
-            allItemsRef.current = sorted; // Update the master list in the ref
-            setColumns(newCols);
-          }
-        });
-
-        
-
-        builtColumns.push(
-          createColumn('col1', 'Project Number', 'ProjectNumber'),
-          createColumn('col2', 'Project Name', 'ProjectName'),
-          createColumn('col3', 'Sector', 'Sector'),
-          createColumn('col4', 'Status', 'Status'),
-          createColumn('col5', 'Client', 'Client'),
-          {
-            key: 'col6',
-            name: 'Project Manager',
-            minWidth: 150,
-            onRender: item => <span>{item.PM?.Title || '—'}</span>
-          },
-          {
-            key: 'col7',
-            name: 'Information Manager',
-            minWidth: 150,
-            onRender: item => <span>{item.Manager?.Title || '—'}</span>
-          }
-        );
-        if (!DEBUG) console.log("Built columns after build:", builtColumns);
-
-        setColumns(builtColumns);
-      } catch (error) {
-        console.error("Failed to load project list items", error);
+      } catch (err) {
+        console.error("Error loading items:", err);
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchItems().catch(console.error);
-    const unsubscribe = EventService.subscribeToProjectUpdates(() => {
-      if (!DEBUG) console.log("Project updated event received, re-fetching items...");
-      fetchItems().catch(console.error);
+    fetchItems().catch(err => {
+      console.error("Error fetching items:", err);
+      setIsLoading(false);
     });
+    const unsubscribe = EventService.subscribeToProjectUpdates(fetchItems);
     return () => unsubscribe();
   }, []);
 
+  const filteredItems = items.filter(item =>
+    item.ProjectNumber?.toLowerCase().includes(searchNumber.toLowerCase()) &&
+    item.ProjectName?.toLowerCase().includes(searchName.toLowerCase()) &&
+    (filterSector === '' || item.Sector === filterSector) &&
+    (filterStatus === '' || item.Status === filterStatus)
+  );
+
+  const handleSort = (field: keyof Project): void => {
+    const isAsc = sortField === field && sortDirection === 'asc';
+    setSortField(field);
+    setSortDirection(isAsc ? 'desc' : 'asc');
+  };
+
+  const sortedItems = [...filteredItems].sort((a, b) => {
+    const aVal = a[sortField];
+    const bVal = b[sortField];
+    if (aVal === null || aVal === undefined || bVal === null || bVal === undefined) return 0;
+  
+    if (typeof aVal === 'string' && typeof bVal === 'string') {
+      return sortDirection === 'asc'
+        ? aVal.localeCompare(bVal)
+        : bVal.localeCompare(aVal);
+    }
+  
+    return sortDirection === 'asc' ? (aVal > bVal ? 1 : -1) : (aVal < bVal ? 1 : -1);
+  });
+  
+
   return (
-    <Stack tokens={{ childrenGap: 20 }} styles={{ root: { width: 'auto', height: 'auto' } }}>
-      <Stack
-        horizontal
-        wrap
-        tokens={{ childrenGap: 15, padding: 10 }}
-        styles={{
-          root: {
-            marginBottom: 20,
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            columnGap: '15px',
-            rowGap: '10px',
-            display: 'flex',
-            flexWrap: 'wrap'
-          }
-        }}
-      >
-        <TextField
-          label="Project Number"
+    <div className={styles.root}>
+      <div className={styles.filters}>
+        <Input
+          placeholder="Search Project Number"
           value={searchNumber}
-          onChange={(_, v) => setSearchNumber(v || '')}
-          styles={{ root: { minWidth: 180, margin: '7.5px' } }}
+          onChange={(_, data) => setSearchNumber(data.value)}
         />
-        <TextField
-          label="Project Name"
+        <Input
+          placeholder="Search Project Name"
           value={searchName}
-          onChange={(_, v) => setSearchName(v || '')}
-          styles={{ root: { minWidth: 180, margin: '7.5px' } }}
+          onChange={(_, data) => setSearchName(data.value)}
         />
-        <Dropdown
-          label="Sector"
-          options={sectorOptions}
-          selectedKey={filterSector}
-          onChange={(_, option) => setFilterSector(option?.key as string)}
-          styles={{ root: { minWidth: 100 } }}
-        />
-        <Dropdown
-          label="Status"
-          options={projectStatusOptions}
-          selectedKey={filterStatus}
-          onChange={(_, option) => setFilterStatus(option?.key as string)}
-          styles={{ root: { minWidth: 100 } }}
-        />
-        <ComboBox
-          label="Client"
-          allowFreeform
-          autoComplete="on"
-          options={[...Array.from(new Set(allItems.map(i => i.Client))).map(c => ({ key: c, text: c }))]}
-          selectedKey={filterClient}
-          onChange={(_, option) => setFilterClient(option?.key as string)}
-          onPendingValueChanged={(val) => setFilterClient(val?.key as string)}
-          styles={{ root: { minWidth: 180 } }}
-        />
+        <Select
+          style={{ minWidth: '150px' }}
+          value={filterSector ?? ''}
+          onChange={(_, data) => setFilterSector(data.value)}
+        >
+          <option value="">All Sectors</option>
+          {sectorOptions.map(option => (
+            <option key={option.key} value={option.text}>
+              {option.text}
+            </option>
+          ))}
+        </Select>
 
-        <Stack.Item grow align="end" styles={{ root: { marginLeft: 'auto', marginTop: 8 } }}>
-          <DefaultButton
-            text="Clear Filters"
-            onClick={() => {
-              setSearchNumber('');
-              setSearchName('');
-              setFilterSector('');
-              setFilterStatus('');
-              setFilterClient('');
-            }}
-            primary
-          />
-        </Stack.Item>
-      </Stack>
+        <Select
+          style={{ minWidth: '150px' }}
+          value={filterSector ?? ''}
+          onChange={(_, data) => setFilterStatus(data.value)}
+        >
+          <option value="">All Statuses</option>
+          {projectStatusOptions.map(option => (
+            <option key={option.key} value={option.text}>
+              {option.text}
+            </option>
+          ))}
+        </Select>
 
-      <Stack styles={{ root: { width: '100%', height: 'auto', overflowY: 'auto', overflowX: 'auto' } }}>
-        <Text variant="xLarge">📁 All Projects</Text>
-        {isLoading ? (
-          <Spinner label="Updating SharePoint Lists..." size={SpinnerSize.medium} />
-        ) : (
-          <DetailsList
-            items={items.filter(item =>
-              item.ProjectNumber?.toLowerCase().includes(searchNumber.toLowerCase()) &&
-              item.ProjectName?.toLowerCase().includes(searchName.toLowerCase()) &&
-              (filterSector === '' || item.Sector === filterSector) &&
-              (filterStatus === '' || item.Status === filterStatus) &&
-              (filterClient === '' || item.Client?.toLowerCase().includes(filterClient.toLowerCase()))
-            )}
-            columns={columns}
-            setKey="items"
-            layoutMode={DetailsListLayoutMode.fixedColumns}
-            selectionMode={SelectionMode.single}
-            onActiveItemChanged={(item) => {
-              if (!DEBUG) console.log("Selected project:", item);
-              ProjectSelectionService.setSelectedProject(item);
-            }}
-          />
-        )}
-      </Stack>
-    </Stack>
+        <Button
+          onClick={() => {
+            setSearchNumber('');
+            setSearchName('');
+            setFilterSector('');
+            setFilterStatus('');
+          }}
+        >
+          Clear Filters
+        </Button>
+      </div>
+
+      {isLoading ? (
+        <Spinner label="Loading projects..." />
+      ) : (
+        <div className={styles.tableContainer}>
+          <Table sortable>
+            <TableHeader>
+              <TableRow>
+                <TableHeaderCell onClick={() => handleSort('ProjectNumber')}>
+                  Project Number {sortField === 'ProjectNumber' ? (sortDirection === 'asc' ? '↑' : '↓') : ''}
+                </TableHeaderCell>
+                <TableHeaderCell onClick={() => handleSort('ProjectName')}>
+                  Project Name {sortField === 'ProjectName' ? (sortDirection === 'asc' ? '↑' : '↓') : ''}
+                </TableHeaderCell>
+                <TableHeaderCell onClick={() => handleSort('Sector')}>
+                  Sector {sortField === 'Sector' ? (sortDirection === 'asc' ? '↑' : '↓') : ''}
+                </TableHeaderCell>
+                <TableHeaderCell onClick={() => handleSort('Status')}>
+                  Status {sortField === 'Status' ? (sortDirection === 'asc' ? '↑' : '↓') : ''}
+                </TableHeaderCell>
+                <TableHeaderCell onClick={() => handleSort('Client')}>
+                  Client {sortField === 'Client' ? (sortDirection === 'asc' ? '↑' : '↓') : ''}
+                </TableHeaderCell>
+                <TableHeaderCell>Project Manager</TableHeaderCell>
+                <TableHeaderCell>Information Manager</TableHeaderCell>
+                <TableHeaderCell>Checker</TableHeaderCell>
+                <TableHeaderCell>Approver</TableHeaderCell>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {sortedItems.map(project => (
+                <TableRow key={project.id} onClick={() => ProjectSelectionService.setSelectedProject(project)}>
+                  <TableCell>{project.ProjectNumber}</TableCell>
+                  <TableCell>{project.ProjectName}</TableCell>
+                  <TableCell>{project.Sector}</TableCell>
+                  <TableCell>{project.Status}</TableCell>
+                  <TableCell>{project.Client}</TableCell>
+                  <TableCell>
+                    <Persona
+                      size="small"
+                      name={project.PM?.Title}
+                      avatar={{ image: {
+                        src: `/_layouts/15/userphoto.aspx?accountname=${encodeURIComponent(project.PM?.Email || '')}`,
+                        alt: project.PM?.Title,
+                      } }}
+                      // secondaryText={project.PM?.JobTitle}
+                      // tertiaryText={project.PM?.Department}
+                  />
+                  </TableCell>
+
+                  <TableCell>
+                    <Persona
+                      size="small"
+                      name={project.Manager?.Title}
+                      avatar={{ image: {
+                        src: `/_layouts/15/userphoto.aspx?accountname=${encodeURIComponent(project.Manager?.Email || '')}`,
+                        alt: project.Manager?.Title,
+                      } }}
+                      // secondaryText={project.Manager?.JobTitle}
+                      // tertiaryText={project.Manager?.Department}
+                  />
+                  </TableCell>
+
+                  <TableCell>
+                    <Persona
+                      size="small"
+                      name={project.Checker?.Title}
+                      avatar={{ image: {
+                        src: `/_layouts/15/userphoto.aspx?accountname=${encodeURIComponent(project.Checker?.Email || '')}`,
+                        alt: project.Checker?.Title,
+                      } }}
+                      // secondaryText={project.Checker?.JobTitle}
+                      // tertiaryText={project.Checker?.Department}
+                  />
+                  </TableCell>
+
+                  <TableCell>
+                    <Persona
+                      size="small"
+                      name={project.Approver?.Title}
+                      avatar={{ image: {
+                        src: `/_layouts/15/userphoto.aspx?accountname=${encodeURIComponent(project.Approver?.Email || '')}`,
+                        alt: project.Approver?.Title,
+                      } }}
+                      // secondaryText={project.Approver?.JobTitle}
+                      // tertiaryText={project.Approver?.Department}
+                  />
+                  </TableCell>
+
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      )}
+    </div>
   );
 };
 

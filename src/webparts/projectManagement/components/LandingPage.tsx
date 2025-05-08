@@ -10,23 +10,11 @@ import {
   DialogActions,
   makeStyles,
   tokens,
-  Tooltip,
 } from '@fluentui/react-components';
 import {
   AddRegular,
-  PersonCircle32Regular,
-  Board20Filled,
-  Board20Regular,
-  bundleIcon,
 } from '@fluentui/react-icons';
-import {
-  AppItem,
-  Hamburger,
-  NavDrawer,
-  NavDrawerBody,
-  NavDrawerHeader,
-  NavItem,
-} from '@fluentui/react-nav-preview';
+
 import ProjectList from './ProjectList';
 import { WebPartContext } from '@microsoft/sp-webpart-base';
 import { useLoading } from '../services/LoadingContext';
@@ -35,6 +23,7 @@ import { ProjectSelectionService } from '../services/ProjectSelectionServices';
 import { Project } from '../services/ProjectSelectionServices';
 import ProjectDetails from './ProjectDetails';
 import ProgrammeView from './projectCalender/ProgrammeView';
+import Navigation from './common/Navigation';
 
 
 const useStyles = makeStyles({
@@ -61,6 +50,18 @@ const useStyles = makeStyles({
     flexDirection: 'column',
     gridRowGap: tokens.spacingVerticalS,
   },
+  rightPanel: {
+    flex: '1 1 300px',
+    minWidth: '250px',
+    maxWidth: '100%',
+    height: '100%',
+    overflowY: 'auto',
+    boxSizing: 'border-box',
+    padding: '16px',
+    '@media (min-width: 900px)': {
+      flex: '0 0 30%',
+    },
+  },
 });
 
 interface ILandingPageProps {
@@ -74,12 +75,11 @@ interface CustomWindow {
 const LandingPage: React.FC<ILandingPageProps> = ({ context }) => {
   const { setIsLoading } = useLoading();
   const [selectedProject, setSelectedProject] = useState<Project | undefined>();
-  const [isOpen, setIsOpen] = React.useState(true);
-  const Dashboard = bundleIcon(Board20Filled, Board20Regular);
+
   const styles = useStyles();
   const [tab, setTab] = useState<string>('overview');
 
-  const linkDestination = 'https://contoso.sharepoint.com/sites/ContosoHR/Pages/Home.aspx';
+  // const linkDestination = 'https://contoso.sharepoint.com/sites/ContosoHR/Pages/Home.aspx';
 
   useEffect(() => {
     const service = ProjectSelectionService;
@@ -117,43 +117,7 @@ const LandingPage: React.FC<ILandingPageProps> = ({ context }) => {
         }}
       >
         {/* Left Panel - Navigation Drawer */}
-        {isOpen && (
-          <NavDrawer
-            defaultSelectedValue="1"
-            defaultSelectedCategoryValue=""
-            open={isOpen}
-            type="inline"
-            multiple={true}
-            className={styles.nav}
-            style={{ height: '100%', minWidth: '200px' }}
-          >
-            <NavDrawerHeader>
-              <Tooltip content="Close Navigation" relationship="label">
-                <Hamburger onClick={() => setIsOpen(!isOpen)} />
-              </Tooltip>
-            </NavDrawerHeader>
-
-            <NavDrawerBody>
-              <AppItem icon={<PersonCircle32Regular />} as="a" href={linkDestination}>
-                BIM Team
-              </AppItem>
-              <NavItem href={linkDestination} icon={<Dashboard />} value="1">
-                Projects
-              </NavItem>
-              <NavItem href={linkDestination} icon={<Dashboard />} value="2">
-                Resourcing
-              </NavItem>
-              <NavItem href={linkDestination} icon={<Dashboard />} value="3">
-                CoFW
-              </NavItem>
-            </NavDrawerBody>
-          </NavDrawer>
-        )}
-        {!isOpen && (
-          <Tooltip content="Open Navigation" relationship="label">
-            <Hamburger style={{ height: '32px' }} onClick={() => setIsOpen(!isOpen)} />
-          </Tooltip>
-        )}
+        <Navigation />
 
         {/* Center Panel */}
         <div
@@ -206,10 +170,11 @@ const LandingPage: React.FC<ILandingPageProps> = ({ context }) => {
         {/* Right Panel - Project Details */}
         <div
           style={{
-            flex: '0 0 30%',
+            flex: '1 1 30%',
             height: '100%',
             overflowY: 'auto',
             minWidth: '250px',
+            maxWidth: '100%',
             boxSizing: 'border-box',
             padding: '16px',
           }}

@@ -35,7 +35,7 @@ export const taskPriorityOptions: IDropdownOption[] = [
 export const taskTypeOptions: IDropdownOption[] = [
   { key: 'Task', text: 'Task' },
   { key: 'Meeting', text: 'Meeting' },
-  { key: 'DocumentWorkflow', text: 'DOcument Workflow' },
+  { key: 'DocumentWorkflow', text: 'Document Workflow' },
   { key: 'Reporting', text: 'Reporting' },
 ]
 

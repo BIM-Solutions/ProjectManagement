@@ -17,7 +17,8 @@ import { PropertyPaneButton, PropertyPaneButtonType } from '@microsoft/sp-proper
 import { LoadingProvider } from './services/LoadingContext';
 import {
   FluentProvider,
-  webLightTheme
+  webLightTheme,
+  IdPrefixProvider,
 } from "@fluentui/react-components";
 
 
@@ -60,15 +61,16 @@ export default class ProjectManagementWebPart extends BaseClientSideWebPart<IPro
    */
   public render(): void {
     const element = (
-      <FluentProvider theme={webLightTheme}>
-        <SPProvider context={this.context}>
-          <LoadingProvider>
-            <LandingPage context={this.context} />
-          </LoadingProvider>
-        </SPProvider>
-      </FluentProvider>
+      <IdPrefixProvider value={`month-picker-${this.context.instanceId}-`}>
+        <FluentProvider theme={webLightTheme}>
+          <SPProvider context={this.context}>
+            <LoadingProvider>
+              <LandingPage context={this.context} />
+            </LoadingProvider>
+          </SPProvider>
+        </FluentProvider>
+      </IdPrefixProvider>
     );
-
     ReactDom.render(element, this.domElement);
   }
 
