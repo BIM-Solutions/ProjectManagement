@@ -54,7 +54,7 @@ const ProgrammeTaskDetails: React.FC<Props> = ({
             <Text><strong>Description:</strong> {selectedTask.Description}</Text>
             <Text><strong>Start:</strong> {selectedTask.StartDate}</Text>
             <Text><strong>End:</strong> {selectedTask.DueDate}</Text>
-            <Text><strong>Assigned To:</strong> {selectedTask.AssignToId}</Text>
+            <Text><strong>Assigned To:</strong> {selectedTask.AssignedTo}</Text>
             <Text><strong>Progress:</strong> {selectedTask.Progress}</Text>
             <Text><strong>Created By:</strong> {selectedTask.CreatedBy}</Text>
           </>

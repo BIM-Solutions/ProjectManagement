@@ -141,6 +141,7 @@ const LandingPage: React.FC<ILandingPageProps> = ({ context }) => {
           <Dialog modalType="modal">
             <DialogTrigger disableButtonEnhancement>
               <div style={{ marginBottom: '24px' }}>
+              {tab === 'overview' && (
                 <Button
                   appearance="primary"
                   icon={<AddRegular />}
@@ -150,6 +151,7 @@ const LandingPage: React.FC<ILandingPageProps> = ({ context }) => {
                 >
                   Add Project
                 </Button>
+                )}
               </div>
             </DialogTrigger>
             <DialogSurface style={{ width: '100%' }} aria-hidden="true">
@@ -165,9 +167,11 @@ const LandingPage: React.FC<ILandingPageProps> = ({ context }) => {
                   />
                 </DialogContent>
                 <DialogActions>
-                  <DialogTrigger disableButtonEnhancement>
-                    <Button appearance="secondary">Close</Button>
-                  </DialogTrigger>
+                  
+                    <DialogTrigger disableButtonEnhancement>
+                      <Button appearance="secondary">Close</Button>
+                    </DialogTrigger>
+                  
                 </DialogActions>
               </DialogBody>
             </DialogSurface>

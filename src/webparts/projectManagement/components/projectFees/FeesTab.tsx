@@ -4,14 +4,7 @@ import {
   Text,
   makeStyles,
   tokens,
-  DataGrid,
-  DataGridHeader,
-  DataGridRow,
-  DataGridBody,
-  DataGridCell,
-  // DataGridSelectionCell,
-  TableColumnDefinition,
-  createTableColumn,
+
 } from '@fluentui/react-components';
 import { WebPartContext } from '@microsoft/sp-webpart-base';
 import { spfi } from '@pnp/sp';
@@ -56,6 +49,15 @@ const useStyles = makeStyles({
     flexDirection: 'column',
     gap: tokens.spacingVerticalM,
   },
+  table: {
+    width: '100%',
+  },
+  clickableRow: {
+    cursor: 'pointer',
+    '&:hover': {
+      backgroundColor: tokens.colorNeutralBackground2,
+    },
+  },
 });
 
 const listName = '9719_ProjectFees';
@@ -87,67 +89,34 @@ const FeesTab: React.FC<FeesTabProps> = ({ context, project }) => {
     ensureFeeEntry().catch(console.error);
   }, [project]);
 
-  const columns: TableColumnDefinition<FeeItem>[] = [
-    createTableColumn<FeeItem>({
-      columnId: 'FeeName',
-      renderHeaderCell: () => 'Fee Name',
-      renderCell: (item) => item.FeeName,
-    }),
-    createTableColumn<FeeItem>({
-      columnId: 'BudgetFee',
-      renderHeaderCell: () => 'Budget (£)',
-      renderCell: (item) => `£${item.BudgetFee?.toFixed(2) ?? '0.00'}`,
-    }),
-    createTableColumn<FeeItem>({
-      columnId: 'SpendToDate',
-      renderHeaderCell: () => 'Spend (£)',
-      renderCell: (item) => `£${item.SpendToDate?.toFixed(2) ?? '0.00'}`,
-    }),
-    createTableColumn<FeeItem>({
-      columnId: 'ForecastHours',
-      renderHeaderCell: () => 'Forecast Hrs',
-      renderCell: (item) => `${item.ForecastHours ?? 0}`,
-    }),
-  ];
-
   return (
     <div className={styles.root}>
       <div className={styles.leftPanel}>
         <Text size={500} weight="semibold">Fee Summary</Text>
-        <DataGrid
-          items={fees}
-          columns={columns}
-          selectionMode="single"
-          getRowId={(item) => item.Id.toString()}
-          onSelectionChange={(event, data) => {
-            const selectedId = Array.from(data.selectedItems.values())[0];
-            const fee = fees.find(f => f.Id.toString() === selectedId);
-            setSelectedFee(fee ?? null);
-          }}
-        >
-          <DataGridHeader>
-            {(ctx: { columns: TableColumnDefinition<FeeItem>[] }) => (
-              <DataGridRow>
-                {(column) => (
-                  ctx.columns.map((column) => (
-                    <DataGridCell key={column.columnId}>{column.renderHeaderCell()}</DataGridCell>
-                  ))
-                )}
-              </DataGridRow>
-            )}
-          </DataGridHeader>
-          <DataGridBody<FeeItem>>
-            {(row) => (
-              <React.Fragment>
-                {columns.map((column, index) => (
-                  <DataGridCell key={column.columnId} aria-colindex={index + 1}>
-                    {column.renderCell(row.item)}
-                  </DataGridCell>
-                ))}
-              </React.Fragment>
-            )}
-          </DataGridBody>
-        </DataGrid>
+        <table className={styles.table}>
+          <thead>
+            <tr>
+              <th>Fee Name</th>
+              <th>Budget (£)</th>
+              <th>Spend (£)</th>
+              <th>Forecast Hrs</th>
+            </tr>
+          </thead>
+          <tbody>
+            {fees.map(fee => (
+              <tr 
+                key={fee.Id} 
+                className={styles.clickableRow}
+                onClick={() => setSelectedFee(fee)}
+              >
+                <td>{fee.FeeName}</td>
+                <td>£{fee.BudgetFee?.toFixed(2) ?? '0.00'}</td>
+                <td>£{fee.SpendToDate?.toFixed(2) ?? '0.00'}</td>
+                <td>{fee.ForecastHours ?? 0}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
 
       <div className={styles.rightPanel}>

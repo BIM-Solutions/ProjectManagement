@@ -10,7 +10,7 @@
     "build": "gulp bundle",
     "clean": "gulp clean",
     "test": "gulp test",
-    "serve": "gulp serve",
+    "serve": "fast-serve",
     "ship package": "gulp package-solution --ship",
     "ship build": "gulp bundle --ship",
     "package-solution": "gulp clean && gulp build && gulp bundle --ship && gulp package-solution --ship"
@@ -54,6 +54,7 @@
     "eslint": "8.57.0",
     "eslint-plugin-react-hooks": "4.3.0",
     "gulp": "^4.0.2",
-    "typescript": "4.7.4"
+    "typescript": "4.7.4",
+    "spfx-fast-serve-helpers": "~1.20.0"
   }
 }
