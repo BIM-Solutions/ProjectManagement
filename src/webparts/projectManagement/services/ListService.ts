@@ -13,59 +13,63 @@ import {
   AddUserProps,
   AddCurrencyProps
 } from '@pnp/sp/fields/types';
-import { IDropdownOption } from "@fluentui/react";
+import { DropdownProps } from "@fluentui/react-components";
+export interface ComboboxOption {
+  key: string;
+  value: string;
+}
 
-export const taskStatusOptions: IDropdownOption[] = [
-  { key: 'Not Started', text: 'Not Started' },
-  { key: 'In Progress', text: 'In Progress' },
-  { key: 'Complete', text: 'Complete' },
-  { key: 'Cancelled', text: 'Cancelled' },
-  { key: 'On Hold', text: 'On Hold' },
-  { key: 'Postponed', text: 'Postponed' }
+export const taskStatusOptions: DropdownProps[] = [
+  { key: 'Not Started', value: 'Not Started' },
+  { key: 'In Progress', value: 'In Progress' },
+  { key: 'Complete', value: 'Complete' },
+  { key: 'Cancelled', value: 'Cancelled' },
+  { key: 'On Hold', value: 'On Hold' },
+  { key: 'Postponed', value: 'Postponed' }
 ];
 
-export const taskPriorityOptions: IDropdownOption[] = [
-  { key: 'High', text: 'High' },
-  { key: 'Medium', text: 'Medium' },
-  { key: 'Low', text: 'Low' },
-  { key: 'Critical', text: 'Critical' },
-  { key: 'Urgent', text: 'Urgent' }
+export const taskPriorityOptions: DropdownProps[] = [
+  { key: 'High', value: 'High' },
+  { key: 'Medium', value: 'Medium' },
+  { key: 'Low', value: 'Low' },
+  { key: 'Critical', value: 'Critical' },
+  { key: 'Urgent', value: 'Urgent' }
 ];
 
-export const taskTypeOptions: IDropdownOption[] = [
-  { key: 'Task', text: 'Task' },
-  { key: 'Meeting', text: 'Meeting' },
-  { key: 'DocumentWorkflow', text: 'Document Workflow' },
-  { key: 'Reporting', text: 'Reporting' },
+export const taskTypeOptions: DropdownProps[] = [
+  { key: 'Task', value: 'Task' },
+  { key: 'Meeting', value: 'Meeting' },
+  { key: 'DocumentWorkflow', value: 'Document Workflow' },
+  { key: 'Reporting', value: 'Reporting' },
 ]
 
-export const changeTypeOptions: IDropdownOption[] = [
-  { key: 'Scope', text: 'Scope' },
-  { key: 'Schedule', text: 'Schedule' },
-  { key: 'Cost', text: 'Cost' },
-  { key: 'Risk', text: 'Risk' },
+export const changeTypeOptions: DropdownProps[] = [
+  { key: 'Scope', value: 'Scope' },
+  { key: 'Schedule', value: 'Schedule' },
+  { key: 'Cost', value: 'Cost' },
+  { key: 'Risk', value: 'Risk' },
 ]
 
-export const changeStatusOptions: IDropdownOption[] = [
-  { key: 'Approved', text: 'Approved' },
-  { key: 'Pending', text: 'Pending' },
-  { key: 'Rejected', text: 'Rejected' },
+export const changeStatusOptions: DropdownProps[] = [
+  { key: 'Approved', value: 'Approved' },
+  { key: 'Pending', value: 'Pending' },
+  { key: 'Rejected', value: 'Rejected' },
 ]
 
 
-export const sectorOptions: IDropdownOption[] = [
-  { key: 'Public', text: 'Public' },
-  { key: 'Defence', text: 'Defence' },
-  { key: 'Power', text: 'Power' }
+export const sectorOptions: ComboboxOption[] = [
+  { key: 'Public', value: 'Public' },
+  { key: 'Defence', value: 'Defence' },
+  { key: 'Power', value: 'Power' }
 ];
 
-export const projectStatusOptions: IDropdownOption[] = [
-  { key: 'Enquiry', text: 'Enquiry' },
-  { key: 'Active', text: 'Active' },
-  { key: 'Complete', text: 'Complete' },
-  { key: 'Lost', text: 'Lost' },
-  { key: 'Cancelled', text: 'Cancelled' },
-  { key: 'Inactive', text: 'Inactive' }
+export const projectStatusOptions: ComboboxOption[] = [
+  { key: 'Enquiry', value: 'Enquiry' },
+  { key: 'Active', value: 'Active' },
+  { key: 'Complete', value: 'Complete' },
+  { key: 'Lost', value: 'Lost' },
+  { key: 'Cancelled', value: 'Cancelled' },
+  { key: 'Inactive', value: 'Inactive' }
 ];
 
 
@@ -279,8 +283,8 @@ export class ListService {
     await this.ensureUserField(list, "Manager");
     await this.ensureUserField(list, "Checker");
     await this.ensureUserField(list, "Approver");
-    await this.ensureChoiceField(list, "Status",  { Choices: projectStatusOptions.map(option => option.text) });
-    await this.ensureChoiceField(list, "Sector",  { Choices: sectorOptions.map(option => option.text) });
+    await this.ensureChoiceField(list, "Status",  { Choices: projectStatusOptions.map(option => option.value).filter((value): value is string => value !== undefined) });
+    await this.ensureChoiceField(list, "Sector",  { Choices: sectorOptions.map(option => option.value).filter((value): value is string => value !== undefined) });
     await this.ensureMultiLineField(list, "ClientContact");
     await this.ensureImageField(list, "ProjectImage");
   }
@@ -304,20 +308,21 @@ export class ListService {
   private async ensureProjectTasks(): Promise<void> {
     const { list } = await this.sp.web.lists.ensure("9719_ProjectTasks", "Stores project tasks");
     await this.ensureTextField(list, "TaskName");
-    await this.ensureChoiceField(list, "Status",  { Choices: taskStatusOptions.map(option => option.text) });
+    await this.ensureChoiceField(list, "Status",  { Choices: taskStatusOptions.map(option => option.value).filter((value): value is string => value !== undefined) });
     await this.ensureDateTimeField(list, "DueDate");
     await this.ensureDateTimeField(list, "StartDate");
     await this.ensureUserField(list, "AssignedTo");
     await this.ensureMultiLineField(list, "Description");
     await this.ensureMultiLineField(list, "Comments");
-    await this.ensureChoiceField(list, "Priority",  { Choices: taskPriorityOptions.map(option => option.text) });
-    await this.ensureChoiceField(list, "TaskType",  { Choices: taskTypeOptions.map(option => option.text) });
+    await this.ensureChoiceField(list, "Priority",  { Choices: taskPriorityOptions.map(option => option.value).filter((value): value is string => value !== undefined) });
+    await this.ensureChoiceField(list, "TaskType",  { Choices: taskTypeOptions.map(option => option.value).filter((value): value is string => value !== undefined) });
     await this.ensureUserField(list, "CreatedBy");
     await this.ensureDateTimeField(list, "CreatedDate");
     await this.ensureUserField(list, "ModifiedBy");
     await this.ensureDateTimeField(list, "ModifiedDate");
     await this.ensureTextField(list, "TaskID");
-    await this.ensureTextField(list, "ParentTaskID");
+    await this.ensureTextField(list, "ProjectID");
+    await this.ensureTextField(list, "Progress");
   }
 
   /**

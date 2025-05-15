@@ -5,13 +5,14 @@ import { PeoplePicker, PrincipalType, IPeoplePickerContext } from "@pnp/spfx-con
 import { FilePicker, IFilePickerResult } from '@pnp/spfx-controls-react/lib/FilePicker';
 import {
   Button,
-   Dropdown, 
+   Combobox, 
    Field, 
    Input, 
    MessageBar,
    MessageBarIntent,
    Textarea,
    makeStyles,
+   Option
   //  useId
 } from '@fluentui/react-components';
 import { Image, ImageFit } from '@fluentui/react/lib/Image';
@@ -62,8 +63,8 @@ const ProjectForm: React.FC<IProjectFormProps> = ({ context, mode, project, onSu
   const [title, setTitle] = useState('');
   const [projectName, setProjectName] = useState('');
   const [projectImage, setProjectImage] = useState<{ fileName: string; serverRelativeUrl: string } | null>(null);
-  const [sector, setSector] = useState<string | undefined>();
-  const [status, setStatus] = useState<string | undefined>();
+  const [sector, setSector] = useState<string>('');
+  const [status, setStatus] = useState<string>('');
   const [client, setClient] = useState('');
   const [manager, setManager] = useState('');
   const [pm, setPM] = useState('');
@@ -236,6 +237,7 @@ const ProjectForm: React.FC<IProjectFormProps> = ({ context, mode, project, onSu
         }
       }
   };
+  
 
   return (
     <div className={styles.container}>
@@ -256,64 +258,69 @@ const ProjectForm: React.FC<IProjectFormProps> = ({ context, mode, project, onSu
           style={{ flexGrow: 1}}
           />
       </Field>
-      </div>
-      <FilePicker
-        context={context}
-        buttonLabel="Upload Project Image"
-        hideStockImages={true}
-        hideLinkUploadTab={true}
-        hideOneDriveTab={true}
-        hideSiteFilesTab={false}
-        onSave={async (results: IFilePickerResult[]) => {
-          const result = results[0];
-          const blob = await result.downloadFileContent();
-          const arrayBuffer = await blob.arrayBuffer();
-          const upload = await sp.web.getFolderByServerRelativePath("/sites/DevelopmentSite/SiteAssets/ProjectImages")
-            .files.addUsingPath(result.fileName, arrayBuffer, { Overwrite: true });
-          const serverRelativeUrl = upload.ServerRelativeUrl;
-          setProjectImage({ fileName: result.fileName, serverRelativeUrl });
-        }}
-        onCancel={() => console.log("Image selection cancelled")}
-      />
-      {projectImage && (
-        <Image
-          imageFit={ImageFit.contain}
-          src={projectImage.serverRelativeUrl}
-          alt={projectImage.fileName}
-          style={{ height: 200, width: 'auto' }}
+      </div >
+      <div style={{ marginTop: 16 }}>
+        <FilePicker
+          context={context}
+          buttonLabel="Upload Project Image"
+          hideStockImages={true}
+          hideLinkUploadTab={true}
+          hideOneDriveTab={true}
+          hideSiteFilesTab={false}
+          onSave={async (results: IFilePickerResult[]) => {
+            const result = results[0];
+            const blob = await result.downloadFileContent();
+            const arrayBuffer = await blob.arrayBuffer();
+            const upload = await sp.web.getFolderByServerRelativePath("/sites/DevelopmentSite/SiteAssets/ProjectImages")
+              .files.addUsingPath(result.fileName, arrayBuffer, { Overwrite: true });
+            const serverRelativeUrl = upload.ServerRelativeUrl;
+            setProjectImage({ fileName: result.fileName, serverRelativeUrl });
+          }}
+          onCancel={() => console.log("Image selection cancelled")}
+          
         />
+        {projectImage && (
+          <Image
+            imageFit={ImageFit.contain}
+            src={projectImage.serverRelativeUrl}
+            alt={projectImage.fileName}
+            style={{ height: 200, width: 'auto', marginTop: 16 }}
+          />
       )}
+      </div>
       <div className={styles.rowArea}>
       <Field label="Sector" required>
-        <Dropdown
+        <Combobox
           value={sector}
-          onOptionSelect={(_, data) => setSector(data.optionValue)}
+          onOptionSelect={(_, data) => setSector(data.optionText || '')}
+          placeholder="Select sector"
         >
-          {sectorOptions.map((option) => (
-            <option key={option.key} value={option.key}>
-              {option.text}
-            </option>
+          {sectorOptions.map((text) => (
+            <Option key={text.key} text={text.value}>
+              {text.value}
+            </Option>
           ))}
-        </Dropdown>
+        </Combobox>
+      </Field>
+      <Field label="Status" required>
+        <Combobox
+          value={status}
+          onOptionSelect={(_, data) => setStatus(data.optionText || '')}
+          placeholder="Select status"
+        >
+          {projectStatusOptions.map((text) => (
+            <Option key={text.key} text={text.value}>
+              {text.value}
+            </Option>
+          ))}
+        </Combobox>
       </Field>
 
-      <Field label="Status" required>
-        <Dropdown
-          value={status}
-          onOptionSelect={(_, data) => setStatus(data.optionValue)}
-        >
-          {projectStatusOptions.map((option) => (
-            <option key={option.key} value={option.key}>
-              {option.text}
-            </option>
-          ))}
-        </Dropdown>
-      </Field>
       </div>
       <Field label="Client" required>
         <Input
           value={client}
-          onChange={(event) => setProjectName((event.target as HTMLInputElement).value || '')}
+          onChange={(event) => setClient((event.target as HTMLInputElement).value || '')}
           style={{ flexGrow: 1}}
           />
       </Field>
@@ -347,8 +354,8 @@ const ProjectForm: React.FC<IProjectFormProps> = ({ context, mode, project, onSu
         <Button appearance='primary' onClick={() => {
           setTitle('');
           setProjectName('');
-          setSector(undefined);
-          setStatus(undefined);
+          setSector('');
+          setStatus('');
           setClient('');
           setManager('');
           setPM('');

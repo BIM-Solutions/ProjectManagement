@@ -14,7 +14,8 @@ import {
   makeStyles,
   Persona,
   tokens,
-  mergeClasses
+  mergeClasses,
+
 
 } from '@fluentui/react-components';
 import { SPContext } from './common/SPContext';
@@ -92,24 +93,24 @@ const ProjectList: React.FC = () => {
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
   const [selectedProjectId, setSelectedProjectId] = useState<number | null>(null);
 
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent): void => {
-      // Don't deselect if focused on an input or textarea or select
-      const target = e.target as HTMLElement;
-      const tag = target?.tagName?.toLowerCase();
-      const isTypingField = tag === 'input' || tag === 'textarea' || tag === 'select';
+  // useEffect(() => {
+  //   const handleKeyDown = (e: KeyboardEvent): void => {
+  //     // Don't deselect if focused on an input or textarea or select
+  //     const target = e.target as HTMLElement;
+  //     const tag = target?.tagName?.toLowerCase();
+  //     const isTypingField = tag === 'input' || tag === 'textarea' || tag === 'select';
   
-      if (e.key === 'Escape' && !isTypingField) {
-        setSelectedProjectId(null);
-        ProjectSelectionService.setSelectedProject(undefined);
-      }
-    };
+  //     if (e.key === 'Escape' && !isTypingField) {
+  //       setSelectedProjectId(null);
+  //       ProjectSelectionService.setSelectedProject(undefined);
+  //     }
+  //   };
   
-    document.addEventListener('keydown', handleKeyDown);
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-    };
-  }, []);
+  //   document.addEventListener('keydown', handleKeyDown);
+  //   return () => {
+  //     document.removeEventListener('keydown', handleKeyDown);
+  //   };
+  // }, []);
 
   useEffect(() => {
     const fetchItems = async (): Promise<void> => {
@@ -177,6 +178,7 @@ const ProjectList: React.FC = () => {
         });
 
         setItems(sortedData);
+        setSelectedProjectId(ProjectSelectionService.getSelectedProject()?.id || null)
       } catch (err) {
         console.error("Error loading items:", err);
       } finally {
@@ -240,8 +242,8 @@ const ProjectList: React.FC = () => {
         >
           <option value="">All Sectors</option>
           {sectorOptions.map(option => (
-            <option key={option.key} value={option.text}>
-              {option.text}
+            <option key={option.key} value={option.value}>
+              {option.value}
             </option>
           ))}
         </Select>
@@ -253,8 +255,8 @@ const ProjectList: React.FC = () => {
         >
           <option value="">All Statuses</option>
           {projectStatusOptions.map(option => (
-            <option key={option.key} value={option.text}>
-              {option.text}
+            <option key={option.key} value={option.value}>
+              {option.value}
             </option>
           ))}
         </Select>

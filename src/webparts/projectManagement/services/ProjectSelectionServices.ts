@@ -18,7 +18,7 @@ export interface Project {
   ProjectDescription?: string;
   DeltekSubCodes?: string;
   SubCodes?: string;
-  Sector?: string;
+  Sector: string;
   PM?: IUserField;
   Manager?: IUserField;
   Checker?: IUserField;

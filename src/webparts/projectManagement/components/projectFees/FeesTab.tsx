@@ -1,7 +1,18 @@
-// FeesTab.tsx
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { Stack, Text, DetailsList, DetailsListLayoutMode, SelectionMode } from '@fluentui/react';
+import {
+  Text,
+  makeStyles,
+  tokens,
+  DataGrid,
+  DataGridHeader,
+  DataGridRow,
+  DataGridBody,
+  DataGridCell,
+  // DataGridSelectionCell,
+  TableColumnDefinition,
+  createTableColumn,
+} from '@fluentui/react-components';
 import { WebPartContext } from '@microsoft/sp-webpart-base';
 import { spfi } from '@pnp/sp';
 import { SPFx } from '@pnp/sp/presets/all';
@@ -26,10 +37,33 @@ interface FeeItem {
   RemianingBudgetOverspend?: number;
 }
 
+const useStyles = makeStyles({
+  root: {
+    display: 'flex',
+    flexDirection: 'row',
+    gap: tokens.spacingHorizontalXL,
+    paddingTop: tokens.spacingVerticalL,
+  },
+  leftPanel: {
+    width: '50%',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: tokens.spacingVerticalM,
+  },
+  rightPanel: {
+    flexGrow: 1,
+    display: 'flex',
+    flexDirection: 'column',
+    gap: tokens.spacingVerticalM,
+  },
+});
+
 const listName = '9719_ProjectFees';
 
 const FeesTab: React.FC<FeesTabProps> = ({ context, project }) => {
   const sp = spfi().using(SPFx(context));
+  const styles = useStyles();
+
   const [fees, setFees] = useState<FeeItem[]>([]);
   const [selectedFee, setSelectedFee] = useState<FeeItem | null>(null);
 
@@ -53,28 +87,71 @@ const FeesTab: React.FC<FeesTabProps> = ({ context, project }) => {
     ensureFeeEntry().catch(console.error);
   }, [project]);
 
-  return (
-    <Stack horizontal tokens={{ childrenGap: 20 }} styles={{ root: { paddingTop: 20 } }}>
-      {/* Left Panel - Fee Summary */}
-      <Stack tokens={{ childrenGap: 10 }} styles={{ root: { width: '50%' } }}>
-        <Text variant="large">Fee Summary</Text>
-        <DetailsList
-          items={fees}
-          columns={[
-            { key: 'feeName', name: 'Fee Name', fieldName: 'FeeName', minWidth: 100, isResizable: true },
-            { key: 'budget', name: 'Budget (£)', fieldName: 'BudgetFee', minWidth: 100, isResizable: true },
-            { key: 'spend', name: 'Spend (£)', fieldName: 'SpendToDate', minWidth: 100, isResizable: true },
-            { key: 'hours', name: 'Forecast Hrs', fieldName: 'ForecastHours', minWidth: 80, isResizable: true },
-          ]}
-          layoutMode={DetailsListLayoutMode.fixedColumns}
-          selectionMode={SelectionMode.single}
-          onItemInvoked={(item) => setSelectedFee(item)}
-        />
-      </Stack>
+  const columns: TableColumnDefinition<FeeItem>[] = [
+    createTableColumn<FeeItem>({
+      columnId: 'FeeName',
+      renderHeaderCell: () => 'Fee Name',
+      renderCell: (item) => item.FeeName,
+    }),
+    createTableColumn<FeeItem>({
+      columnId: 'BudgetFee',
+      renderHeaderCell: () => 'Budget (£)',
+      renderCell: (item) => `£${item.BudgetFee?.toFixed(2) ?? '0.00'}`,
+    }),
+    createTableColumn<FeeItem>({
+      columnId: 'SpendToDate',
+      renderHeaderCell: () => 'Spend (£)',
+      renderCell: (item) => `£${item.SpendToDate?.toFixed(2) ?? '0.00'}`,
+    }),
+    createTableColumn<FeeItem>({
+      columnId: 'ForecastHours',
+      renderHeaderCell: () => 'Forecast Hrs',
+      renderCell: (item) => `${item.ForecastHours ?? 0}`,
+    }),
+  ];
 
-      {/* Right Panel - Fee Details */}
-      <Stack tokens={{ childrenGap: 10 }} styles={{ root: { flexGrow: 1 } }}>
-        <Text variant="large">Fee Details</Text>
+  return (
+    <div className={styles.root}>
+      <div className={styles.leftPanel}>
+        <Text size={500} weight="semibold">Fee Summary</Text>
+        <DataGrid
+          items={fees}
+          columns={columns}
+          selectionMode="single"
+          getRowId={(item) => item.Id.toString()}
+          onSelectionChange={(event, data) => {
+            const selectedId = Array.from(data.selectedItems.values())[0];
+            const fee = fees.find(f => f.Id.toString() === selectedId);
+            setSelectedFee(fee ?? null);
+          }}
+        >
+          <DataGridHeader>
+            {(ctx: { columns: TableColumnDefinition<FeeItem>[] }) => (
+              <DataGridRow>
+                {(column) => (
+                  ctx.columns.map((column) => (
+                    <DataGridCell key={column.columnId}>{column.renderHeaderCell()}</DataGridCell>
+                  ))
+                )}
+              </DataGridRow>
+            )}
+          </DataGridHeader>
+          <DataGridBody<FeeItem>>
+            {(row) => (
+              <React.Fragment>
+                {columns.map((column, index) => (
+                  <DataGridCell key={column.columnId} aria-colindex={index + 1}>
+                    {column.renderCell(row.item)}
+                  </DataGridCell>
+                ))}
+              </React.Fragment>
+            )}
+          </DataGridBody>
+        </DataGrid>
+      </div>
+
+      <div className={styles.rightPanel}>
+        <Text size={500} weight="semibold">Fee Details</Text>
         {selectedFee ? (
           <>
             <Text><strong>Fee Name:</strong> {selectedFee.FeeName}</Text>
@@ -88,8 +165,8 @@ const FeesTab: React.FC<FeesTabProps> = ({ context, project }) => {
         ) : (
           <Text>No fee selected.</Text>
         )}
-      </Stack>
-    </Stack>
+      </div>
+    </div>
   );
 };
 

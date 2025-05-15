@@ -34,7 +34,8 @@ const useStyles = makeStyles({
       minHeight: 0, 
     },
     nav: {
-      minWidth: '200px',
+      minWidth: '160px',
+      width: '160px',
     },
     content: {
       flex: '1',

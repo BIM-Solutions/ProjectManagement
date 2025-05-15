@@ -33,6 +33,18 @@ const useStyles = makeStyles({
     backgroundColor: '#f1f0ef'
   },
 
+  projectForm:{
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '20',
+    padding: '50',
+    margin: '50',
+    height: 'auto', 
+    minHeight: '50vh', 
+    overflowY: 'auto', 
+    backgroundColor: '#f1f0ef'
+  }
+
 
 
 })
@@ -80,19 +92,21 @@ const ProjectDetails: React.FC<ProjectDetailsProps> = ({ context, onEdit, onDele
           setSelectedTask={setSelectedTask}
         />
       ) : (
-        <ProjectForm
-          context={context}
-          mode="edit"
-          project={project}
-          onSuccess={() => {
-            setIsEditing(false);
-            if (onEdit) {
-              onEdit();
-            }
+        <div className={styles.projectForm}>
+          <ProjectForm 
+            context={context}
+            mode="edit"
+            project={project}
+            onSuccess={() => {
+              setIsEditing(false);
+              if (onEdit) {
+                onEdit();
+              }
 
-          }}
-          onCancel={() => setIsEditing(false)}
-        />
+            }}
+            onCancel={() => setIsEditing(false)}
+          />
+        </div>
       )}
     </div>
   );

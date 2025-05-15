@@ -1,14 +1,23 @@
-// StagesTab.tsx
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { Stack, Text, DetailsList, DetailsListLayoutMode, SelectionMode } from '@fluentui/react';
+import {
+  Text,
+  makeStyles,
+  tokens,
+  DataGrid,
+  DataGridHeader,
+  DataGridRow,
+  DataGridBody,
+  DataGridCell,
+  TableColumnDefinition,
+  createTableColumn,
+} from '@fluentui/react-components';
 import { WebPartContext } from '@microsoft/sp-webpart-base';
 import { spfi } from '@pnp/sp';
 import { SPFx } from '@pnp/sp/presets/all';
-import "@pnp/sp/webs";
-import "@pnp/sp/lists";
-import "@pnp/sp/items";
-
+import '@pnp/sp/webs';
+import '@pnp/sp/lists';
+import '@pnp/sp/items';
 import { Project } from '../../services/ProjectSelectionServices';
 
 interface StagesTabProps {
@@ -27,8 +36,31 @@ interface StageItem {
 
 const listName = 'ProjectStages';
 
+const useStyles = makeStyles({
+  root: {
+    display: 'flex',
+    flexDirection: 'row',
+    gap: tokens.spacingHorizontalXL,
+    paddingTop: tokens.spacingVerticalL,
+  },
+  leftPanel: {
+    width: '40%',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: tokens.spacingVerticalM,
+  },
+  rightPanel: {
+    flexGrow: 1,
+    display: 'flex',
+    flexDirection: 'column',
+    gap: tokens.spacingVerticalM,
+  },
+});
+
 const StagesTab: React.FC<StagesTabProps> = ({ project, context }) => {
   const sp = spfi().using(SPFx(context));
+  const styles = useStyles();
+
   const [stages, setStages] = useState<StageItem[]>([]);
   const [selectedStage, setSelectedStage] = useState<StageItem | null>(null);
 
@@ -38,7 +70,7 @@ const StagesTab: React.FC<StagesTabProps> = ({ project, context }) => {
     if (!items.length) {
       await sp.web.lists.getByTitle(listName).items.add({
         Title: 'Placeholder Stage',
-        ProjectNumber: project.ProjectNumber
+        ProjectNumber: project.ProjectNumber,
       });
     }
   };
@@ -55,28 +87,70 @@ const StagesTab: React.FC<StagesTabProps> = ({ project, context }) => {
     fetchStages().catch(console.error);
   }, [project]);
 
-  return (
-    <Stack horizontal tokens={{ childrenGap: 20 }} styles={{ root: { paddingTop: 20 } }}>
-      {/* Left panel: list of stages */}
-      <Stack tokens={{ childrenGap: 10 }} styles={{ root: { width: '40%' } }}>
-        <Text variant="large">Stages</Text>
-        <DetailsList
-          items={stages}
-          columns={[
-            { key: 'title', name: 'Stage Name', fieldName: 'Title', minWidth: 100, isResizable: true },
-            { key: 'start', name: 'Start Date', fieldName: 'StartDate', minWidth: 80, isResizable: true },
-            { key: 'end', name: 'End Date', fieldName: 'EndDate', minWidth: 80, isResizable: true },
-            { key: 'status', name: 'Status', fieldName: 'Status', minWidth: 80, isResizable: true },
-          ]}
-          layoutMode={DetailsListLayoutMode.fixedColumns}
-          selectionMode={SelectionMode.single}
-          onItemInvoked={(item) => setSelectedStage(item)}
-        />
-      </Stack>
+  const columns: TableColumnDefinition<StageItem>[] = [
+    createTableColumn<StageItem>({
+      columnId: 'Title',
+      renderHeaderCell: () => 'Stage Name',
+      renderCell: (item) => item.Title,
+    }),
+    createTableColumn<StageItem>({
+      columnId: 'StartDate',
+      renderHeaderCell: () => 'Start Date',
+      renderCell: (item) => item.StartDate ?? '',
+    }),
+    createTableColumn<StageItem>({
+      columnId: 'EndDate',
+      renderHeaderCell: () => 'End Date',
+      renderCell: (item) => item.EndDate ?? '',
+    }),
+    createTableColumn<StageItem>({
+      columnId: 'Status',
+      renderHeaderCell: () => 'Status',
+      renderCell: (item) => item.Status ?? '',
+    }),
+  ];
 
-      {/* Right panel: selected stage details */}
-      <Stack tokens={{ childrenGap: 10 }} styles={{ root: { flexGrow: 1 } }}>
-        <Text variant="large">Stage Details</Text>
+  return (
+    <div className={styles.root}>
+      <div className={styles.leftPanel}>
+        <Text size={500} weight="semibold">Stages</Text>
+        <DataGrid
+          items={stages}
+          columns={columns}
+          selectionMode="single"
+          getRowId={(item) => item.Id.toString()}
+          onSelectionChange={(event, data) => {
+            const selected = stages.find(s => s.Id.toString() === Array.from(data.selectedItems)[0]);
+            setSelectedStage(selected ?? null);
+          }}
+        >
+          <DataGridHeader>
+            {(ctx: {columns: TableColumnDefinition<StageItem>[]}) => (
+              <DataGridRow>
+                {(column) => (
+                  ctx.columns.map((column) => (
+
+                  <DataGridCell key={column.columnId}>{column.renderHeaderCell()}</DataGridCell>
+                )))}
+              </DataGridRow>
+            )}
+          </DataGridHeader>
+          <DataGridBody<StageItem>>
+            {(row) => (
+              <React.Fragment>
+                {columns.map((column, index) => (
+                  <DataGridCell key={column.columnId} aria-colindex={index + 1}>
+                    {column.renderCell(row.item)}
+                  </DataGridCell>
+                ))}
+              </React.Fragment>
+            )}
+          </DataGridBody>
+        </DataGrid>
+      </div>
+
+      <div className={styles.rightPanel}>
+        <Text size={500} weight="semibold">Stage Details</Text>
         {selectedStage ? (
           <>
             <Text><strong>Stage:</strong> {selectedStage.Title}</Text>
@@ -88,8 +162,8 @@ const StagesTab: React.FC<StagesTabProps> = ({ project, context }) => {
         ) : (
           <Text>No stage selected.</Text>
         )}
-      </Stack>
-    </Stack>
+      </div>
+    </div>
   );
 };
 
