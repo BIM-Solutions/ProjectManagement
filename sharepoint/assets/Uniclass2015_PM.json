@@ -1,0 +1,4566 @@
+[
+  {
+    "code": "PM_10",
+    "title": "Project information",
+    "subgroups": [
+      {
+        "code": "PM_10_10",
+        "title": "Project",
+        "sections": [
+          {
+            "code": "PM_10_10_10",
+            "title": "Initial project brief"
+          },
+          {
+            "code": "PM_10_10_20",
+            "title": "Final project brief"
+          },
+          {
+            "code": "PM_10_10_60",
+            "title": "Project description"
+          }
+        ]
+      },
+      {
+        "code": "PM_10_20",
+        "title": "Client requirements",
+        "sections": [
+          {
+            "code": "PM_10_20_03",
+            "title": "Appointment document"
+          },
+          {
+            "code": "PM_10_20_05",
+            "title": "Approvals"
+          },
+          {
+            "code": "PM_10_20_07",
+            "title": "Brief"
+          },
+          {
+            "code": "PM_10_20_09",
+            "title": "Buildability statement"
+          },
+          {
+            "code": "PM_10_20_10",
+            "title": "Building registration application"
+          },
+          {
+            "code": "PM_10_20_11",
+            "title": "Carbon road map"
+          },
+          {
+            "code": "PM_10_20_12",
+            "title": "Carbon strategy"
+          },
+          {
+            "code": "PM_10_20_13",
+            "title": "Community analysis"
+          },
+          {
+            "code": "PM_10_20_14",
+            "title": "Community and tenant liaison plan"
+          },
+          {
+            "code": "PM_10_20_15",
+            "title": "Common data environment information"
+          },
+          {
+            "code": "PM_10_20_16",
+            "title": "Construction industry registration scheme requirements"
+          },
+          {
+            "code": "PM_10_20_17",
+            "title": "Core requirements statement"
+          },
+          {
+            "code": "PM_10_20_18",
+            "title": "Cost benefit analysis"
+          },
+          {
+            "code": "PM_10_20_21",
+            "title": "Data quality and protection plans"
+          },
+          {
+            "code": "PM_10_20_25",
+            "title": "Employer's requirements"
+          },
+          {
+            "code": "PM_10_20_26",
+            "title": "Environmental policy"
+          },
+          {
+            "code": "PM_10_20_27",
+            "title": "Environmental reporting information"
+          },
+          {
+            "code": "PM_10_20_28",
+            "title": "Exchange information requirements"
+          },
+          {
+            "code": "PM_10_20_30",
+            "title": "Feasibility study"
+          },
+          {
+            "code": "PM_10_20_46",
+            "title": "Landlord and tenant liaison plan"
+          },
+          {
+            "code": "PM_10_20_69",
+            "title": "Quality plan"
+          },
+          {
+            "code": "PM_10_20_73",
+            "title": "Site appraisals"
+          },
+          {
+            "code": "PM_10_20_75",
+            "title": "Stakeholder engagement plan"
+          },
+          {
+            "code": "PM_10_20_82",
+            "title": "Statement of requirements"
+          },
+          {
+            "code": "PM_10_20_84",
+            "title": "Statement of security requirements"
+          },
+          {
+            "code": "PM_10_20_86",
+            "title": "Sustainable development engagement plan"
+          },
+          {
+            "code": "PM_10_20_90",
+            "title": "Technical statement of requirements (TSOR)"
+          },
+          {
+            "code": "PM_10_20_92",
+            "title": "User requirement document"
+          }
+        ]
+      },
+      {
+        "code": "PM_10_80",
+        "title": "Space management requirements",
+        "sections": [
+          {
+            "code": "PM_10_80_10",
+            "title": "Accommodation and layout plan"
+          },
+          {
+            "code": "PM_10_80_27",
+            "title": "Equipment layout plan"
+          },
+          {
+            "code": "PM_10_80_75",
+            "title": "Space design"
+          },
+          {
+            "code": "PM_10_80_80",
+            "title": "Space plan"
+          },
+          {
+            "code": "PM_10_80_85",
+            "title": "Space standard"
+          }
+        ]
+      },
+      {
+        "code": "PM_10_90",
+        "title": "Transport management requirements",
+        "sections": [
+          {
+            "code": "PM_10_90_01",
+            "title": "Abnormal indivisible load (AIL) schedule"
+          },
+          {
+            "code": "PM_10_90_04",
+            "title": "Transport assessment and travel plan"
+          },
+          {
+            "code": "PM_10_90_31",
+            "title": "Freight management plan"
+          },
+          {
+            "code": "PM_10_90_50",
+            "title": "Transport management strategy"
+          },
+          {
+            "code": "PM_10_90_85",
+            "title": "Staff and visitor travel plan"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "code": "PM_30",
+    "title": "Site, ground and environmental information",
+    "subgroups": [
+      {
+        "code": "PM_30_05",
+        "title": "Aquatic survey information",
+        "sections": [
+          {
+            "code": "PM_30_05_11",
+            "title": "Canals survey information"
+          },
+          {
+            "code": "PM_30_05_15",
+            "title": "Coastal survey information"
+          },
+          {
+            "code": "PM_30_05_46",
+            "title": "Lakes and ponds survey information"
+          },
+          {
+            "code": "PM_30_05_70",
+            "title": "Reservoirs survey information"
+          },
+          {
+            "code": "PM_30_05_72",
+            "title": "Rivers and streams survey information"
+          },
+          {
+            "code": "PM_30_05_73",
+            "title": "River estuaries survey information"
+          }
+        ]
+      },
+      {
+        "code": "PM_30_10",
+        "title": "Site survey information",
+        "sections": [
+          {
+            "code": "PM_30_10_06",
+            "title": "Bathymetric survey information"
+          },
+          {
+            "code": "PM_30_10_10",
+            "title": "Cadastral survey information"
+          },
+          {
+            "code": "PM_30_10_15",
+            "title": "Condition survey information"
+          },
+          {
+            "code": "PM_30_10_22",
+            "title": "Dimensional information"
+          },
+          {
+            "code": "PM_30_10_26",
+            "title": "Electrical power quality assessment information"
+          },
+          {
+            "code": "PM_30_10_28",
+            "title": "Existing structure information"
+          },
+          {
+            "code": "PM_30_10_36",
+            "title": "Historic site survey information"
+          },
+          {
+            "code": "PM_30_10_37",
+            "title": "Historic building survey information"
+          },
+          {
+            "code": "PM_30_10_38",
+            "title": "Hydraulic information"
+          },
+          {
+            "code": "PM_30_10_39",
+            "title": "Hydrological information"
+          },
+          {
+            "code": "PM_30_10_47",
+            "title": "Land registration information"
+          },
+          {
+            "code": "PM_30_10_49",
+            "title": "Light detection and ranging (LIDAR) survey information"
+          },
+          {
+            "code": "PM_30_10_58",
+            "title": "Mapping information"
+          },
+          {
+            "code": "PM_30_10_60",
+            "title": "Party wall survey information"
+          },
+          {
+            "code": "PM_30_10_62",
+            "title": "Pedestrian flow analysis information"
+          },
+          {
+            "code": "PM_30_10_64",
+            "title": "Photogrammetry survey information"
+          },
+          {
+            "code": "PM_30_10_65",
+            "title": "Preliminary site survey information"
+          },
+          {
+            "code": "PM_30_10_73",
+            "title": "Rights of light survey information"
+          },
+          {
+            "code": "PM_30_10_76",
+            "title": "Scan survey information"
+          },
+          {
+            "code": "PM_30_10_77",
+            "title": "Security needs assessment information"
+          },
+          {
+            "code": "PM_30_10_78",
+            "title": "Site abnormal information"
+          },
+          {
+            "code": "PM_30_10_80",
+            "title": "Site boundary information"
+          },
+          {
+            "code": "PM_30_10_85",
+            "title": "Structural survey information"
+          },
+          {
+            "code": "PM_30_10_88",
+            "title": "Topographical survey information"
+          },
+          {
+            "code": "PM_30_10_90",
+            "title": "Transport feasibility survey information"
+          },
+          {
+            "code": "PM_30_10_93",
+            "title": "Utilities and services survey information"
+          },
+          {
+            "code": "PM_30_10_95",
+            "title": "Vehicle flow analysis information"
+          }
+        ]
+      },
+      {
+        "code": "PM_30_20",
+        "title": "Ground investigation and survey reports",
+        "sections": [
+          {
+            "code": "PM_30_20_02",
+            "title": "Archaeological survey report"
+          },
+          {
+            "code": "PM_30_20_06",
+            "title": "Bathymetric survey report"
+          },
+          {
+            "code": "PM_30_20_10",
+            "title": "Geological survey report"
+          },
+          {
+            "code": "PM_30_20_17",
+            "title": "Contaminated land survey report"
+          },
+          {
+            "code": "PM_30_20_24",
+            "title": "Underground services survey report"
+          },
+          {
+            "code": "PM_30_20_25",
+            "title": "Geochemical survey report"
+          },
+          {
+            "code": "PM_30_20_27",
+            "title": "Geoenvironmental exploratory investigation report"
+          },
+          {
+            "code": "PM_30_20_28",
+            "title": "Geoenvironmental ground investigation report"
+          },
+          {
+            "code": "PM_30_20_30",
+            "title": "Geological boundaries survey report"
+          },
+          {
+            "code": "PM_30_20_31",
+            "title": "Geological faults survey report"
+          },
+          {
+            "code": "PM_30_20_33",
+            "title": "Geotechnical survey report"
+          },
+          {
+            "code": "PM_30_20_34",
+            "title": "Geotechnical substructure investigation report"
+          },
+          {
+            "code": "PM_30_20_35",
+            "title": "Ground levels investigation report"
+          },
+          {
+            "code": "PM_30_20_36",
+            "title": "Groundwater table survey report"
+          },
+          {
+            "code": "PM_30_20_37",
+            "title": "Ground investigation survey report"
+          },
+          {
+            "code": "PM_30_20_39",
+            "title": "Hydrological survey report"
+          },
+          {
+            "code": "PM_30_20_46",
+            "title": "Land quality assessment report"
+          },
+          {
+            "code": "PM_30_20_80",
+            "title": "Soil survey report"
+          },
+          {
+            "code": "PM_30_20_89",
+            "title": "Topographic survey report"
+          },
+          {
+            "code": "PM_30_20_92",
+            "title": "Underground drainage closed-circuit television (CCTV) condition survey information"
+          }
+        ]
+      },
+      {
+        "code": "PM_30_30",
+        "title": "Environmental information",
+        "sections": [
+          {
+            "code": "PM_30_30_02",
+            "title": "Acoustic survey information"
+          },
+          {
+            "code": "PM_30_30_03",
+            "title": "Air quality survey information"
+          },
+          {
+            "code": "PM_30_30_04",
+            "title": "Arboricultural survey information"
+          },
+          {
+            "code": "PM_30_30_08",
+            "title": "Broad scale model"
+          },
+          {
+            "code": "PM_30_30_10",
+            "title": "Carbon calculation report"
+          },
+          {
+            "code": "PM_30_30_13",
+            "title": "Climate forecasting information"
+          },
+          {
+            "code": "PM_30_30_15",
+            "title": "Coastal model"
+          },
+          {
+            "code": "PM_30_30_17",
+            "title": "Continuous flood simulation model"
+          },
+          {
+            "code": "PM_30_30_23",
+            "title": "Catchment drainage model"
+          },
+          {
+            "code": "PM_30_30_24",
+            "title": "Environmental constraints report"
+          },
+          {
+            "code": "PM_30_30_25",
+            "title": "Ecological survey report"
+          },
+          {
+            "code": "PM_30_30_26",
+            "title": "Environmental action report"
+          },
+          {
+            "code": "PM_30_30_27",
+            "title": "Environmental impact report"
+          },
+          {
+            "code": "PM_30_30_28",
+            "title": "Environmental survey report"
+          },
+          {
+            "code": "PM_30_30_29",
+            "title": "Flood risk assessment report"
+          },
+          {
+            "code": "PM_30_30_30",
+            "title": "Flood forecasting model"
+          },
+          {
+            "code": "PM_30_30_31",
+            "title": "Flood protection information"
+          },
+          {
+            "code": "PM_30_30_32",
+            "title": "Fluvial flow model"
+          },
+          {
+            "code": "PM_30_30_33",
+            "title": "Flood simulation model"
+          },
+          {
+            "code": "PM_30_30_34",
+            "title": "Flood history report"
+          },
+          {
+            "code": "PM_30_30_39",
+            "title": "Hydrological model"
+          },
+          {
+            "code": "PM_30_30_41",
+            "title": "Integrated catchment model"
+          },
+          {
+            "code": "PM_30_30_46",
+            "title": "Landscape and visual impact assessment"
+          },
+          {
+            "code": "PM_30_30_51",
+            "title": "Measured building survey information"
+          },
+          {
+            "code": "PM_30_30_53",
+            "title": "Model calibration information"
+          },
+          {
+            "code": "PM_30_30_58",
+            "title": "Operational waste management plan"
+          },
+          {
+            "code": "PM_30_30_64",
+            "title": "Plant operating conditions"
+          },
+          {
+            "code": "PM_30_30_65",
+            "title": "Pluvial flow model"
+          },
+          {
+            "code": "PM_30_30_67",
+            "title": "Protected species report"
+          },
+          {
+            "code": "PM_30_30_70",
+            "title": "Reservoir model"
+          },
+          {
+            "code": "PM_30_30_72",
+            "title": "Road safety audit report"
+          },
+          {
+            "code": "PM_30_30_75",
+            "title": "Seismic survey report"
+          },
+          {
+            "code": "PM_30_30_83",
+            "title": "Strategic environmental assessment report"
+          },
+          {
+            "code": "PM_30_30_85",
+            "title": "Sustainability information"
+          },
+          {
+            "code": "PM_30_30_86",
+            "title": "Thermal and environmental model"
+          },
+          {
+            "code": "PM_30_30_87",
+            "title": "Tidal information"
+          },
+          {
+            "code": "PM_30_30_88",
+            "title": "Tidal and coastal boundary information"
+          },
+          {
+            "code": "PM_30_30_89",
+            "title": "Thermal comfort survey information"
+          },
+          {
+            "code": "PM_30_30_96",
+            "title": "Water management information"
+          },
+          {
+            "code": "PM_30_30_97",
+            "title": "Water quality assessment information"
+          },
+          {
+            "code": "PM_30_30_98",
+            "title": "Weather forecasting information"
+          }
+        ]
+      },
+      {
+        "code": "PM_30_35",
+        "title": "Wildlife survey reports",
+        "sections": [
+          {
+            "code": "PM_30_35_05",
+            "title": "Animal conservation assessment survey report"
+          },
+          {
+            "code": "PM_30_35_06",
+            "title": "Bird and pest survey report"
+          },
+          {
+            "code": "PM_30_35_40",
+            "title": "Invasive species survey report"
+          },
+          {
+            "code": "PM_30_35_56",
+            "title": "Nuisance animal species survey report"
+          },
+          {
+            "code": "PM_30_35_58",
+            "title": "Ornithological survey report"
+          }
+        ]
+      },
+      {
+        "code": "PM_30_40",
+        "title": "Hazardous substances information",
+        "sections": [
+          {
+            "code": "PM_30_40_06",
+            "title": "Asbestos survey report"
+          },
+          {
+            "code": "PM_30_40_10",
+            "title": "Biological agents survey report"
+          },
+          {
+            "code": "PM_30_40_33",
+            "title": "Gases survey report"
+          },
+          {
+            "code": "PM_30_40_36",
+            "title": "Hazardous chemicals survey report"
+          },
+          {
+            "code": "PM_30_40_39",
+            "title": "Heavy metals survey report"
+          },
+          {
+            "code": "PM_30_40_46",
+            "title": "Lead survey report"
+          },
+          {
+            "code": "PM_30_40_70",
+            "title": "Radioactive waste survey report"
+          },
+          {
+            "code": "PM_30_40_72",
+            "title": "Radon and hazardous ground gases survey report"
+          },
+          {
+            "code": "PM_30_40_92",
+            "title": "Unexploded ordnance survey report"
+          },
+          {
+            "code": "PM_30_40_94",
+            "title": "Volatile organic compounds survey report"
+          }
+        ]
+      },
+      {
+        "code": "PM_30_50",
+        "title": "Building services condition survey reports",
+        "sections": [
+          {
+            "code": "PM_30_50_06",
+            "title": "Below-ground services survey report"
+          },
+          {
+            "code": "PM_30_50_08",
+            "title": "Boilers, heating and hot water systems survey report"
+          },
+          {
+            "code": "PM_30_50_11",
+            "title": "Catering equipment survey report"
+          },
+          {
+            "code": "PM_30_50_15",
+            "title": "Cold water and water treatment systems survey report"
+          },
+          {
+            "code": "PM_30_50_16",
+            "title": "Control systems survey report"
+          },
+          {
+            "code": "PM_30_50_28",
+            "title": "Escalator and moving pavement systems survey report"
+          },
+          {
+            "code": "PM_30_50_30",
+            "title": "Fire alarm systems survey report"
+          },
+          {
+            "code": "PM_30_50_34",
+            "title": "Generators system survey report"
+          },
+          {
+            "code": "PM_30_50_46",
+            "title": "Lighting survey information"
+          },
+          {
+            "code": "PM_30_50_47",
+            "title": "Lift installation survey report"
+          },
+          {
+            "code": "PM_30_50_48",
+            "title": "Low-voltage general power electrical installations survey report"
+          },
+          {
+            "code": "PM_30_50_71",
+            "title": "Refrigeration systems survey report"
+          },
+          {
+            "code": "PM_30_50_82",
+            "title": "Sprinkler systems survey report"
+          },
+          {
+            "code": "PM_30_50_95",
+            "title": "Ventilation and air conditioning systems survey report"
+          }
+        ]
+      },
+      {
+        "code": "PM_30_60",
+        "title": "Building survey reports",
+        "sections": [
+          {
+            "code": "PM_30_60_10",
+            "title": "Building fabric survey report"
+          },
+          {
+            "code": "PM_30_60_12",
+            "title": "Building measurement survey report"
+          },
+          {
+            "code": "PM_30_60_15",
+            "title": "Concealed elements survey report"
+          },
+          {
+            "code": "PM_30_60_17",
+            "title": "Concrete cover survey report"
+          },
+          {
+            "code": "PM_30_60_18",
+            "title": "Concrete defects survey report"
+          },
+          {
+            "code": "PM_30_60_20",
+            "title": "Damp ingress and excess moisture survey report"
+          },
+          {
+            "code": "PM_30_60_22",
+            "title": "Dilapidations survey report"
+          },
+          {
+            "code": "PM_30_60_25",
+            "title": "Doors, windows and glazing defects survey report"
+          },
+          {
+            "code": "PM_30_60_50",
+            "title": "Masonry defects survey report"
+          },
+          {
+            "code": "PM_30_60_52",
+            "title": "Metalwork defects survey report"
+          },
+          {
+            "code": "PM_30_60_73",
+            "title": "Roof defects survey report"
+          },
+          {
+            "code": "PM_30_60_85",
+            "title": "Structural survey report"
+          },
+          {
+            "code": "PM_30_60_90",
+            "title": "Timber defects survey report"
+          }
+        ]
+      },
+      {
+        "code": "PM_30_70",
+        "title": "Building performance survey reports",
+        "sections": [
+          {
+            "code": "PM_30_70_02",
+            "title": "Access audit report"
+          },
+          {
+            "code": "PM_30_70_04",
+            "title": "Acoustics and noise transfer survey report"
+          },
+          {
+            "code": "PM_30_70_06",
+            "title": "Airtightness survey report"
+          },
+          {
+            "code": "PM_30_70_26",
+            "title": "Energy assessment survey report"
+          },
+          {
+            "code": "PM_30_70_30",
+            "title": "Fire protection survey report"
+          },
+          {
+            "code": "PM_30_70_75",
+            "title": "Building security audit report"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "code": "PM_35",
+    "title": "Project performance requirements",
+    "subgroups": [
+      {
+        "code": "PM_35_05",
+        "title": "Project context requirements",
+        "sections": [
+          {
+            "code": "PM_35_05_22",
+            "title": "Development performance requirements"
+          },
+          {
+            "code": "PM_35_05_79",
+            "title": "Site context requirements"
+          }
+        ]
+      },
+      {
+        "code": "PM_35_10",
+        "title": "Quality and operational properties performance requirements",
+        "sections": [
+          {
+            "code": "PM_35_10_03",
+            "title": "Air quality performance requirements"
+          },
+          {
+            "code": "PM_35_10_13",
+            "title": "Comfort performance requirements"
+          },
+          {
+            "code": "PM_35_10_15",
+            "title": "Condensation control performance requirements"
+          },
+          {
+            "code": "PM_35_10_22",
+            "title": "Design quality performance requirements"
+          },
+          {
+            "code": "PM_35_10_25",
+            "title": "Durability performance requirements"
+          },
+          {
+            "code": "PM_35_10_32",
+            "title": "Functional properties performance requirements"
+          },
+          {
+            "code": "PM_35_10_47",
+            "title": "Life cycle performance requirements"
+          },
+          {
+            "code": "PM_35_10_60",
+            "title": "Performance compliance requirements"
+          },
+          {
+            "code": "PM_35_10_96",
+            "title": "Watertightness performance requirements"
+          }
+        ]
+      },
+      {
+        "code": "PM_35_20",
+        "title": "Structural performance requirements",
+        "sections": [
+          {
+            "code": "PM_35_20_03",
+            "title": "Accidental loading performance requirements"
+          },
+          {
+            "code": "PM_35_20_26",
+            "title": "Earthquake loading performance requirements"
+          },
+          {
+            "code": "PM_35_20_33",
+            "title": "Geotechnical performance requirements"
+          },
+          {
+            "code": "PM_35_20_42",
+            "title": "Imposed loads performance requirements"
+          },
+          {
+            "code": "PM_35_20_62",
+            "title": "Permanent loads performance requirements"
+          },
+          {
+            "code": "PM_35_20_76",
+            "title": "Snow and ice load performance requirements"
+          },
+          {
+            "code": "PM_35_20_80",
+            "title": "Structural design performance requirements"
+          },
+          {
+            "code": "PM_35_20_81",
+            "title": "Structural robustness performance requirements"
+          },
+          {
+            "code": "PM_35_20_82",
+            "title": "Subsidence mitigation performance requirements"
+          },
+          {
+            "code": "PM_35_20_90",
+            "title": "Thermal actions performance requirements"
+          },
+          {
+            "code": "PM_35_20_96",
+            "title": "Wind loading performance requirements"
+          }
+        ]
+      },
+      {
+        "code": "PM_35_30",
+        "title": "Fire performance requirements",
+        "sections": [
+          {
+            "code": "PM_35_30_04",
+            "title": "Automatic fire suppression performance requirements"
+          },
+          {
+            "code": "PM_35_30_18",
+            "title": "Electrical fire performance requirements"
+          },
+          {
+            "code": "PM_35_30_20",
+            "title": "Escape lighting performance requirements"
+          },
+          {
+            "code": "PM_35_30_24",
+            "title": "Fire and rescue service requirements"
+          },
+          {
+            "code": "PM_35_30_26",
+            "title": "Fire protection zone requirements"
+          },
+          {
+            "code": "PM_35_30_28",
+            "title": "Fire resistance performance requirements"
+          },
+          {
+            "code": "PM_35_30_30",
+            "title": "Fire safety performance requirements"
+          },
+          {
+            "code": "PM_35_30_70",
+            "title": "Reaction to fire performance requirements"
+          },
+          {
+            "code": "PM_35_30_80",
+            "title": "Spread of fire performance requirements"
+          },
+          {
+            "code": "PM_35_30_85",
+            "title": "Structural fire performance requirements"
+          },
+          {
+            "code": "PM_35_30_96",
+            "title": "Wildfire protection performance requirements"
+          }
+        ]
+      },
+      {
+        "code": "PM_35_40",
+        "title": "Environmentally sustainable design requirements",
+        "sections": [
+          {
+            "code": "PM_35_40_08",
+            "title": "Biodiversity performance requirements"
+          },
+          {
+            "code": "PM_35_40_10",
+            "title": "BREEAM (Building Research Establishment Environmental Assessment Method) requirements"
+          },
+          {
+            "code": "PM_35_40_28",
+            "title": "Earthworks and groundworks schedules"
+          },
+          {
+            "code": "PM_35_40_30",
+            "title": "Environmental scheme performance requirements"
+          },
+          {
+            "code": "PM_35_40_32",
+            "title": "Flood defence performance requirements"
+          },
+          {
+            "code": "PM_35_40_34",
+            "title": "Habitat performance requirements"
+          },
+          {
+            "code": "PM_35_40_35",
+            "title": "Hazardous materials control requirements"
+          },
+          {
+            "code": "PM_35_40_38",
+            "title": "Hydrological performance requirements"
+          },
+          {
+            "code": "PM_35_40_45",
+            "title": "LEED (Leadership in Energy and Environmental Design) requirements"
+          },
+          {
+            "code": "PM_35_40_56",
+            "title": "NABERS energy requirements"
+          },
+          {
+            "code": "PM_35_40_60",
+            "title": "Passive house energy requirements"
+          },
+          {
+            "code": "PM_35_40_70",
+            "title": "Retrofit energy requirements"
+          },
+          {
+            "code": "PM_35_40_72",
+            "title": "Resistance to ground contaminants requirements"
+          },
+          {
+            "code": "PM_35_40_84",
+            "title": "Sustainability performance requirements"
+          },
+          {
+            "code": "PM_35_40_96",
+            "title": "WELL environment requirements"
+          }
+        ]
+      },
+      {
+        "code": "PM_35_50",
+        "title": "Safety performance requirements",
+        "sections": [
+          {
+            "code": "PM_35_50_01",
+            "title": "Accessibility performance requirements"
+          },
+          {
+            "code": "PM_35_50_08",
+            "title": "Biosecurity performance requirements"
+          },
+          {
+            "code": "PM_35_50_47",
+            "title": "Lightning protection performance requirements"
+          },
+          {
+            "code": "PM_35_50_65",
+            "title": "Project and site safety performance requirements"
+          },
+          {
+            "code": "PM_35_50_72",
+            "title": "Safety and protection performance requirements"
+          },
+          {
+            "code": "PM_35_50_74",
+            "title": "Security performance requirements"
+          }
+        ]
+      },
+      {
+        "code": "PM_35_60",
+        "title": "Acoustic performance requirements",
+        "sections": [
+          {
+            "code": "PM_35_60_01",
+            "title": "Acoustic attenuation performance requirements"
+          },
+          {
+            "code": "PM_35_60_03",
+            "title": "Acoustic diffusion performance requirements"
+          },
+          {
+            "code": "PM_35_60_05",
+            "title": "Acoustic separation performance requirements"
+          },
+          {
+            "code": "PM_35_60_95",
+            "title": "Vibration control performance requirements"
+          }
+        ]
+      },
+      {
+        "code": "PM_35_70",
+        "title": "Energy performance requirements",
+        "sections": [
+          {
+            "code": "PM_35_70_03",
+            "title": "Airtightness performance requirements"
+          },
+          {
+            "code": "PM_35_70_05",
+            "title": "Air conditioning performance requirement"
+          },
+          {
+            "code": "PM_35_70_15",
+            "title": "Chilled water performance requirements"
+          },
+          {
+            "code": "PM_35_70_17",
+            "title": "Combustion appliance performance requirements"
+          },
+          {
+            "code": "PM_35_70_20",
+            "title": "Daylight and shading performance requirements"
+          },
+          {
+            "code": "PM_35_70_27",
+            "title": "Energy metering requirements"
+          },
+          {
+            "code": "PM_35_70_36",
+            "title": "Heating performance requirements"
+          },
+          {
+            "code": "PM_35_70_38",
+            "title": "Hot and cold water supply performance requirements"
+          },
+          {
+            "code": "PM_35_70_46",
+            "title": "Lighting performance requirements"
+          },
+          {
+            "code": "PM_35_70_92",
+            "title": "Thermal performance requirements"
+          },
+          {
+            "code": "PM_35_70_94",
+            "title": "Ventilation performance requirements"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "code": "PM_40",
+    "title": "Design and approvals information",
+    "subgroups": [
+      {
+        "code": "PM_40_20",
+        "title": "Design strategies",
+        "sections": [
+          {
+            "code": "PM_40_20_01",
+            "title": "Access and maintenance strategy"
+          },
+          {
+            "code": "PM_40_20_02",
+            "title": "Acoustic strategy"
+          },
+          {
+            "code": "PM_40_20_05",
+            "title": "Air conditioning design strategy"
+          },
+          {
+            "code": "PM_40_20_08",
+            "title": "Building fabric strategy"
+          },
+          {
+            "code": "PM_40_20_10",
+            "title": "Building services strategy"
+          },
+          {
+            "code": "PM_40_20_13",
+            "title": "Civil engineering design strategy"
+          },
+          {
+            "code": "PM_40_20_14",
+            "title": "Comfort strategy"
+          },
+          {
+            "code": "PM_40_20_15",
+            "title": "Commissioning strategy"
+          },
+          {
+            "code": "PM_40_20_17",
+            "title": "Conservation strategy"
+          },
+          {
+            "code": "PM_40_20_19",
+            "title": "Cost plan strategy"
+          },
+          {
+            "code": "PM_40_20_21",
+            "title": "Daylight design strategy"
+          },
+          {
+            "code": "PM_40_20_24",
+            "title": "Drainage strategy"
+          },
+          {
+            "code": "PM_40_20_26",
+            "title": "Energy strategy"
+          },
+          {
+            "code": "PM_40_20_30",
+            "title": "Fire safety strategy"
+          },
+          {
+            "code": "PM_40_20_36",
+            "title": "Health and safety strategy"
+          },
+          {
+            "code": "PM_40_20_38",
+            "title": "Heating and cooling design strategy"
+          },
+          {
+            "code": "PM_40_20_39",
+            "title": "High-voltage power supply strategy"
+          },
+          {
+            "code": "PM_40_20_40",
+            "title": "Hot and cold water supply design strategy"
+          },
+          {
+            "code": "PM_40_20_42",
+            "title": "Inclusive design strategy"
+          },
+          {
+            "code": "PM_40_20_43",
+            "title": "Information and communications technology (ICT) strategy"
+          },
+          {
+            "code": "PM_40_20_46",
+            "title": "Landscape design strategy"
+          },
+          {
+            "code": "PM_40_20_47",
+            "title": "Lighting strategy"
+          },
+          {
+            "code": "PM_40_20_49",
+            "title": "Low-voltage power supply strategy"
+          },
+          {
+            "code": "PM_40_20_58",
+            "title": "Off-site construction strategy"
+          },
+          {
+            "code": "PM_40_20_59",
+            "title": "Operational energy use strategy"
+          },
+          {
+            "code": "PM_40_20_61",
+            "title": "Overheating mitigation strategy"
+          },
+          {
+            "code": "PM_40_20_63",
+            "title": "Planning strategy"
+          },
+          {
+            "code": "PM_40_20_64",
+            "title": "Plant and equipment replacement strategy"
+          },
+          {
+            "code": "PM_40_20_65",
+            "title": "Plan for use strategy"
+          },
+          {
+            "code": "PM_40_20_67",
+            "title": "Regulatory approval"
+          },
+          {
+            "code": "PM_40_20_70",
+            "title": "Renewable energy strategy"
+          },
+          {
+            "code": "PM_40_20_77",
+            "title": "Security design strategy"
+          },
+          {
+            "code": "PM_40_20_83",
+            "title": "Structural engineering design strategy"
+          },
+          {
+            "code": "PM_40_20_85",
+            "title": "Sustainability strategy"
+          },
+          {
+            "code": "PM_40_20_92",
+            "title": "Thermal performance strategy"
+          },
+          {
+            "code": "PM_40_20_93",
+            "title": "Urban design strategy"
+          },
+          {
+            "code": "PM_40_20_94",
+            "title": "Ventilation design strategy"
+          }
+        ]
+      },
+      {
+        "code": "PM_40_25",
+        "title": "Design calculations",
+        "sections": [
+          {
+            "code": "PM_40_25_02",
+            "title": "Above-ground drainage calculations"
+          },
+          {
+            "code": "PM_40_25_11",
+            "title": "Cable calculations"
+          },
+          {
+            "code": "PM_40_25_15",
+            "title": "Containment calculations"
+          },
+          {
+            "code": "PM_40_25_27",
+            "title": "Electrical load calculations"
+          },
+          {
+            "code": "PM_40_25_37",
+            "title": "Heating and cooling load calculations"
+          },
+          {
+            "code": "PM_40_25_39",
+            "title": "Heat loss calculations"
+          },
+          {
+            "code": "PM_40_25_47",
+            "title": "Lighting calculations"
+          },
+          {
+            "code": "PM_40_25_50",
+            "title": "Maintenance factor calculations"
+          },
+          {
+            "code": "PM_40_25_52",
+            "title": "Mechanical services calculations"
+          },
+          {
+            "code": "PM_40_25_63",
+            "title": "Pipework calculations"
+          },
+          {
+            "code": "PM_40_25_68",
+            "title": "Public health calculations"
+          },
+          {
+            "code": "PM_40_25_83",
+            "title": "Structural engineering calculations"
+          },
+          {
+            "code": "PM_40_25_86",
+            "title": "Surface water calculations"
+          },
+          {
+            "code": "PM_40_25_94",
+            "title": "Ventilation calculations"
+          },
+          {
+            "code": "PM_40_25_96",
+            "title": "Wastewater drainage calculations"
+          }
+        ]
+      },
+      {
+        "code": "PM_40_30",
+        "title": "Design information",
+        "sections": [
+          {
+            "code": "PM_40_30_04",
+            "title": "Architectural design"
+          },
+          {
+            "code": "PM_40_30_17",
+            "title": "Concept analysis"
+          },
+          {
+            "code": "PM_40_30_21",
+            "title": "Design development register information"
+          },
+          {
+            "code": "PM_40_30_22",
+            "title": "Designer health and safety risk assessment"
+          },
+          {
+            "code": "PM_40_30_23",
+            "title": "Design philosophy statement"
+          },
+          {
+            "code": "PM_40_30_24",
+            "title": "Design responsibility matrix"
+          },
+          {
+            "code": "PM_40_30_25",
+            "title": "Developmental control plan"
+          },
+          {
+            "code": "PM_40_30_27",
+            "title": "Energy target"
+          },
+          {
+            "code": "PM_40_30_28",
+            "title": "Energy and comfort design calculations"
+          },
+          {
+            "code": "PM_40_30_30",
+            "title": "Fire-rated doorset design and installation drawings"
+          },
+          {
+            "code": "PM_40_30_32",
+            "title": "Geotechnical engineering information"
+          },
+          {
+            "code": "PM_40_30_34",
+            "title": "Graphical information"
+          },
+          {
+            "code": "PM_40_30_50",
+            "title": "Management control plan"
+          },
+          {
+            "code": "PM_40_30_52",
+            "title": "Mechanical, electrical, instrumentation, controls and automation (MEICA) design"
+          },
+          {
+            "code": "PM_40_30_54",
+            "title": "Modelling production and delivery table"
+          },
+          {
+            "code": "PM_40_30_55",
+            "title": "Modelling specification"
+          },
+          {
+            "code": "PM_40_30_60",
+            "title": "Parametric information"
+          },
+          {
+            "code": "PM_40_30_62",
+            "title": "Photorealistic visualization images"
+          },
+          {
+            "code": "PM_40_30_63",
+            "title": "Photorealistic visualization model"
+          },
+          {
+            "code": "PM_40_30_67",
+            "title": "Prohibited materials information"
+          },
+          {
+            "code": "PM_40_30_70",
+            "title": "Room data"
+          },
+          {
+            "code": "PM_40_30_77",
+            "title": "Schedule of works"
+          },
+          {
+            "code": "PM_40_30_80",
+            "title": "Site orientation"
+          },
+          {
+            "code": "PM_40_30_85",
+            "title": "Sun path diagrams"
+          },
+          {
+            "code": "PM_40_30_89",
+            "title": "Technical information"
+          },
+          {
+            "code": "PM_40_30_91",
+            "title": "Thermal bridging calculations"
+          },
+          {
+            "code": "PM_40_30_95",
+            "title": "Video survey information"
+          },
+          {
+            "code": "PM_40_30_96",
+            "title": "Water hardness test report"
+          },
+          {
+            "code": "PM_40_30_97",
+            "title": "Water analysis report"
+          }
+        ]
+      },
+      {
+        "code": "PM_40_35",
+        "title": "Design models",
+        "sections": [
+          {
+            "code": "PM_40_35_04",
+            "title": "Architects models"
+          },
+          {
+            "code": "PM_40_35_10",
+            "title": "Building services models"
+          },
+          {
+            "code": "PM_40_35_11",
+            "title": "Catering models"
+          },
+          {
+            "code": "PM_40_35_15",
+            "title": "Civil engineering models"
+          },
+          {
+            "code": "PM_40_35_18",
+            "title": "Combined discipline models"
+          },
+          {
+            "code": "PM_40_35_24",
+            "title": "Drainage models"
+          },
+          {
+            "code": "PM_40_35_27",
+            "title": "Electrical models"
+          },
+          {
+            "code": "PM_40_35_29",
+            "title": "Fittings, furnishings and equipment (FF&E) models"
+          },
+          {
+            "code": "PM_40_35_33",
+            "title": "Geotechnical models"
+          },
+          {
+            "code": "PM_40_35_45",
+            "title": "Landscape models"
+          },
+          {
+            "code": "PM_40_35_51",
+            "title": "Mechanical models"
+          },
+          {
+            "code": "PM_40_35_65",
+            "title": "Process models"
+          },
+          {
+            "code": "PM_40_35_68",
+            "title": "Public health models"
+          },
+          {
+            "code": "PM_40_35_83",
+            "title": "Structural engineering models"
+          }
+        ]
+      },
+      {
+        "code": "PM_40_40",
+        "title": "Design drawings",
+        "sections": [
+          {
+            "code": "PM_40_40_01",
+            "title": "2D plan drawings"
+          },
+          {
+            "code": "PM_40_40_02",
+            "title": "3D plan drawings"
+          },
+          {
+            "code": "PM_40_40_10",
+            "title": "Builders' work drawings"
+          },
+          {
+            "code": "PM_40_40_15",
+            "title": "Coordination drawings"
+          },
+          {
+            "code": "PM_40_40_18",
+            "title": "Cross-section drawings"
+          },
+          {
+            "code": "PM_40_40_20",
+            "title": "Decant drawings"
+          },
+          {
+            "code": "PM_40_40_22",
+            "title": "Diagrammatical drawings"
+          },
+          {
+            "code": "PM_40_40_27",
+            "title": "Elevation drawings"
+          },
+          {
+            "code": "PM_40_40_34",
+            "title": "General arrangement drawings"
+          },
+          {
+            "code": "PM_40_40_42",
+            "title": "Isometric drawings"
+          },
+          {
+            "code": "PM_40_40_50",
+            "title": "Manufacturer's drawings"
+          },
+          {
+            "code": "PM_40_40_54",
+            "title": "Multi-view drawings"
+          },
+          {
+            "code": "PM_40_40_63",
+            "title": "Phasing drawings"
+          },
+          {
+            "code": "PM_40_40_75",
+            "title": "Schematic drawings"
+          },
+          {
+            "code": "PM_40_40_79",
+            "title": "Sketch drawings"
+          },
+          {
+            "code": "PM_40_40_88",
+            "title": "Technical design drawings"
+          }
+        ]
+      },
+      {
+        "code": "PM_40_45",
+        "title": "Specifications",
+        "sections": [
+          {
+            "code": "PM_40_45_03",
+            "title": "Architectural construction specification"
+          },
+          {
+            "code": "PM_40_45_04",
+            "title": "Architectural outline specification"
+          },
+          {
+            "code": "PM_40_45_05",
+            "title": "Architectural performance specification"
+          },
+          {
+            "code": "PM_40_45_10",
+            "title": "Building services construction specification"
+          },
+          {
+            "code": "PM_40_45_11",
+            "title": "Building services outline specification"
+          },
+          {
+            "code": "PM_40_45_12",
+            "title": "Building services performance specification"
+          },
+          {
+            "code": "PM_40_45_15",
+            "title": "Civil engineering construction specification"
+          },
+          {
+            "code": "PM_40_45_16",
+            "title": "Civil engineering outline specification"
+          },
+          {
+            "code": "PM_40_45_17",
+            "title": "Civil engineering performance specification"
+          },
+          {
+            "code": "PM_40_45_26",
+            "title": "Electrical services construction specification"
+          },
+          {
+            "code": "PM_40_45_27",
+            "title": "Electrical services outline specification"
+          },
+          {
+            "code": "PM_40_45_28",
+            "title": "Electrical services performance specification"
+          },
+          {
+            "code": "PM_40_45_45",
+            "title": "Landscape architecture construction specification"
+          },
+          {
+            "code": "PM_40_45_46",
+            "title": "Landscape architecture outline specification"
+          },
+          {
+            "code": "PM_40_45_47",
+            "title": "Landscape architecture performance specification"
+          },
+          {
+            "code": "PM_40_45_51",
+            "title": "Mechanical services construction specification"
+          },
+          {
+            "code": "PM_40_45_52",
+            "title": "Mechanical services outline specification"
+          },
+          {
+            "code": "PM_40_45_53",
+            "title": "Mechanical services performance specification"
+          },
+          {
+            "code": "PM_40_45_83",
+            "title": "Structural engineering construction specification"
+          },
+          {
+            "code": "PM_40_45_84",
+            "title": "Structural engineering outline specification"
+          },
+          {
+            "code": "PM_40_45_85",
+            "title": "Structural engineering performance specification"
+          }
+        ]
+      },
+      {
+        "code": "PM_40_50",
+        "title": "Approvals information",
+        "sections": [
+          {
+            "code": "PM_40_50_03",
+            "title": "Approvals and assurance plan"
+          },
+          {
+            "code": "PM_40_50_09",
+            "title": "Building control design approval"
+          },
+          {
+            "code": "PM_40_50_10",
+            "title": "Building codes application"
+          },
+          {
+            "code": "PM_40_50_12",
+            "title": "Building codes approval"
+          },
+          {
+            "code": "PM_40_50_13",
+            "title": "Building safety approval application"
+          },
+          {
+            "code": "PM_40_50_14",
+            "title": "Consent"
+          },
+          {
+            "code": "PM_40_50_16",
+            "title": "Contribution agreement"
+          },
+          {
+            "code": "PM_40_50_21",
+            "title": "Design submittals"
+          },
+          {
+            "code": "PM_40_50_27",
+            "title": "Environmental health officer approval"
+          },
+          {
+            "code": "PM_40_50_30",
+            "title": "Fire officer approval"
+          },
+          {
+            "code": "PM_40_50_32",
+            "title": "Funding profile"
+          },
+          {
+            "code": "PM_40_50_37",
+            "title": "Heritage registration"
+          },
+          {
+            "code": "PM_40_50_41",
+            "title": "Internal approval"
+          },
+          {
+            "code": "PM_40_50_47",
+            "title": "Landowner agreement"
+          },
+          {
+            "code": "PM_40_50_49",
+            "title": "Letter of authority"
+          },
+          {
+            "code": "PM_40_50_58",
+            "title": "Outline planning application"
+          },
+          {
+            "code": "PM_40_50_60",
+            "title": "Partnership agreement"
+          },
+          {
+            "code": "PM_40_50_63",
+            "title": "Planning application"
+          },
+          {
+            "code": "PM_40_50_64",
+            "title": "Planning conditions information"
+          },
+          {
+            "code": "PM_40_50_65",
+            "title": "Planning permission"
+          },
+          {
+            "code": "PM_40_50_66",
+            "title": "Principal designer compliance declaration"
+          },
+          {
+            "code": "PM_40_50_67",
+            "title": "Project board agreement"
+          },
+          {
+            "code": "PM_40_50_69",
+            "title": "Project team agreement"
+          },
+          {
+            "code": "PM_40_50_90",
+            "title": "Tree protection order"
+          }
+        ]
+      },
+      {
+        "code": "PM_40_55",
+        "title": "Schedules",
+        "sections": [
+          {
+            "code": "PM_40_55_08",
+            "title": "Boiler schedules"
+          },
+          {
+            "code": "PM_40_55_24",
+            "title": "Door schedules"
+          },
+          {
+            "code": "PM_40_55_49",
+            "title": "Luminaire schedules"
+          },
+          {
+            "code": "PM_40_55_70",
+            "title": "Radiator schedules"
+          },
+          {
+            "code": "PM_40_55_97",
+            "title": "Window schedules"
+          }
+        ]
+      },
+      {
+        "code": "PM_40_60",
+        "title": "Project information management information",
+        "sections": [
+          {
+            "code": "PM_40_60_01",
+            "title": "4D programme federated model"
+          },
+          {
+            "code": "PM_40_60_02",
+            "title": "5D cost federated model"
+          },
+          {
+            "code": "PM_40_60_03",
+            "title": "6D handover sequence federated model"
+          },
+          {
+            "code": "PM_40_60_05",
+            "title": "Activities terminology"
+          },
+          {
+            "code": "PM_40_60_06",
+            "title": "Asset delivery description"
+          },
+          {
+            "code": "PM_40_60_07",
+            "title": "Benefits realization plan"
+          },
+          {
+            "code": "PM_40_60_08",
+            "title": "BIM execution plan"
+          },
+          {
+            "code": "PM_40_60_11",
+            "title": "Capability and capacity assessment information"
+          },
+          {
+            "code": "PM_40_60_12",
+            "title": "Clash detection resolution report"
+          },
+          {
+            "code": "PM_40_60_14",
+            "title": "Change control plan"
+          },
+          {
+            "code": "PM_40_60_15",
+            "title": "Change control records"
+          },
+          {
+            "code": "PM_40_60_16",
+            "title": "COBie data set"
+          },
+          {
+            "code": "PM_40_60_18",
+            "title": "Communications plan"
+          },
+          {
+            "code": "PM_40_60_19",
+            "title": "Construction risk review"
+          },
+          {
+            "code": "PM_40_60_20",
+            "title": "Contingency plan"
+          },
+          {
+            "code": "PM_40_60_21",
+            "title": "Curriculum vitae (CV)"
+          },
+          {
+            "code": "PM_40_60_22",
+            "title": "Data security policy"
+          },
+          {
+            "code": "PM_40_60_23",
+            "title": "Description terminology"
+          },
+          {
+            "code": "PM_40_60_24",
+            "title": "Detailed responsibility matrix"
+          },
+          {
+            "code": "PM_40_60_25",
+            "title": "Design process management plan"
+          },
+          {
+            "code": "PM_40_60_26",
+            "title": "Design programme"
+          },
+          {
+            "code": "PM_40_60_27",
+            "title": "Electronic data interchange (EDI)"
+          },
+          {
+            "code": "PM_40_60_28",
+            "title": "Document numbering system"
+          },
+          {
+            "code": "PM_40_60_29",
+            "title": "Document control information"
+          },
+          {
+            "code": "PM_40_60_31",
+            "title": "Federated coordination models"
+          },
+          {
+            "code": "PM_40_60_33",
+            "title": "Federated information models"
+          },
+          {
+            "code": "PM_40_60_34",
+            "title": "Fire safety information exchange (FIREie)"
+          },
+          {
+            "code": "PM_40_60_35",
+            "title": "Fire safety management plan"
+          },
+          {
+            "code": "PM_40_60_38",
+            "title": "Information assurance"
+          },
+          {
+            "code": "PM_40_60_39",
+            "title": "Information validation"
+          },
+          {
+            "code": "PM_40_60_40",
+            "title": "Information verification"
+          },
+          {
+            "code": "PM_40_60_41",
+            "title": "Information delivery plan"
+          },
+          {
+            "code": "PM_40_60_43",
+            "title": "Installation process management plan"
+          },
+          {
+            "code": "PM_40_60_44",
+            "title": "Information security triage matrix"
+          },
+          {
+            "code": "PM_40_60_45",
+            "title": "Key performance indicator (KPI) information"
+          },
+          {
+            "code": "PM_40_60_47",
+            "title": "Landowner notice"
+          },
+          {
+            "code": "PM_40_60_50",
+            "title": "Master information delivery plan"
+          },
+          {
+            "code": "PM_40_60_53",
+            "title": "Mobilization plan"
+          },
+          {
+            "code": "PM_40_60_62",
+            "title": "Post-occupancy evaluation"
+          },
+          {
+            "code": "PM_40_60_63",
+            "title": "Project breakdown structure documentation"
+          },
+          {
+            "code": "PM_40_60_64",
+            "title": "Pre-appointment BIM execution plan"
+          },
+          {
+            "code": "PM_40_60_65",
+            "title": "Project execution plan"
+          },
+          {
+            "code": "PM_40_60_66",
+            "title": "Project information production methods and procedures"
+          },
+          {
+            "code": "PM_40_60_67",
+            "title": "Project information protocol"
+          },
+          {
+            "code": "PM_40_60_68",
+            "title": "Project information standards"
+          },
+          {
+            "code": "PM_40_60_70",
+            "title": "Risk schedule"
+          },
+          {
+            "code": "PM_40_60_72",
+            "title": "Risk and opportunities management plan"
+          },
+          {
+            "code": "PM_40_60_85",
+            "title": "Stakeholder management plan"
+          },
+          {
+            "code": "PM_40_60_87",
+            "title": "Task information delivery plan"
+          },
+          {
+            "code": "PM_40_60_89",
+            "title": "Through-life management plan (TLMP)"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "code": "PM_50",
+    "title": "Financial and commercial information",
+    "subgroups": [
+      {
+        "code": "PM_50_15",
+        "title": "Commercial information",
+        "sections": [
+          {
+            "code": "PM_50_15_10",
+            "title": "Building lease"
+          },
+          {
+            "code": "PM_50_15_71",
+            "title": "Resident profile"
+          },
+          {
+            "code": "PM_50_15_90",
+            "title": "Tenancy agreement"
+          }
+        ]
+      },
+      {
+        "code": "PM_50_30",
+        "title": "Economic viability information",
+        "sections": [
+          {
+            "code": "PM_50_30_10",
+            "title": "Business case"
+          },
+          {
+            "code": "PM_50_30_11",
+            "title": "Capital contributions information"
+          },
+          {
+            "code": "PM_50_30_12",
+            "title": "Commercial compliance report"
+          },
+          {
+            "code": "PM_50_30_14",
+            "title": "Commercial plan"
+          },
+          {
+            "code": "PM_50_30_16",
+            "title": "Commercial strategy"
+          },
+          {
+            "code": "PM_50_30_18",
+            "title": "Cost model and indicative costing"
+          },
+          {
+            "code": "PM_50_30_26",
+            "title": "Earned value management report"
+          },
+          {
+            "code": "PM_50_30_27",
+            "title": "Efficiency assessment"
+          },
+          {
+            "code": "PM_50_30_28",
+            "title": "Financial damage assessment"
+          },
+          {
+            "code": "PM_50_30_29",
+            "title": "Financial strategy"
+          },
+          {
+            "code": "PM_50_30_30",
+            "title": "Funding information"
+          },
+          {
+            "code": "PM_50_30_40",
+            "title": "Initial planning estimate"
+          },
+          {
+            "code": "PM_50_30_42",
+            "title": "Investment appraisal"
+          },
+          {
+            "code": "PM_50_30_60",
+            "title": "Partnership funding report"
+          },
+          {
+            "code": "PM_50_30_64",
+            "title": "Preliminary business case"
+          },
+          {
+            "code": "PM_50_30_66",
+            "title": "Pre-tender estimate"
+          },
+          {
+            "code": "PM_50_30_68",
+            "title": "Private-sector participation (PSP) evaluation report"
+          },
+          {
+            "code": "PM_50_30_70",
+            "title": "Private-sector participation (PSP) financial close"
+          },
+          {
+            "code": "PM_50_30_85",
+            "title": "Supply chain agreement"
+          },
+          {
+            "code": "PM_50_30_96",
+            "title": "Whole-life costing"
+          }
+        ]
+      },
+      {
+        "code": "PM_50_50",
+        "title": "Procurement and tendering information",
+        "sections": [
+          {
+            "code": "PM_50_50_01",
+            "title": "Procurement strategy"
+          },
+          {
+            "code": "PM_50_50_03",
+            "title": "Prior information notice"
+          },
+          {
+            "code": "PM_50_50_05",
+            "title": "Advance procurement information"
+          },
+          {
+            "code": "PM_50_50_10",
+            "title": "Tender enquiry"
+          },
+          {
+            "code": "PM_50_50_12",
+            "title": "Tender programme"
+          },
+          {
+            "code": "PM_50_50_15",
+            "title": "Tender invitation"
+          },
+          {
+            "code": "PM_50_50_20",
+            "title": "Early contractor involvement information"
+          },
+          {
+            "code": "PM_50_50_25",
+            "title": "Framework agreement information"
+          },
+          {
+            "code": "PM_50_50_30",
+            "title": "Tender acceptance criteria"
+          },
+          {
+            "code": "PM_50_50_35",
+            "title": "Tender documents"
+          },
+          {
+            "code": "PM_50_50_40",
+            "title": "Private-sector participation (PSP) tender"
+          },
+          {
+            "code": "PM_50_50_45",
+            "title": "Tender clarification report"
+          },
+          {
+            "code": "PM_50_50_50",
+            "title": "Tender instruction"
+          },
+          {
+            "code": "PM_50_50_55",
+            "title": "Tender site visit strategy"
+          },
+          {
+            "code": "PM_50_50_60",
+            "title": "Tender return"
+          },
+          {
+            "code": "PM_50_50_65",
+            "title": "Tender assessment report"
+          },
+          {
+            "code": "PM_50_50_70",
+            "title": "Tender evaluation report"
+          },
+          {
+            "code": "PM_50_50_75",
+            "title": "Tender error resolution strategy"
+          },
+          {
+            "code": "PM_50_50_80",
+            "title": "Tender acceptance report"
+          },
+          {
+            "code": "PM_50_50_85",
+            "title": "Post-tender negotiation"
+          },
+          {
+            "code": "PM_50_50_90",
+            "title": "Tender notification"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "code": "PM_55",
+    "title": "Contract information",
+    "subgroups": [
+      {
+        "code": "PM_55_15",
+        "title": "Contract compliance information",
+        "sections": [
+          {
+            "code": "PM_55_15_04",
+            "title": "Asset compliance information"
+          },
+          {
+            "code": "PM_55_15_15",
+            "title": "Compliance statement"
+          },
+          {
+            "code": "PM_55_15_17",
+            "title": "Contract notice"
+          },
+          {
+            "code": "PM_55_15_28",
+            "title": "Escrow agreement"
+          },
+          {
+            "code": "PM_55_15_47",
+            "title": "Liquidated damages information"
+          },
+          {
+            "code": "PM_55_15_65",
+            "title": "Project brief derogations"
+          }
+        ]
+      },
+      {
+        "code": "PM_55_55",
+        "title": "Contract",
+        "sections": [
+          {
+            "code": "PM_55_55_50",
+            "title": "Maintenance contract"
+          },
+          {
+            "code": "PM_55_55_70",
+            "title": "Services contract"
+          },
+          {
+            "code": "PM_55_55_80",
+            "title": "Supplies contract"
+          },
+          {
+            "code": "PM_55_55_85",
+            "title": "Target cost contracts"
+          },
+          {
+            "code": "PM_55_55_90",
+            "title": "Works contract"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "code": "PM_60",
+    "title": "Construction management information",
+    "subgroups": [
+      {
+        "code": "PM_60_10",
+        "title": "Site information",
+        "sections": [
+          {
+            "code": "PM_60_10_50",
+            "title": "Site access information"
+          },
+          {
+            "code": "PM_60_10_52",
+            "title": "Site altitude"
+          },
+          {
+            "code": "PM_60_10_55",
+            "title": "Site branding information"
+          },
+          {
+            "code": "PM_60_10_58",
+            "title": "Site establishment information"
+          },
+          {
+            "code": "PM_60_10_60",
+            "title": "Site grid reference"
+          },
+          {
+            "code": "PM_60_10_62",
+            "title": "Site layout plan"
+          },
+          {
+            "code": "PM_60_10_63",
+            "title": "Site logistics plan"
+          },
+          {
+            "code": "PM_60_10_65",
+            "title": "Site safety plan"
+          },
+          {
+            "code": "PM_60_10_70",
+            "title": "Site services information"
+          },
+          {
+            "code": "PM_60_10_75",
+            "title": "Site set-up information"
+          },
+          {
+            "code": "PM_60_10_77",
+            "title": "Site security information"
+          },
+          {
+            "code": "PM_60_10_80",
+            "title": "Surrounding land and building uses report"
+          },
+          {
+            "code": "PM_60_10_81",
+            "title": "Temporary accommodation information"
+          },
+          {
+            "code": "PM_60_10_83",
+            "title": "Temporary services information"
+          },
+          {
+            "code": "PM_60_10_85",
+            "title": "Temporary works information"
+          },
+          {
+            "code": "PM_60_10_90",
+            "title": "Temporary works impact report"
+          },
+          {
+            "code": "PM_60_10_95",
+            "title": "Working area information"
+          }
+        ]
+      },
+      {
+        "code": "PM_60_20",
+        "title": "Project requirements",
+        "sections": [
+          {
+            "code": "PM_60_20_15",
+            "title": "Completion work information"
+          },
+          {
+            "code": "PM_60_20_20",
+            "title": "Concurrent work information"
+          },
+          {
+            "code": "PM_60_20_22",
+            "title": "Construction method statement"
+          },
+          {
+            "code": "PM_60_20_24",
+            "title": "Decant programme"
+          },
+          {
+            "code": "PM_60_20_26",
+            "title": "Decant protocol"
+          },
+          {
+            "code": "PM_60_20_28",
+            "title": "Embodied carbon assessment"
+          },
+          {
+            "code": "PM_60_20_55",
+            "title": "Nominated subcontractor or supplier work information"
+          },
+          {
+            "code": "PM_60_20_60",
+            "title": "Pre-construction information"
+          },
+          {
+            "code": "PM_60_20_62",
+            "title": "Pre-ordered items information"
+          },
+          {
+            "code": "PM_60_20_64",
+            "title": "Prime cost item"
+          },
+          {
+            "code": "PM_60_20_65",
+            "title": "Preparatory work information"
+          },
+          {
+            "code": "PM_60_20_67",
+            "title": "Provisional item"
+          },
+          {
+            "code": "PM_60_20_70",
+            "title": "Red, amber, green (RAG) list compliance"
+          },
+          {
+            "code": "PM_60_20_73",
+            "title": "Reuse and recycling information"
+          },
+          {
+            "code": "PM_60_20_79",
+            "title": "Setting out methodology"
+          },
+          {
+            "code": "PM_60_20_90",
+            "title": "Works by local authority information"
+          },
+          {
+            "code": "PM_60_20_95",
+            "title": "Work by statutory undertakers information"
+          }
+        ]
+      },
+      {
+        "code": "PM_60_25",
+        "title": "Construction models",
+        "sections": [
+          {
+            "code": "PM_60_25_83",
+            "title": "Structural fabrication models"
+          }
+        ]
+      },
+      {
+        "code": "PM_60_30",
+        "title": "Contract programme and progress",
+        "sections": [
+          {
+            "code": "PM_60_30_05",
+            "title": "Actions log"
+          },
+          {
+            "code": "PM_60_30_13",
+            "title": "Commissioning programme"
+          },
+          {
+            "code": "PM_60_30_15",
+            "title": "Contract communications log"
+          },
+          {
+            "code": "PM_60_30_17",
+            "title": "Contract consultation strategy"
+          },
+          {
+            "code": "PM_60_30_19",
+            "title": "Contract administration information"
+          },
+          {
+            "code": "PM_60_30_20",
+            "title": "Contract programme"
+          },
+          {
+            "code": "PM_60_30_22",
+            "title": "Delivery risk review"
+          },
+          {
+            "code": "PM_60_30_26",
+            "title": "Early warning notice"
+          },
+          {
+            "code": "PM_60_30_27",
+            "title": "Excavation sequence programme"
+          },
+          {
+            "code": "PM_60_30_28",
+            "title": "Exception report"
+          },
+          {
+            "code": "PM_60_30_37",
+            "title": "Highlights report"
+          },
+          {
+            "code": "PM_60_30_40",
+            "title": "Issues log"
+          },
+          {
+            "code": "PM_60_30_45",
+            "title": "Limitations on method report"
+          },
+          {
+            "code": "PM_60_30_47",
+            "title": "Limitations on sequence report"
+          },
+          {
+            "code": "PM_60_30_49",
+            "title": "Limitations on timing report"
+          },
+          {
+            "code": "PM_60_30_51",
+            "title": "Limitations on use of site report"
+          },
+          {
+            "code": "PM_60_30_57",
+            "title": "Notice of commencement"
+          },
+          {
+            "code": "PM_60_30_60",
+            "title": "Partial completion strategy"
+          },
+          {
+            "code": "PM_60_30_66",
+            "title": "Progress report"
+          },
+          {
+            "code": "PM_60_30_71",
+            "title": "Request for information (RFI)"
+          },
+          {
+            "code": "PM_60_30_73",
+            "title": "Responsible, accountable, consulted and informed (RACI) log"
+          },
+          {
+            "code": "PM_60_30_77",
+            "title": "Site inspection programme"
+          },
+          {
+            "code": "PM_60_30_80",
+            "title": "Stage end report"
+          }
+        ]
+      },
+      {
+        "code": "PM_60_40",
+        "title": "Meetings and records",
+        "sections": [
+          {
+            "code": "PM_60_40_05",
+            "title": "Accident report"
+          },
+          {
+            "code": "PM_60_40_40",
+            "title": "Labour and equipment record"
+          },
+          {
+            "code": "PM_60_40_50",
+            "title": "Meeting agenda"
+          },
+          {
+            "code": "PM_60_40_55",
+            "title": "Meeting minutes"
+          },
+          {
+            "code": "PM_60_40_58",
+            "title": "Progress photographs"
+          },
+          {
+            "code": "PM_60_40_60",
+            "title": "Progress record"
+          },
+          {
+            "code": "PM_60_40_70",
+            "title": "Record photographs"
+          },
+          {
+            "code": "PM_60_40_72",
+            "title": "Risk register"
+          }
+        ]
+      },
+      {
+        "code": "PM_60_50",
+        "title": "Contract cost management",
+        "sections": [
+          {
+            "code": "PM_60_50_10",
+            "title": "Budget"
+          },
+          {
+            "code": "PM_60_50_12",
+            "title": "Cash flow forecast"
+          },
+          {
+            "code": "PM_60_50_16",
+            "title": "Compensation event"
+          },
+          {
+            "code": "PM_60_50_17",
+            "title": "Completion certificate"
+          },
+          {
+            "code": "PM_60_50_18",
+            "title": "Completion certificate application"
+          },
+          {
+            "code": "PM_60_50_19",
+            "title": "Contract change to forecast"
+          },
+          {
+            "code": "PM_60_50_20",
+            "title": "Contract instruction"
+          },
+          {
+            "code": "PM_60_50_23",
+            "title": "Cost estimate"
+          },
+          {
+            "code": "PM_60_50_25",
+            "title": "Cost forecast"
+          },
+          {
+            "code": "PM_60_50_27",
+            "title": "Cost information report"
+          },
+          {
+            "code": "PM_60_50_35",
+            "title": "Fee note"
+          },
+          {
+            "code": "PM_60_50_37",
+            "title": "Financial report"
+          },
+          {
+            "code": "PM_60_50_50",
+            "title": "Milestone payment schedule"
+          },
+          {
+            "code": "PM_60_50_58",
+            "title": "Order"
+          },
+          {
+            "code": "PM_60_50_60",
+            "title": "Payment application"
+          },
+          {
+            "code": "PM_60_50_61",
+            "title": "Partial completion certificate application"
+          },
+          {
+            "code": "PM_60_50_62",
+            "title": "Payment certificate"
+          },
+          {
+            "code": "PM_60_50_63",
+            "title": "Pricing document"
+          },
+          {
+            "code": "PM_60_50_65",
+            "title": "Partial completion certificate"
+          },
+          {
+            "code": "PM_60_50_67",
+            "title": "Purchasing protocol"
+          },
+          {
+            "code": "PM_60_50_69",
+            "title": "Quotation"
+          },
+          {
+            "code": "PM_60_50_88",
+            "title": "Technical query"
+          },
+          {
+            "code": "PM_60_50_90",
+            "title": "Timesheet"
+          }
+        ]
+      },
+      {
+        "code": "PM_60_60",
+        "title": "Contract support information",
+        "sections": [
+          {
+            "code": "PM_60_60_15",
+            "title": "Contract contacts list"
+          },
+          {
+            "code": "PM_60_60_17",
+            "title": "Construction control plan"
+          },
+          {
+            "code": "PM_60_60_26",
+            "title": "Environmental protection information"
+          },
+          {
+            "code": "PM_60_60_30",
+            "title": "Feedback information"
+          },
+          {
+            "code": "PM_60_60_40",
+            "title": "Insurance policies and records"
+          },
+          {
+            "code": "PM_60_60_44",
+            "title": "Lifting plan"
+          },
+          {
+            "code": "PM_60_60_55",
+            "title": "Permit to work"
+          },
+          {
+            "code": "PM_60_60_57",
+            "title": "Principal contractor compliance declaration"
+          },
+          {
+            "code": "PM_60_60_58",
+            "title": "Site communication plan"
+          },
+          {
+            "code": "PM_60_60_60",
+            "title": "Site control and protection information"
+          },
+          {
+            "code": "PM_60_60_63",
+            "title": "Site organization chart"
+          },
+          {
+            "code": "PM_60_60_65",
+            "title": "Site personnel records"
+          },
+          {
+            "code": "PM_60_60_70",
+            "title": "Site records"
+          },
+          {
+            "code": "PM_60_60_75",
+            "title": "Site safety information"
+          },
+          {
+            "code": "PM_60_60_78",
+            "title": "Site waste management plan"
+          },
+          {
+            "code": "PM_60_60_88",
+            "title": "Temporary services records"
+          },
+          {
+            "code": "PM_60_60_90",
+            "title": "Temporary works records"
+          },
+          {
+            "code": "PM_60_60_95",
+            "title": "Waste transfer notes\u00a0"
+          },
+          {
+            "code": "PM_60_60_96",
+            "title": "Winch operation plan"
+          },
+          {
+            "code": "PM_60_60_98",
+            "title": "Work equipment report"
+          }
+        ]
+      },
+      {
+        "code": "PM_60_70",
+        "title": "Construction risk management",
+        "sections": [
+          {
+            "code": "PM_60_70_03",
+            "title": "Asbestos works notification information"
+          },
+          {
+            "code": "PM_60_70_15",
+            "title": "Construction notification report"
+          },
+          {
+            "code": "PM_60_70_17",
+            "title": "Construction phase health and safety plan"
+          },
+          {
+            "code": "PM_60_70_18",
+            "title": "Construction phase risk assessment report"
+          },
+          {
+            "code": "PM_60_70_20",
+            "title": "Demolition hazard report"
+          },
+          {
+            "code": "PM_60_70_23",
+            "title": "Environmental management plan"
+          },
+          {
+            "code": "PM_60_70_25",
+            "title": "Execution hazard report"
+          },
+          {
+            "code": "PM_60_70_38",
+            "title": "Health and safety audit report"
+          },
+          {
+            "code": "PM_60_70_40",
+            "title": "Health and safety statement"
+          },
+          {
+            "code": "PM_60_70_60",
+            "title": "Product hazard report"
+          },
+          {
+            "code": "PM_60_70_66",
+            "title": "Safety, health, environment and wellbeing (SHEW) reports"
+          },
+          {
+            "code": "PM_60_70_68",
+            "title": "Site hazard report"
+          },
+          {
+            "code": "PM_60_70_70",
+            "title": "Site risk assessment"
+          },
+          {
+            "code": "PM_60_70_72",
+            "title": "Site risk report"
+          },
+          {
+            "code": "PM_60_70_75",
+            "title": "Site security policy"
+          },
+          {
+            "code": "PM_60_70_80",
+            "title": "Social responsibility registration scheme"
+          },
+          {
+            "code": "PM_60_70_93",
+            "title": "Vehicle safety report"
+          },
+          {
+            "code": "PM_60_70_95",
+            "title": "Welfare responsibility registration scheme"
+          }
+        ]
+      },
+      {
+        "code": "PM_60_90",
+        "title": "Contract quality standards information",
+        "sections": [
+          {
+            "code": "PM_60_90_40",
+            "title": "Site inspection report"
+          },
+          {
+            "code": "PM_60_90_46",
+            "title": "Lessons learned logs"
+          },
+          {
+            "code": "PM_60_90_47",
+            "title": "Lessons learned report"
+          },
+          {
+            "code": "PM_60_90_50",
+            "title": "Mandatory occurrence reports"
+          },
+          {
+            "code": "PM_60_90_70",
+            "title": "Quality control and management report"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "code": "PM_70",
+    "title": "Testing, commissioning and completion information",
+    "subgroups": [
+      {
+        "code": "PM_70_15",
+        "title": "Compliance and certification documents",
+        "sections": [
+          {
+            "code": "PM_70_15_01",
+            "title": "Acoustic test certificate"
+          },
+          {
+            "code": "PM_70_15_02",
+            "title": "Airtightness test certificate"
+          },
+          {
+            "code": "PM_70_15_04",
+            "title": "Asbestos clearance certificate"
+          },
+          {
+            "code": "PM_70_15_06",
+            "title": "Building assessment certificate"
+          },
+          {
+            "code": "PM_70_15_07",
+            "title": "Building control completion certificate"
+          },
+          {
+            "code": "PM_70_15_08",
+            "title": "Building control occupation certificate"
+          },
+          {
+            "code": "PM_70_15_11",
+            "title": "Cabling test certificate"
+          },
+          {
+            "code": "PM_70_15_12",
+            "title": "Certificate of making good defects"
+          },
+          {
+            "code": "PM_70_15_13",
+            "title": "Chlorination certificate"
+          },
+          {
+            "code": "PM_70_15_16",
+            "title": "Control of legionella certificate"
+          },
+          {
+            "code": "PM_70_15_21",
+            "title": "Demolition certificate"
+          },
+          {
+            "code": "PM_70_15_23",
+            "title": "Disinfection and sterilization certificate"
+          },
+          {
+            "code": "PM_70_15_24",
+            "title": "Distribution network operator (DNO) notification certificate"
+          },
+          {
+            "code": "PM_70_15_25",
+            "title": "Emergency lighting certificate"
+          },
+          {
+            "code": "PM_70_15_26",
+            "title": "Environmental completion certificate"
+          },
+          {
+            "code": "PM_70_15_27",
+            "title": "Electrical test certificate"
+          },
+          {
+            "code": "PM_70_15_28",
+            "title": "Fire alarm electrical supply test certificate"
+          },
+          {
+            "code": "PM_70_15_29",
+            "title": "Fire safety acceptance certificate"
+          },
+          {
+            "code": "PM_70_15_30",
+            "title": "Fire-stopping protection certificate"
+          },
+          {
+            "code": "PM_70_15_31",
+            "title": "Fire-stopping protection register"
+          },
+          {
+            "code": "PM_70_15_32",
+            "title": "Flat roof electronic test results"
+          },
+          {
+            "code": "PM_70_15_33",
+            "title": "Gas installation pressure test and purging certificate"
+          },
+          {
+            "code": "PM_70_15_34",
+            "title": "Gas installation safety certificate"
+          },
+          {
+            "code": "PM_70_15_36",
+            "title": "High-risk building work completion certificate"
+          },
+          {
+            "code": "PM_70_15_40",
+            "title": "Incoming gas supply pressure test report"
+          },
+          {
+            "code": "PM_70_15_42",
+            "title": "Insurance certificate"
+          },
+          {
+            "code": "PM_70_15_50",
+            "title": "Material fire performance test certificate"
+          },
+          {
+            "code": "PM_70_15_60",
+            "title": "Party wall certificate"
+          },
+          {
+            "code": "PM_70_15_63",
+            "title": "Power metering commissioning certificate"
+          },
+          {
+            "code": "PM_70_15_65",
+            "title": "Primary fresh air supply test certificate"
+          },
+          {
+            "code": "PM_70_15_76",
+            "title": "Secondary and backup electricity supplies test certificate"
+          },
+          {
+            "code": "PM_70_15_80",
+            "title": "Smoke and fire alarm and fire suppression system telephone lines test results"
+          },
+          {
+            "code": "PM_70_15_82",
+            "title": "Soak test results"
+          },
+          {
+            "code": "PM_70_15_83",
+            "title": "Sports pitch certificate"
+          },
+          {
+            "code": "PM_70_15_84",
+            "title": "Structured data cabling test certificate"
+          },
+          {
+            "code": "PM_70_15_85",
+            "title": "Sustainable timber certificate"
+          },
+          {
+            "code": "PM_70_15_91",
+            "title": "Unvented hot water competence certificate"
+          },
+          {
+            "code": "PM_70_15_95",
+            "title": "Water authority compliance certificate"
+          },
+          {
+            "code": "PM_70_15_96",
+            "title": "Water quality and flushing test certificate"
+          },
+          {
+            "code": "PM_70_15_98",
+            "title": "White lining sign-off certificate"
+          }
+        ]
+      },
+      {
+        "code": "PM_70_25",
+        "title": "Energy and environmental certification documents",
+        "sections": [
+          {
+            "code": "PM_70_25_10",
+            "title": "BREEAM (Building Research Establishment Environmental Assessment Method) certificate"
+          },
+          {
+            "code": "PM_70_25_27",
+            "title": "Energy technology list (ETL) certification"
+          },
+          {
+            "code": "PM_70_25_45",
+            "title": "LEED (Leadership in Energy and Environmental Design) certificate"
+          },
+          {
+            "code": "PM_70_25_56",
+            "title": "NABERS energy certificate"
+          },
+          {
+            "code": "PM_70_25_60",
+            "title": "Passive house energy certificate"
+          },
+          {
+            "code": "PM_70_25_70",
+            "title": "Retrofit energy certificate"
+          },
+          {
+            "code": "PM_70_25_96",
+            "title": "WELL environment certificate"
+          }
+        ]
+      },
+      {
+        "code": "PM_70_30",
+        "title": "Equipment certification documents",
+        "sections": [
+          {
+            "code": "PM_70_30_02",
+            "title": "Air handling unit commissioning certificate"
+          },
+          {
+            "code": "PM_70_30_04",
+            "title": "Automatic door test certificate"
+          },
+          {
+            "code": "PM_70_30_06",
+            "title": "Boiler commissioning certificate"
+          },
+          {
+            "code": "PM_70_30_08",
+            "title": "Booster pump set test certificate"
+          },
+          {
+            "code": "PM_70_30_10",
+            "title": "Building management systems (BMS) commissioning certificate"
+          },
+          {
+            "code": "PM_70_30_12",
+            "title": "Chilled beam commissioning certificate"
+          },
+          {
+            "code": "PM_70_30_13",
+            "title": "Chiller commissioning certificate"
+          },
+          {
+            "code": "PM_70_30_15",
+            "title": "Closed-circuit television (CCTV) commissioning certificate"
+          },
+          {
+            "code": "PM_70_30_21",
+            "title": "Data cable test certificate"
+          },
+          {
+            "code": "PM_70_30_22",
+            "title": "Disabled alarms and disabled refuge alarm testing certificate"
+          },
+          {
+            "code": "PM_70_30_24",
+            "title": "Ductwork air leakage test certificate"
+          },
+          {
+            "code": "PM_70_30_25",
+            "title": "Fan test certificate"
+          },
+          {
+            "code": "PM_70_30_26",
+            "title": "Equipment safety certificate"
+          },
+          {
+            "code": "PM_70_30_27",
+            "title": "Fire hydrant and mains commissioning certificate"
+          },
+          {
+            "code": "PM_70_30_28",
+            "title": "Fire-rated doors test certificate"
+          },
+          {
+            "code": "PM_70_30_29",
+            "title": "Fire-rated glazing and framing test certificate"
+          },
+          {
+            "code": "PM_70_30_30",
+            "title": "Fire and smoke damper test certificate"
+          },
+          {
+            "code": "PM_70_30_31",
+            "title": "Fan coil unit test certificate"
+          },
+          {
+            "code": "PM_70_30_32",
+            "title": "Fume cupboard commissioning certificate"
+          },
+          {
+            "code": "PM_70_30_33",
+            "title": "Gas appliance commissioning certificate"
+          },
+          {
+            "code": "PM_70_30_35",
+            "title": "Generator commissioning certificate"
+          },
+          {
+            "code": "PM_70_30_37",
+            "title": "Heater test certificate"
+          },
+          {
+            "code": "PM_70_30_40",
+            "title": "Information and communications technology (ICT) security certification information"
+          },
+          {
+            "code": "PM_70_30_45",
+            "title": "Kitchen equipment certificate"
+          },
+          {
+            "code": "PM_70_30_47",
+            "title": "Lightning protection certificate"
+          },
+          {
+            "code": "PM_70_30_64",
+            "title": "Photovoltaic solar panel test certificate"
+          },
+          {
+            "code": "PM_70_30_66",
+            "title": "Pump test certificate"
+          },
+          {
+            "code": "PM_70_30_70",
+            "title": "Retractable seating safety certificate"
+          },
+          {
+            "code": "PM_70_30_73",
+            "title": "Roller shutter commissioning and conformity certificate"
+          },
+          {
+            "code": "PM_70_30_78",
+            "title": "Security and intruder alarm commissioning certificate"
+          },
+          {
+            "code": "PM_70_30_79",
+            "title": "Smoke curtain drop test and commissioning certificate"
+          },
+          {
+            "code": "PM_70_30_80",
+            "title": "Solar hot water collector commissioning certificate"
+          },
+          {
+            "code": "PM_70_30_83",
+            "title": "Sprinkler installation test certificate"
+          },
+          {
+            "code": "PM_70_30_88",
+            "title": "Theatre lighting certificate"
+          },
+          {
+            "code": "PM_70_30_92",
+            "title": "Uninterruptible power supply (UPS) test certificate"
+          },
+          {
+            "code": "PM_70_30_94",
+            "title": "Water heater test certificate"
+          },
+          {
+            "code": "PM_70_30_95",
+            "title": "Water treatment equipment test certificate"
+          },
+          {
+            "code": "PM_70_30_97",
+            "title": "Window certificates"
+          },
+          {
+            "code": "PM_70_30_98",
+            "title": "Workshop equipment commissioning certificate"
+          }
+        ]
+      },
+      {
+        "code": "PM_70_40",
+        "title": "Installation inspection information",
+        "sections": [
+          {
+            "code": "PM_70_40_23",
+            "title": "Drain test inspection report"
+          },
+          {
+            "code": "PM_70_40_28",
+            "title": "Fire-rated doors installation inspection report"
+          },
+          {
+            "code": "PM_70_40_30",
+            "title": "Fire-stopping installation inspection report"
+          },
+          {
+            "code": "PM_70_40_34",
+            "title": "Generator inspection report"
+          },
+          {
+            "code": "PM_70_40_75",
+            "title": "Safety glass installation inspection report"
+          }
+        ]
+      },
+      {
+        "code": "PM_70_70",
+        "title": "Structural testing information",
+        "sections": [
+          {
+            "code": "PM_70_70_13",
+            "title": "Cement test report"
+          },
+          {
+            "code": "PM_70_70_15",
+            "title": "Concrete cube test report"
+          },
+          {
+            "code": "PM_70_70_17",
+            "title": "Concrete design certificate"
+          },
+          {
+            "code": "PM_70_70_18",
+            "title": "Concrete mix design certificate"
+          },
+          {
+            "code": "PM_70_70_25",
+            "title": "Pile dynamic load testing report"
+          },
+          {
+            "code": "PM_70_70_28",
+            "title": "External wall system assessment information"
+          },
+          {
+            "code": "PM_70_70_42",
+            "title": "Pile integrity testing report"
+          },
+          {
+            "code": "PM_70_70_70",
+            "title": "Pile rapid load testing report"
+          },
+          {
+            "code": "PM_70_70_74",
+            "title": "Roof truss certificate"
+          },
+          {
+            "code": "PM_70_70_80",
+            "title": "Static loading pile test report"
+          },
+          {
+            "code": "PM_70_70_81",
+            "title": "Structural fire protection certificate"
+          },
+          {
+            "code": "PM_70_70_82",
+            "title": "Pile static load testing test records"
+          },
+          {
+            "code": "PM_70_70_96",
+            "title": "Wall ties and structural restraint inspection report"
+          }
+        ]
+      },
+      {
+        "code": "PM_70_75",
+        "title": "Testing information",
+        "sections": [
+          {
+            "code": "PM_70_75_01",
+            "title": "Acoustic test report"
+          },
+          {
+            "code": "PM_70_75_02",
+            "title": "Air distribution test report"
+          },
+          {
+            "code": "PM_70_75_03",
+            "title": "Access equipment test report"
+          },
+          {
+            "code": "PM_70_75_04",
+            "title": "Air leakage test certificate"
+          },
+          {
+            "code": "PM_70_75_05",
+            "title": "Air quality test certificate"
+          },
+          {
+            "code": "PM_70_75_06",
+            "title": "Bathroom pod test certificate"
+          },
+          {
+            "code": "PM_70_75_07",
+            "title": "Bell system test report"
+          },
+          {
+            "code": "PM_70_75_08",
+            "title": "Boiler test report"
+          },
+          {
+            "code": "PM_70_75_09",
+            "title": "Ceiling system fire resistance test report"
+          },
+          {
+            "code": "PM_70_75_10",
+            "title": "Chlorination test report"
+          },
+          {
+            "code": "PM_70_75_11",
+            "title": "Cable test report"
+          },
+          {
+            "code": "PM_70_75_12",
+            "title": "Cladding and curtain walling water test report"
+          },
+          {
+            "code": "PM_70_75_13",
+            "title": "Coliform and bacteria count test report"
+          },
+          {
+            "code": "PM_70_75_14",
+            "title": "Combined heat and power (CHP) system test report"
+          },
+          {
+            "code": "PM_70_75_15",
+            "title": "Control system test report"
+          },
+          {
+            "code": "PM_70_75_17",
+            "title": "Co-ordinated shut down interface test report"
+          },
+          {
+            "code": "PM_70_75_21",
+            "title": "Disabled alarms and disabled refuge alarm test report"
+          },
+          {
+            "code": "PM_70_75_22",
+            "title": "Drainage leakage test results"
+          },
+          {
+            "code": "PM_70_75_23",
+            "title": "Ductwork cleaning test certificate"
+          },
+          {
+            "code": "PM_70_75_24",
+            "title": "Ductwork cleaning test report"
+          },
+          {
+            "code": "PM_70_75_25",
+            "title": "Ductwork pressure test certificate"
+          },
+          {
+            "code": "PM_70_75_27",
+            "title": "Electrical installation test report"
+          },
+          {
+            "code": "PM_70_75_28",
+            "title": "Emergency lighting test report"
+          },
+          {
+            "code": "PM_70_75_29",
+            "title": "Energy meter calibration test report"
+          },
+          {
+            "code": "PM_70_75_30",
+            "title": "Fire protection installation test report"
+          },
+          {
+            "code": "PM_70_75_31",
+            "title": "Fire alarm test certificate"
+          },
+          {
+            "code": "PM_70_75_32",
+            "title": "Fire alarm decibel level test report"
+          },
+          {
+            "code": "PM_70_75_33",
+            "title": "Fume cupboard test report"
+          },
+          {
+            "code": "PM_70_75_34",
+            "title": "Gas interlock test report"
+          },
+          {
+            "code": "PM_70_75_35",
+            "title": "Generator test report"
+          },
+          {
+            "code": "PM_70_75_36",
+            "title": "Heating installation test report"
+          },
+          {
+            "code": "PM_70_75_37",
+            "title": "High-voltage electrical installation test report"
+          },
+          {
+            "code": "PM_70_75_40",
+            "title": "Information and communications technology (ICT) infrastructure test report"
+          },
+          {
+            "code": "PM_70_75_45",
+            "title": "Kitchen equipment installation test report"
+          },
+          {
+            "code": "PM_70_75_47",
+            "title": "Lifts test report"
+          },
+          {
+            "code": "PM_70_75_48",
+            "title": "Lighting lux level test report"
+          },
+          {
+            "code": "PM_70_75_49",
+            "title": "Lightning protection installation test report"
+          },
+          {
+            "code": "PM_70_75_52",
+            "title": "Monitoring systems connection test report"
+          },
+          {
+            "code": "PM_70_75_61",
+            "title": "Perimeter gates test report"
+          },
+          {
+            "code": "PM_70_75_63",
+            "title": "Pipeline pressure test certificate"
+          },
+          {
+            "code": "PM_70_75_65",
+            "title": "Pressure system installation test report"
+          },
+          {
+            "code": "PM_70_75_68",
+            "title": "Public health installation test report"
+          },
+          {
+            "code": "PM_70_75_69",
+            "title": "Rainwater drainage system test certificate"
+          },
+          {
+            "code": "PM_70_75_70",
+            "title": "Rainwater harvesting system test certificate"
+          },
+          {
+            "code": "PM_70_75_71",
+            "title": "Refrigerant pipeline pressure test certificate"
+          },
+          {
+            "code": "PM_70_75_79",
+            "title": "Sliding partitions test report"
+          },
+          {
+            "code": "PM_70_75_81",
+            "title": "Solar panel wind uplift test report"
+          },
+          {
+            "code": "PM_70_75_83",
+            "title": "Sound and lighting systems test report"
+          },
+          {
+            "code": "PM_70_75_85",
+            "title": "Surveillance equipment installation test report"
+          },
+          {
+            "code": "PM_70_75_88",
+            "title": "Telecommunications installation test report"
+          },
+          {
+            "code": "PM_70_75_93",
+            "title": "Voice alarm equipment test certificate"
+          },
+          {
+            "code": "PM_70_75_94",
+            "title": "Ventilation test report"
+          },
+          {
+            "code": "PM_70_75_95",
+            "title": "Wastewater drainage system test certificate"
+          },
+          {
+            "code": "PM_70_75_96",
+            "title": "Water distribution pressure test report"
+          },
+          {
+            "code": "PM_70_75_97",
+            "title": "Window cleaning equipment test report"
+          },
+          {
+            "code": "PM_70_75_98",
+            "title": "Workshop equipment test certificate"
+          }
+        ]
+      },
+      {
+        "code": "PM_70_80",
+        "title": "Commissioning information",
+        "sections": [
+          {
+            "code": "PM_70_80_01",
+            "title": "Access control commissioning certificate"
+          },
+          {
+            "code": "PM_70_80_02",
+            "title": "Air distribution systems commissioning report"
+          },
+          {
+            "code": "PM_70_80_03",
+            "title": "Air conditioning systems commissioning certificate"
+          },
+          {
+            "code": "PM_70_80_04",
+            "title": "Air source heat pump commissioning certificate"
+          },
+          {
+            "code": "PM_70_80_05",
+            "title": "Audiovisual systems commissioning and acceptance certificate"
+          },
+          {
+            "code": "PM_70_80_07",
+            "title": "Bell system commissioning certificate"
+          },
+          {
+            "code": "PM_70_80_11",
+            "title": "Chilled water system commissioning certificate"
+          },
+          {
+            "code": "PM_70_80_13",
+            "title": "Combined heat and power (CHP) system commissioning certificate"
+          },
+          {
+            "code": "PM_70_80_14",
+            "title": "Communications systems commissioning certificate"
+          },
+          {
+            "code": "PM_70_80_15",
+            "title": "Control system commissioning report"
+          },
+          {
+            "code": "PM_70_80_22",
+            "title": "Domestic hot water commissioning certificate"
+          },
+          {
+            "code": "PM_70_80_24",
+            "title": "Dry fire main commissioning certificate"
+          },
+          {
+            "code": "PM_70_80_28",
+            "title": "Emergency lighting installation commissioning report"
+          },
+          {
+            "code": "PM_70_80_30",
+            "title": "Fire alarm system commissioning certificate"
+          },
+          {
+            "code": "PM_70_80_31",
+            "title": "Fire suppression system commissioning certificate"
+          },
+          {
+            "code": "PM_70_80_32",
+            "title": "Fume cupboard commissioning report"
+          },
+          {
+            "code": "PM_70_80_34",
+            "title": "Ground source heat pump commissioning certificate"
+          },
+          {
+            "code": "PM_70_80_36",
+            "title": "Heating system commissioning certificate"
+          },
+          {
+            "code": "PM_70_80_37",
+            "title": "Heating system water treatment certificate"
+          },
+          {
+            "code": "PM_70_80_42",
+            "title": "Induction loop commissioning certificate"
+          },
+          {
+            "code": "PM_70_80_45",
+            "title": "Kitchen ventilation certificate"
+          },
+          {
+            "code": "PM_70_80_46",
+            "title": "Lifts commissioning certificate"
+          },
+          {
+            "code": "PM_70_80_47",
+            "title": "Lifts commissioning report"
+          },
+          {
+            "code": "PM_70_80_48",
+            "title": "Lighting commissioning report"
+          },
+          {
+            "code": "PM_70_80_49",
+            "title": "Lighting control certificate"
+          },
+          {
+            "code": "PM_70_80_75",
+            "title": "Seasonal commissioning certificate"
+          },
+          {
+            "code": "PM_70_80_77",
+            "title": "Security system commissioning report"
+          },
+          {
+            "code": "PM_70_80_79",
+            "title": "Smoke extract and control system commissioning certificate"
+          },
+          {
+            "code": "PM_70_80_80",
+            "title": "Smoke extract and control system commissioning report"
+          },
+          {
+            "code": "PM_70_80_85",
+            "title": "Surveillance system installation commissioning report"
+          },
+          {
+            "code": "PM_70_80_88",
+            "title": "Telecommunications installation certificate"
+          },
+          {
+            "code": "PM_70_80_89",
+            "title": "Toilet alarm commissioning certificate"
+          },
+          {
+            "code": "PM_70_80_90",
+            "title": "Trace heating commissioning certificate"
+          },
+          {
+            "code": "PM_70_80_92",
+            "title": "Underfloor heating commissioning certificate"
+          },
+          {
+            "code": "PM_70_80_94",
+            "title": "Ventilation commissioning certificate"
+          },
+          {
+            "code": "PM_70_80_96",
+            "title": "Water distribution commissioning report"
+          }
+        ]
+      },
+      {
+        "code": "PM_70_85",
+        "title": "Completion information",
+        "sections": [
+          {
+            "code": "PM_70_85_08",
+            "title": "Building logbook"
+          },
+          {
+            "code": "PM_70_85_10",
+            "title": "Building manual"
+          },
+          {
+            "code": "PM_70_85_11",
+            "title": "Clarifications information"
+          },
+          {
+            "code": "PM_70_85_14",
+            "title": "Contractor sign-off report"
+          },
+          {
+            "code": "PM_70_85_15",
+            "title": "Construction to occupation transition strategy"
+          },
+          {
+            "code": "PM_70_85_18",
+            "title": "Defects notification information"
+          },
+          {
+            "code": "PM_70_85_20",
+            "title": "Defects rectification report"
+          },
+          {
+            "code": "PM_70_85_22",
+            "title": "Defects register"
+          },
+          {
+            "code": "PM_70_85_25",
+            "title": "End user operating information"
+          },
+          {
+            "code": "PM_70_85_30",
+            "title": "Final inspection report"
+          },
+          {
+            "code": "PM_70_85_31",
+            "title": "Fire safety management plan information"
+          },
+          {
+            "code": "PM_70_85_33",
+            "title": "Handover board record of acceptance for occupation"
+          },
+          {
+            "code": "PM_70_85_34",
+            "title": "Handover communications information"
+          },
+          {
+            "code": "PM_70_85_35",
+            "title": "Handover strategy"
+          },
+          {
+            "code": "PM_70_85_40",
+            "title": "Health and safety file"
+          },
+          {
+            "code": "PM_70_85_44",
+            "title": "Life expectancy information"
+          },
+          {
+            "code": "PM_70_85_45",
+            "title": "Spares and consumables information"
+          },
+          {
+            "code": "PM_70_85_50",
+            "title": "Maintenance schedules"
+          },
+          {
+            "code": "PM_70_85_52",
+            "title": "Manufacturer information"
+          },
+          {
+            "code": "PM_70_85_55",
+            "title": "Operating instruction"
+          },
+          {
+            "code": "PM_70_85_56",
+            "title": "Operation and maintenance manual"
+          },
+          {
+            "code": "PM_70_85_60",
+            "title": "Plant logbook"
+          },
+          {
+            "code": "PM_70_85_62",
+            "title": "Pre-handover plan"
+          },
+          {
+            "code": "PM_70_85_64",
+            "title": "Project completion report"
+          },
+          {
+            "code": "PM_70_85_70",
+            "title": "Remedial work completion report"
+          },
+          {
+            "code": "PM_70_85_79",
+            "title": "Soft landings process information"
+          },
+          {
+            "code": "PM_70_85_83",
+            "title": "Supplier directory"
+          },
+          {
+            "code": "PM_70_85_90",
+            "title": "Training documentation"
+          },
+          {
+            "code": "PM_70_85_91",
+            "title": "Training programme"
+          },
+          {
+            "code": "PM_70_85_92",
+            "title": "User acceptance information"
+          },
+          {
+            "code": "PM_70_85_93",
+            "title": "Utilities readings"
+          },
+          {
+            "code": "PM_70_85_96",
+            "title": "Works completion certificate"
+          }
+        ]
+      },
+      {
+        "code": "PM_70_90",
+        "title": "Record information",
+        "sections": [
+          {
+            "code": "PM_70_90_04",
+            "title": "Architectural record drawings"
+          },
+          {
+            "code": "PM_70_90_15",
+            "title": "Control system record drawings"
+          },
+          {
+            "code": "PM_70_90_27",
+            "title": "Electrical systems record drawings"
+          },
+          {
+            "code": "PM_70_90_28",
+            "title": "Fire compartmentation record drawings"
+          },
+          {
+            "code": "PM_70_90_29",
+            "title": "Fire system cause and effect diagrams"
+          },
+          {
+            "code": "PM_70_90_30",
+            "title": "Fire system record drawings"
+          },
+          {
+            "code": "PM_70_90_31",
+            "title": "Fire and smoke stopping record drawings"
+          },
+          {
+            "code": "PM_70_90_45",
+            "title": "Key firefighting equipment diagrams"
+          },
+          {
+            "code": "PM_70_90_46",
+            "title": "Landscape record drawings"
+          },
+          {
+            "code": "PM_70_90_52",
+            "title": "Mechanical systems record drawings"
+          },
+          {
+            "code": "PM_70_90_68",
+            "title": "Public health system record drawings"
+          },
+          {
+            "code": "PM_70_90_77",
+            "title": "Security system record drawings"
+          },
+          {
+            "code": "PM_70_90_79",
+            "title": "Setting out records"
+          },
+          {
+            "code": "PM_70_90_82",
+            "title": "Structural fire protection record drawings"
+          },
+          {
+            "code": "PM_70_90_83",
+            "title": "Structural record drawings"
+          }
+        ]
+      },
+      {
+        "code": "PM_70_95",
+        "title": "Project assurance information",
+        "sections": [
+          {
+            "code": "PM_70_95_08",
+            "title": "Building fabric strategy compliance report"
+          },
+          {
+            "code": "PM_70_95_20",
+            "title": "Design compliance review report"
+          },
+          {
+            "code": "PM_70_95_21",
+            "title": "Design compliance certificate"
+          },
+          {
+            "code": "PM_70_95_29",
+            "title": "Fire-stopping and smoke-stopping assurance records"
+          },
+          {
+            "code": "PM_70_95_30",
+            "title": "Fire-rated doorset assurance records"
+          },
+          {
+            "code": "PM_70_95_33",
+            "title": "Gateway review information"
+          },
+          {
+            "code": "PM_70_95_34",
+            "title": "Governance strategy information"
+          },
+          {
+            "code": "PM_70_95_58",
+            "title": "Option analysis support paper"
+          },
+          {
+            "code": "PM_70_95_62",
+            "title": "Performance testing compliance report"
+          },
+          {
+            "code": "PM_70_95_64",
+            "title": "Post-project evaluation information"
+          },
+          {
+            "code": "PM_70_95_65",
+            "title": "Product compliance evidence information"
+          },
+          {
+            "code": "PM_70_95_66",
+            "title": "Project Assurance Group (PAG) sign-off"
+          },
+          {
+            "code": "PM_70_95_70",
+            "title": "Risk potential assessment"
+          },
+          {
+            "code": "PM_70_95_82",
+            "title": "Structural fire protection assurance records"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "code": "PM_80",
+    "title": "Asset management information",
+    "subgroups": [
+      {
+        "code": "PM_80_10",
+        "title": "Asset strategy, planning and management information",
+        "sections": [
+          {
+            "code": "PM_80_10_01",
+            "title": "Asbestos management plan"
+          },
+          {
+            "code": "PM_80_10_03",
+            "title": "Asset information protocol"
+          },
+          {
+            "code": "PM_80_10_05",
+            "title": "Asset guarantee and warranty information"
+          },
+          {
+            "code": "PM_80_10_07",
+            "title": "Asset management responsibility information"
+          },
+          {
+            "code": "PM_80_10_08",
+            "title": "Asset management policy information"
+          },
+          {
+            "code": "PM_80_10_09",
+            "title": "Asset management strategy information"
+          },
+          {
+            "code": "PM_80_10_10",
+            "title": "Asset register"
+          },
+          {
+            "code": "PM_80_10_11",
+            "title": "Asset condition photographs"
+          },
+          {
+            "code": "PM_80_10_12",
+            "title": "Building performance evaluation plan"
+          },
+          {
+            "code": "PM_80_10_14",
+            "title": "Closed-circuit television (CCTV) strategy"
+          },
+          {
+            "code": "PM_80_10_15",
+            "title": "Configuration management strategy"
+          },
+          {
+            "code": "PM_80_10_16",
+            "title": "Configuration record"
+          },
+          {
+            "code": "PM_80_10_18",
+            "title": "Crime prevention strategy"
+          },
+          {
+            "code": "PM_80_10_19",
+            "title": "Critical assets list"
+          },
+          {
+            "code": "PM_80_10_20",
+            "title": "Deterioration modelling"
+          },
+          {
+            "code": "PM_80_10_22",
+            "title": "Display energy certificate"
+          },
+          {
+            "code": "PM_80_10_23",
+            "title": "Employment and skills plan"
+          },
+          {
+            "code": "PM_80_10_24",
+            "title": "Energy consumption information"
+          },
+          {
+            "code": "PM_80_10_25",
+            "title": "Energy performance certificate"
+          },
+          {
+            "code": "PM_80_10_27",
+            "title": "Equipment schedule"
+          },
+          {
+            "code": "PM_80_10_30",
+            "title": "Finishes information"
+          },
+          {
+            "code": "PM_80_10_31",
+            "title": "Fire and emergency file"
+          },
+          {
+            "code": "PM_80_10_32",
+            "title": "Furniture audit"
+          },
+          {
+            "code": "PM_80_10_40",
+            "title": "Information and communications technology (ICT) protocol"
+          },
+          {
+            "code": "PM_80_10_42",
+            "title": "Insurer's requirements"
+          },
+          {
+            "code": "PM_80_10_44",
+            "title": "Landscape and habitat management plan"
+          },
+          {
+            "code": "PM_80_10_45",
+            "title": "Lessons learned notice"
+          },
+          {
+            "code": "PM_80_10_47",
+            "title": "Loose equipment protocol"
+          },
+          {
+            "code": "PM_80_10_49",
+            "title": "Material flow diagram"
+          },
+          {
+            "code": "PM_80_10_50",
+            "title": "Maintenance requirements"
+          },
+          {
+            "code": "PM_80_10_52",
+            "title": "Maintenance plan information"
+          },
+          {
+            "code": "PM_80_10_53",
+            "title": "Maintenance programme information"
+          },
+          {
+            "code": "PM_80_10_54",
+            "title": "Maintenance records"
+          },
+          {
+            "code": "PM_80_10_55",
+            "title": "Metering strategy"
+          },
+          {
+            "code": "PM_80_10_56",
+            "title": "Non-conformance notification"
+          },
+          {
+            "code": "PM_80_10_57",
+            "title": "Non-conformance protocol"
+          },
+          {
+            "code": "PM_80_10_58",
+            "title": "Organization chart"
+          },
+          {
+            "code": "PM_80_10_59",
+            "title": "Organization operational instructions"
+          },
+          {
+            "code": "PM_80_10_60",
+            "title": "Performance analysis"
+          },
+          {
+            "code": "PM_80_10_63",
+            "title": "Plant and equipment service life report"
+          },
+          {
+            "code": "PM_80_10_64",
+            "title": "Portable appliance test (PAT) information"
+          },
+          {
+            "code": "PM_80_10_65",
+            "title": "Post-operational evaluation"
+          },
+          {
+            "code": "PM_80_10_67",
+            "title": "Postal arrangements information"
+          },
+          {
+            "code": "PM_80_10_72",
+            "title": "Road sewer adoption licence"
+          },
+          {
+            "code": "PM_80_10_78",
+            "title": "Scenario modelling"
+          },
+          {
+            "code": "PM_80_10_79",
+            "title": "Security management plan"
+          },
+          {
+            "code": "PM_80_10_80",
+            "title": "Shoreline management plans"
+          },
+          {
+            "code": "PM_80_10_84",
+            "title": "Survey management plan"
+          },
+          {
+            "code": "PM_80_10_88",
+            "title": "Telephone system information"
+          },
+          {
+            "code": "PM_80_10_90",
+            "title": "Travel plan information"
+          },
+          {
+            "code": "PM_80_10_93",
+            "title": "Vehicle parking management plans"
+          },
+          {
+            "code": "PM_80_10_94",
+            "title": "Visit questionnaire information"
+          }
+        ]
+      },
+      {
+        "code": "PM_80_15",
+        "title": "Asset maintenance information",
+        "sections": [
+          {
+            "code": "PM_80_15_31",
+            "title": "Fire safety log book"
+          },
+          {
+            "code": "PM_80_15_47",
+            "title": "Lighting and small power maintenance strategy"
+          },
+          {
+            "code": "PM_80_15_52",
+            "title": "Mechanical, electrical, instrumentation, controls and automation (MEICA) maintenance strategy"
+          },
+          {
+            "code": "PM_80_15_70",
+            "title": "Renewable energy equipment maintenance strategy"
+          },
+          {
+            "code": "PM_80_15_94",
+            "title": "Ventilation maintenance strategy"
+          }
+        ]
+      },
+      {
+        "code": "PM_80_20",
+        "title": "Communications and engagement",
+        "sections": [
+          {
+            "code": "PM_80_20_15",
+            "title": "Communications log"
+          },
+          {
+            "code": "PM_80_20_17",
+            "title": "Consultation strategy"
+          },
+          {
+            "code": "PM_80_20_19",
+            "title": "Contacts list"
+          },
+          {
+            "code": "PM_80_20_42",
+            "title": "Issued communications"
+          },
+          {
+            "code": "PM_80_20_50",
+            "title": "Media communications"
+          },
+          {
+            "code": "PM_80_20_72",
+            "title": "Received communications"
+          }
+        ]
+      },
+      {
+        "code": "PM_80_25",
+        "title": "Asset impact assessments",
+        "sections": [
+          {
+            "code": "PM_80_25_08",
+            "title": "Biodiversity net gain assessments"
+          },
+          {
+            "code": "PM_80_25_26",
+            "title": "Energy performance assessments"
+          },
+          {
+            "code": "PM_80_25_30",
+            "title": "Flood warning area assessments"
+          },
+          {
+            "code": "PM_80_25_36",
+            "title": "Health impact assessments"
+          },
+          {
+            "code": "PM_80_25_38",
+            "title": "Heritage impact assessments"
+          },
+          {
+            "code": "PM_80_25_46",
+            "title": "Land use assessments"
+          },
+          {
+            "code": "PM_80_25_47",
+            "title": "Life cycle assessments"
+          },
+          {
+            "code": "PM_80_25_80",
+            "title": "Socio-economic impact assessments"
+          }
+        ]
+      },
+      {
+        "code": "PM_80_30",
+        "title": "Asset life cycle cost information",
+        "sections": [
+          {
+            "code": "PM_80_30_05",
+            "title": "Acquisition costs"
+          },
+          {
+            "code": "PM_80_30_07",
+            "title": "Asset value calculation information"
+          },
+          {
+            "code": "PM_80_30_12",
+            "title": "Capital investment cost information"
+          },
+          {
+            "code": "PM_80_30_30",
+            "title": "Finance charges information"
+          },
+          {
+            "code": "PM_80_30_50",
+            "title": "Maintenance and repair cost information"
+          },
+          {
+            "code": "PM_80_30_51",
+            "title": "Maintenance and lease agreement information"
+          },
+          {
+            "code": "PM_80_30_53",
+            "title": "Management cost information"
+          },
+          {
+            "code": "PM_80_30_60",
+            "title": "Office services cost information"
+          },
+          {
+            "code": "PM_80_30_63",
+            "title": "Operational cost information"
+          },
+          {
+            "code": "PM_80_30_70",
+            "title": "Replacement cost information"
+          },
+          {
+            "code": "PM_80_30_80",
+            "title": "Staff cost information"
+          },
+          {
+            "code": "PM_80_30_90",
+            "title": "Utilities cost information"
+          },
+          {
+            "code": "PM_80_30_96",
+            "title": "Written scheme of examination information"
+          }
+        ]
+      },
+      {
+        "code": "PM_80_40",
+        "title": "Personnel training information",
+        "sections": [
+          {
+            "code": "PM_80_40_30",
+            "title": "Fire warden training certificate"
+          },
+          {
+            "code": "PM_80_40_32",
+            "title": "First responder training certificate"
+          },
+          {
+            "code": "PM_80_40_36",
+            "title": "High-voltage systems operator training certificate"
+          },
+          {
+            "code": "PM_80_40_47",
+            "title": "Lift training certificate"
+          },
+          {
+            "code": "PM_80_40_52",
+            "title": "Medical gases training certificate"
+          },
+          {
+            "code": "PM_80_40_80",
+            "title": "Software training documentation"
+          },
+          {
+            "code": "PM_80_40_89",
+            "title": "Training completion reports"
+          },
+          {
+            "code": "PM_80_40_90",
+            "title": "Training guides and videos"
+          },
+          {
+            "code": "PM_80_40_96",
+            "title": "Water hygiene awareness training certificate"
+          }
+        ]
+      },
+      {
+        "code": "PM_80_45",
+        "title": "Personnel information",
+        "sections": [
+          {
+            "code": "PM_80_45_02",
+            "title": "Accountable person details"
+          },
+          {
+            "code": "PM_80_45_17",
+            "title": "Client compliance declaration"
+          },
+          {
+            "code": "PM_80_45_23",
+            "title": "Designated individual details"
+          },
+          {
+            "code": "PM_80_45_25",
+            "title": "Duty holder details"
+          },
+          {
+            "code": "PM_80_45_60",
+            "title": "Principal accountable person details"
+          },
+          {
+            "code": "PM_80_45_61",
+            "title": "Principal accountable person organization details"
+          }
+        ]
+      },
+      {
+        "code": "PM_80_50",
+        "title": "Emergency strategy information",
+        "sections": [
+          {
+            "code": "PM_80_50_10",
+            "title": "Building safety management strategy"
+          },
+          {
+            "code": "PM_80_50_20",
+            "title": "Disaster recovery strategy"
+          },
+          {
+            "code": "PM_80_50_25",
+            "title": "Disaster response strategy"
+          },
+          {
+            "code": "PM_80_50_27",
+            "title": "Emergency response packs"
+          },
+          {
+            "code": "PM_80_50_30",
+            "title": "Fire evacuation strategy"
+          },
+          {
+            "code": "PM_80_50_75",
+            "title": "Safety assistance details"
+          },
+          {
+            "code": "PM_80_50_80",
+            "title": "Security strategy"
+          }
+        ]
+      },
+      {
+        "code": "PM_80_60",
+        "title": "Asset risk management information",
+        "sections": [
+          {
+            "code": "PM_80_60_09",
+            "title": "Building safety risk assessment"
+          },
+          {
+            "code": "PM_80_60_12",
+            "title": "Change of risk information"
+          },
+          {
+            "code": "PM_80_60_13",
+            "title": "Chemical safety data sheets"
+          },
+          {
+            "code": "PM_80_60_15",
+            "title": "Compliance risk management information"
+          },
+          {
+            "code": "PM_80_60_21",
+            "title": "Dangerous substances and explosive atmospheres (DSEAR) assessment"
+          },
+          {
+            "code": "PM_80_60_30",
+            "title": "Financial risk management information"
+          },
+          {
+            "code": "PM_80_60_31",
+            "title": "Fire risk assessment information"
+          },
+          {
+            "code": "PM_80_60_32",
+            "title": "Flood risk management information"
+          },
+          {
+            "code": "PM_80_60_47",
+            "title": "Legionella risk assessment information"
+          },
+          {
+            "code": "PM_80_60_50",
+            "title": "Health and safety risk management information"
+          },
+          {
+            "code": "PM_80_60_56",
+            "title": "Natural flood risk management information"
+          },
+          {
+            "code": "PM_80_60_60",
+            "title": "Operational risk management information"
+          },
+          {
+            "code": "PM_80_60_65",
+            "title": "Performance risk management information"
+          },
+          {
+            "code": "PM_80_60_67",
+            "title": "Power failure risk management information"
+          },
+          {
+            "code": "PM_80_60_68",
+            "title": "Public safety risk management information"
+          },
+          {
+            "code": "PM_80_60_70",
+            "title": "Residual risk information"
+          },
+          {
+            "code": "PM_80_60_75",
+            "title": "Safety case report"
+          },
+          {
+            "code": "PM_80_60_78",
+            "title": "Security risk assessment information"
+          },
+          {
+            "code": "PM_80_60_85",
+            "title": "Structural risk assessment information"
+          },
+          {
+            "code": "PM_80_60_97",
+            "title": "Working at height compliance test information"
+          }
+        ]
+      }
+    ]
+  }
+]

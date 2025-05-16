@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { spfi, SPFx } from "@pnp/sp/presets/all";
 import { useState, useEffect } from 'react';
 import {
   Dialog,
@@ -25,6 +26,12 @@ import ProjectDetails from './ProjectDetails';
 import TaskCalendar from './projectCalender/TaskCalendar';
 import Navigation from './common/Navigation';
 import { TaskItem } from './projectCalender/ProgrammeTab';
+import StagesTab from './projectStages/StagesTab';
+import DocumentsOverview from './projectDocuments/DocumentsOverview';
+import FeesTab from './projectFees/FeesTab';
+
+import { DocumentService } from '../services/DocumentService';
+import { TemplateService } from '../services/TemplateService';
 
 const useStyles = makeStyles({
   root: {
@@ -79,22 +86,48 @@ const useStyles = makeStyles({
 
 interface ILandingPageProps {
   context: WebPartContext;
+  project: Project;
 }
 
 interface CustomWindow {
   __setListLoading?: (isLoading: boolean) => void;
 }
 
-const LandingPage: React.FC<ILandingPageProps> = ({ context }) => {
+const LandingPage: React.FC<ILandingPageProps> = ({ context, project }) => {
   const { setIsLoading } = useLoading();
   const [selectedProject, setSelectedProject] = useState<Project | undefined>();
+  const [documentService] = useState(() => new DocumentService(context));
+  const [templateService] = useState(() => new TemplateService(context));
 
   const styles = useStyles();
   const [tab, setTab] = useState<string>('overview');
   const [tasks, setTasks] = useState<TaskItem[]>([]);
   const [selectedTask, setSelectedTask] = useState<TaskItem | undefined>();
 
-  // const linkDestination = 'https://contoso.sharepoint.com/sites/ContosoHR/Pages/Home.aspx';
+  const sp = spfi().using(SPFx(context));
+
+  const renderTabContent = (): JSX.Element | null => {
+    switch (tab) {
+      case 'overview':
+        return <ProjectList />;
+      case 'programme':
+        return <TaskCalendar tasks={tasks} onTaskClick={setSelectedTask} />;
+      case 'stages':
+        return <StagesTab project={project} context={context} />;
+      case 'documents':
+        return <DocumentsOverview 
+          sp={sp}
+          project={selectedProject} 
+          context={context}
+          documentService={documentService}
+          templateService={templateService}
+        />;
+      case 'fees':
+        return <FeesTab project={project} context={context} />;
+      default:
+        return null;
+    }
+  };
 
   useEffect(() => {
     const service = ProjectSelectionService;
@@ -176,7 +209,7 @@ const LandingPage: React.FC<ILandingPageProps> = ({ context }) => {
               </DialogBody>
             </DialogSurface>
           </Dialog>
-          {tab === 'programme' ? <TaskCalendar tasks={tasks} onTaskClick={setSelectedTask} /> : <ProjectList />}
+          {renderTabContent()}
         </div>
 
         {/* Right Panel - Project Details */}

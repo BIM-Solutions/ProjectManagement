@@ -125,25 +125,27 @@ const StagesTab: React.FC<StagesTabProps> = ({ project, context }) => {
           }}
         >
           <DataGridHeader>
-            {(ctx: {columns: TableColumnDefinition<StageItem>[]}) => (
-              <DataGridRow>
-                {(column) => (
-                  ctx.columns.map((column) => (
-
-                  <DataGridCell key={column.columnId}>{column.renderHeaderCell()}</DataGridCell>
-                )))}
-              </DataGridRow>
-            )}
-          </DataGridHeader>
-          <DataGridBody<StageItem>>
-            {(row) => (
-              <React.Fragment>
-                {columns.map((column, index) => (
-                  <DataGridCell key={column.columnId} aria-colindex={index + 1}>
-                    {column.renderCell(row.item)}
+            <DataGridRow>
+              {(rowProps) => 
+                columns.map((column) => (
+                  <DataGridCell key={column.columnId}>
+                    {column.renderHeaderCell()}
                   </DataGridCell>
-                ))}
-              </React.Fragment>
+                ))
+              }
+            </DataGridRow>
+          </DataGridHeader>
+          <DataGridBody>
+            {({ item }: { item: StageItem }) => (
+              <DataGridRow>
+                {(rowProps) => 
+                  columns.map((column) => (
+                    <DataGridCell key={column.columnId}>
+                      {column.renderCell(item)}
+                    </DataGridCell>
+                  ))
+                }
+              </DataGridRow>
             )}
           </DataGridBody>
         </DataGrid>

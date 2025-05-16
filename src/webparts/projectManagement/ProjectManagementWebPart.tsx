@@ -32,6 +32,7 @@ export default class ProjectManagementWebPart extends BaseClientSideWebPart<IPro
   public _isDarkTheme: boolean = false;
   public _environmentMessage: string = '';
 
+  
   /**
    * Lifecycle method that is called when the web part is initialized.
    * It ensures that all the required lists and their fields are provisioned on the site.
@@ -65,7 +66,26 @@ export default class ProjectManagementWebPart extends BaseClientSideWebPart<IPro
         <FluentProvider theme={webLightTheme}>
           <SPProvider context={this.context}>
             <LoadingProvider>
-              <LandingPage context={this.context} />
+              <LandingPage 
+                context={this.context} 
+                project={{
+                  id: 0,
+                  ProjectNumber: '',
+                  ProjectName: '',
+                  Status: '',
+                  Client: '',
+                  ClientContact: '',
+                  ProjectDescription: '',
+                  DeltekSubCodes: '',
+                  SubCodes: '',
+                  Sector: '',
+                  PM: undefined,
+                  Manager: undefined,
+                  Checker: undefined,
+                  Approver: undefined,
+                  ProjectImage: ''
+                }} 
+              />
             </LoadingProvider>
           </SPProvider>
         </FluentProvider>

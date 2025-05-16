@@ -13,27 +13,15 @@ import {
   ToastBody,
 } from '@fluentui/react-components';
 import { WebPartContext } from '@microsoft/sp-webpart-base';
-import { spfi } from '@pnp/sp';
-import { SPFx } from '@pnp/sp/presets/all';
-import "@pnp/sp/webs";
-import "@pnp/sp/lists";
-import "@pnp/sp/items";
+import { DocumentService, IDocument } from '../../services/DocumentService';
 import { Project } from '../../services/ProjectSelectionServices';
-import { FieldTypes } from '@pnp/sp/fields/types';
 
 interface DocumentsTabProps {
   project: Project;
   context: WebPartContext;
 }
 
-interface ProjectDocumentItem {
-  Id: number;
-  [key: string]: FieldTypes;
-}
-
-const listName = '9719_ProjectDocuments';
-
-const documentFields = [
+const documentTypes = [
   "EIR", "AIR", "PIR", "SMP", "EIRAppraisal", "PreContractBEP", "BEP", "MPDT", "AIDP", "LAP_EIR", "DRM", "MIDP",
   "TIDPs", "ResponsibilityAssignmentMatrix", "IMRiskRegister", "MobilisationPlan", "FederatedModel", "QAR",
   "DataReports", "HelthCheck_WarningReport",
@@ -50,28 +38,26 @@ const useStyles = makeStyles({
 });
 
 const DocumentsTab: React.FC<DocumentsTabProps> = ({ context, project }) => {
-  const sp = spfi().using(SPFx(context));
   const styles = useStyles();
   const toasterId = useId('doc-toast');
   const { dispatchToast } = useToastController();
-  const [docItem, setDocItem] = useState<ProjectDocumentItem | null>(null);
-
-  const ensureDocumentEntry = async (): Promise<void> => {
-    const items = await sp.web.lists.getByTitle(listName).items
-      .filter(`ProjectNumber eq '${project.ProjectNumber}'`).top(1)();
-    if (!items.length) {
-      const addResult = await sp.web.lists.getByTitle(listName).items.add({
-        Title: project.ProjectName,
-        ProjectNumber: project.ProjectNumber
-      });
-      setDocItem(addResult.data);
-    } else {
-      setDocItem(items[0]);
-    }
-  };
+  const [documents, setDocuments] = useState<IDocument[]>([]);
+  const documentService = new DocumentService(context);
 
   const fetchDocumentData = async (): Promise<void> => {
-    await ensureDocumentEntry();
+    try {
+      const docs = await documentService.getProjectDocuments(project.ProjectNumber);
+      setDocuments(docs);
+    } catch (error) {
+      console.error('Error fetching documents:', error);
+      dispatchToast(
+        <Toast>
+          <ToastTitle>Error</ToastTitle>
+          <ToastBody>Failed to load project documents.</ToastBody>
+        </Toast>,
+        { intent: 'error', timeout: 3000 }
+      );
+    }
   };
 
   const copyToClipboard = async (value: string, label: string): Promise<void> => {
@@ -93,23 +79,27 @@ const DocumentsTab: React.FC<DocumentsTabProps> = ({ context, project }) => {
     fetchDocumentData().catch(console.error);
   }, [project]);
 
+  const getDocumentForType = (docType: string): IDocument | undefined => {
+    return documents.find(doc => doc.DocumentType === docType);
+  };
+
   return (
     <>
       <div className={styles.container}>
         <Text size={600} weight="semibold">Project Documents</Text>
 
-        {docItem ? (
+        {documents ? (
           <>
-            {documentFields.map((field) => {
-              const path = docItem[field];
+            {documentTypes.map((docType) => {
+              const doc = getDocumentForType(docType);
               return (
-                <div key={field} className={styles.docRow}>
-                  <Text className={styles.fieldLabel}>{field}</Text>
+                <div key={docType} className={styles.docRow}>
+                  <Text className={styles.fieldLabel}>{docType}</Text>
                   <Text className={styles.fieldValue}>
-                    {path ? String(path) : 'Not available'}
+                    {doc ? doc.FileRef : 'Not available'}
                   </Text>
-                  {path && (
-                    <Button appearance="secondary" onClick={() => copyToClipboard(String(path), field)}>
+                  {doc && (
+                    <Button appearance="secondary" onClick={() => copyToClipboard(doc.FileRef, docType)}>
                       Copy Path
                     </Button>
                   )}
