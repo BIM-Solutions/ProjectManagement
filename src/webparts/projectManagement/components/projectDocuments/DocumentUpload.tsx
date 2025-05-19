@@ -194,7 +194,7 @@ export const DocumentUpload: React.FC<IDocumentUploadProps> = ({
 
 
     return (
-        <div className="document-upload">
+        <div className="documentUpload">
             <input
                 type="file"
                 onChange={handleFileChange}

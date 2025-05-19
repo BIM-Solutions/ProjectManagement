@@ -36,6 +36,31 @@ This SharePoint Framework (SPFx) web part provides a robust solution for managin
 | ------- | ---------------- | --------------- |
 | 1.0.0   | April 25, 2025   | Initial Release |
 
+## Governance and Deployment
+
+### Deployment Requirements
+- All deployments require TAG (Technical Advisory Group) or CAB (Change Advisory Board) review
+- External penetration testing is required before deployment
+- Site collection app catalog deployment requires additional security review
+- Compliance with Group-wide governance processes is mandatory
+
+### Security Considerations
+- The solution interacts with SharePoint lists for data storage
+- No external service integrations
+- Uses standard SPFx libraries and Microsoft Graph API
+- All data remains within the Microsoft 365 tenant
+
+### Business Benefits
+- Enhanced project management capabilities within SharePoint
+- Improved user experience with modern UI components
+- Seamless integration with existing SharePoint infrastructure
+- Reduced need for external project management tools
+
+### Support and Maintenance
+- Regular updates and maintenance will be provided
+- Bug fixes and feature enhancements will be managed through the standard CAB process
+- Documentation will be maintained and updated as needed
+
 ## Disclaimer
 
 **THIS CODE IS PROVIDED _AS IS_ WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING ANY IMPLIED WARRANTIES OF FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.**
@@ -62,10 +87,13 @@ This SharePoint Framework (SPFx) web part provides a robust solution for managin
 
 This project management web part provides:
 
-- Project listing with search and filtering by project number, name, sector, status, and client.
-- Integration with SharePoint lists to store and retrieve project data.
-- Adaptability for both SharePoint pages and Microsoft Teams tabs.
-- Support for theme variants and responsive design.
+- Project listing with search and filtering by project number, name, sector, status, and client
+- Integration with SharePoint lists to store and retrieve project data
+- Adaptability for both SharePoint pages and Microsoft Teams tabs
+- Support for theme variants and responsive design
+- Fee tracking and budget management
+- Project document management
+- Team member assignment and tracking
 
 ## References
 
