@@ -4,14 +4,18 @@ import {
   Text,
   makeStyles,
   tokens,
-  DataGrid,
-  DataGridHeader,
-  DataGridRow,
-  DataGridBody,
-  DataGridCell,
-  TableColumnDefinition,
-  createTableColumn,
+  Button,
+  Dialog,
+  DialogTrigger,
+  DialogSurface,
+  DialogBody,
+  DialogContent,
+  DialogActions,
+  Input,
+  Field,
+  shorthands,
 } from '@fluentui/react-components';
+import { Add24Regular } from '@fluentui/react-icons';
 import { WebPartContext } from '@microsoft/sp-webpart-base';
 import { spfi } from '@pnp/sp';
 import { SPFx } from '@pnp/sp/presets/all';
@@ -19,152 +23,272 @@ import '@pnp/sp/webs';
 import '@pnp/sp/lists';
 import '@pnp/sp/items';
 import { Project } from '../../services/ProjectSelectionServices';
+import { DatePicker } from '@fluentui/react-datepicker-compat';
 
 interface StagesTabProps {
   project: Project;
   context: WebPartContext;
+  selectedStageId?: number;
 }
 
 interface StageItem {
   Id: number;
   Title: string;
-  StartDate?: string;
-  EndDate?: string;
-  Status?: string;
+  StartDate: string;
+  EndDate: string;
+  Status: string;
   Notes?: string;
+  StageColor: string;
+  ProjectNumber: string;
 }
 
-const listName = 'ProjectStages';
+type NewStageItem = Omit<StageItem, 'Id'>;
+
+const listName = '9719_ProjectStages';
+const defaultColor = '#0078D4';
 
 const useStyles = makeStyles({
   root: {
     display: 'flex',
-    flexDirection: 'row',
-    gap: tokens.spacingHorizontalXL,
-    paddingTop: tokens.spacingVerticalL,
+    flexDirection: 'column',
+    gap: tokens.spacingVerticalM,
+    padding: tokens.spacingVerticalM,
+    backgroundColor: tokens.colorNeutralBackground1,
+    borderRadius: tokens.borderRadiusMedium,
+    boxShadow: tokens.shadow4,
   },
-  leftPanel: {
-    width: '40%',
+  header: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  stageList: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: tokens.spacingVerticalS,
+    maxHeight: 'calc(100vh - 300px)',
+    overflowY: 'auto',
+  },
+  stageItem: {
+    display: 'flex',
+    alignItems: 'center',
+    padding: tokens.spacingVerticalS,
+    borderRadius: tokens.borderRadiusMedium,
+    backgroundColor: tokens.colorNeutralBackground2,
+    cursor: 'pointer',
+    '&:hover': {
+      backgroundColor: tokens.colorNeutralBackground2Hover,
+    },
+  },
+  colorDot: {
+    width: '12px',
+    height: '12px',
+    borderRadius: '50%',
+    marginRight: tokens.spacingHorizontalS,
+  },
+  dialogContent: {
     display: 'flex',
     flexDirection: 'column',
     gap: tokens.spacingVerticalM,
   },
-  rightPanel: {
-    flexGrow: 1,
+  colorPickerWrapper: {
+    position: 'relative',
+    width: '100%',
+  },
+  colorButton: {
+    width: '100%',
+    height: '32px',
+    ...shorthands.border('1px', 'solid', tokens.colorNeutralStroke1),
+    ...shorthands.borderRadius(tokens.borderRadiusMedium),
+    cursor: 'pointer',
+    padding: 0,
+    '&:hover': {
+      ...shorthands.borderColor(tokens.colorNeutralStroke1Hover),
+    },
+  },
+  colorInput: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    opacity: 0,
+    cursor: 'pointer',
+  },
+  stageDetails: {
     display: 'flex',
     flexDirection: 'column',
-    gap: tokens.spacingVerticalM,
+    gap: tokens.spacingVerticalS,
+    padding: tokens.spacingVerticalM,
+    backgroundColor: tokens.colorNeutralBackground2,
+    borderRadius: tokens.borderRadiusMedium,
   },
 });
 
-const StagesTab: React.FC<StagesTabProps> = ({ project, context }) => {
+const StagesTab: React.FC<StagesTabProps> = ({ project, context, selectedStageId }) => {
   const sp = spfi().using(SPFx(context));
   const styles = useStyles();
 
   const [stages, setStages] = useState<StageItem[]>([]);
   const [selectedStage, setSelectedStage] = useState<StageItem | null>(null);
+  const [showAddDialog, setShowAddDialog] = useState(false);
+  const [newStage, setNewStage] = useState<Partial<NewStageItem>>({
+    StageColor: defaultColor,
+    ProjectNumber: project.ProjectNumber
+  });
 
   const ensureProjectStage = async (): Promise<void> => {
     const items = await sp.web.lists.getByTitle(listName).items
       .filter(`ProjectNumber eq '${project.ProjectNumber}'`).top(5000)();
     if (!items.length) {
       await sp.web.lists.getByTitle(listName).items.add({
-        Title: 'Placeholder Stage',
-        ProjectNumber: project.ProjectNumber,
+        Title: 'Initial Stage',
+        StageColor: defaultColor,
+        StartDate: new Date().toISOString(),
+        EndDate: new Date().toISOString(),
+        Status: 'Not Started',
       });
     }
   };
 
   const fetchStages = async (): Promise<void> => {
-    await ensureProjectStage();
-    const results = await sp.web.lists.getByTitle(listName).items
-      .filter(`ProjectNumber eq '${project.ProjectNumber}'`).top(5000)();
-    setStages(results);
-    if (results.length) setSelectedStage(results[0]);
+    try {
+      await ensureProjectStage();
+      const results = await sp.web.lists.getByTitle(listName).items
+        .filter(`ProjectNumber eq '${project.ProjectNumber}'`).top(5000)();
+      setStages(results);
+      
+      if (selectedStageId) {
+        const selected = results.find(stage => stage.Id === selectedStageId);
+        if (selected) {
+          setSelectedStage(selected);
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching stages:', error);
+    }
   };
 
   useEffect(() => {
     fetchStages().catch(console.error);
-  }, [project]);
+  }, [project, selectedStageId]);
 
-  const columns: TableColumnDefinition<StageItem>[] = [
-    createTableColumn<StageItem>({
-      columnId: 'Title',
-      renderHeaderCell: () => 'Stage Name',
-      renderCell: (item) => item.Title,
-    }),
-    createTableColumn<StageItem>({
-      columnId: 'StartDate',
-      renderHeaderCell: () => 'Start Date',
-      renderCell: (item) => item.StartDate ?? '',
-    }),
-    createTableColumn<StageItem>({
-      columnId: 'EndDate',
-      renderHeaderCell: () => 'End Date',
-      renderCell: (item) => item.EndDate ?? '',
-    }),
-    createTableColumn<StageItem>({
-      columnId: 'Status',
-      renderHeaderCell: () => 'Status',
-      renderCell: (item) => item.Status ?? '',
-    }),
-  ];
+  const handleAddStage = async (): Promise<void> => {
+    if (newStage.Title && newStage.StartDate && newStage.EndDate) {
+      try {
+        await sp.web.lists.getByTitle(listName).items.add({
+          Title: newStage.Title,
+          ProjectNumber: project.ProjectNumber,
+          StartDate: newStage.StartDate,
+          EndDate: newStage.EndDate,
+          StageColor: newStage.StageColor || defaultColor,
+          Notes: newStage.Notes,
+          Status: 'Not Started',
+        });
+        setShowAddDialog(false);
+        setNewStage({ 
+          StageColor: defaultColor,
+          ProjectNumber: project.ProjectNumber 
+        });
+        await fetchStages();
+      } catch (error) {
+        console.error('Error adding stage:', error);
+      }
+    }
+  };
 
   return (
     <div className={styles.root}>
-      <div className={styles.leftPanel}>
-        <Text size={500} weight="semibold">Stages</Text>
-        <DataGrid
-          items={stages}
-          columns={columns}
-          selectionMode="single"
-          getRowId={(item) => item.Id.toString()}
-          onSelectionChange={(event, data) => {
-            const selected = stages.find(s => s.Id.toString() === Array.from(data.selectedItems)[0]);
-            setSelectedStage(selected ?? null);
-          }}
-        >
-          <DataGridHeader>
-            <DataGridRow>
-              {(rowProps) => 
-                columns.map((column) => (
-                  <DataGridCell key={column.columnId}>
-                    {column.renderHeaderCell()}
-                  </DataGridCell>
-                ))
-              }
-            </DataGridRow>
-          </DataGridHeader>
-          <DataGridBody>
-            {({ item }: { item: StageItem }) => (
-              <DataGridRow>
-                {(rowProps) => 
-                  columns.map((column) => (
-                    <DataGridCell key={column.columnId}>
-                      {column.renderCell(item)}
-                    </DataGridCell>
-                  ))
-                }
-              </DataGridRow>
-            )}
-          </DataGridBody>
-        </DataGrid>
+      <div className={styles.header}>
+        <Text size={500} weight="semibold">Project Stages</Text>
+        <Dialog open={showAddDialog} onOpenChange={(_, { open }) => setShowAddDialog(open)}>
+          <DialogTrigger disableButtonEnhancement>
+            <Button icon={<Add24Regular />}>Add Stage</Button>
+          </DialogTrigger>
+          <DialogSurface>
+            <DialogBody>
+              <DialogContent className={styles.dialogContent}>
+                <Field label="Stage Name" required>
+                  <Input
+                    value={newStage.Title || ''}
+                    onChange={(e) => setNewStage({ ...newStage, Title: e.target.value })}
+                  />
+                </Field>
+                <Field label="Start Date" required>
+                  <DatePicker
+                    value={newStage.StartDate ? new Date(newStage.StartDate) : null}
+                    onSelectDate={(date) => {
+                      if (date) {
+                        setNewStage({ ...newStage, StartDate: date.toISOString() });
+                      }
+                    }}
+                  />
+                </Field>
+                <Field label="End Date" required>
+                  <DatePicker
+                    value={newStage.EndDate ? new Date(newStage.EndDate) : null}
+                    onSelectDate={(date) => {
+                      if (date) {
+                        setNewStage({ ...newStage, EndDate: date.toISOString() });
+                      }
+                    }}
+                  />
+                </Field>
+                <Field label="Stage Color">
+                  <div className={styles.colorPickerWrapper}>
+                    <div
+                      className={styles.colorButton}
+                      style={{ backgroundColor: newStage.StageColor || defaultColor }}
+                    />
+                    <input
+                      type="color"
+                      className={styles.colorInput}
+                      value={newStage.StageColor || defaultColor}
+                      onChange={(e) => setNewStage({ ...newStage, StageColor: e.target.value })}
+                    />
+                  </div>
+                </Field>
+                <Field label="Notes">
+                  <Input
+                    value={newStage.Notes || ''}
+                    onChange={(e) => setNewStage({ ...newStage, Notes: e.target.value })}
+                  />
+                </Field>
+              </DialogContent>
+              <DialogActions>
+                <Button appearance="secondary" onClick={() => setShowAddDialog(false)}>Cancel</Button>
+                <Button appearance="primary" onClick={handleAddStage}>Add Stage</Button>
+              </DialogActions>
+            </DialogBody>
+          </DialogSurface>
+        </Dialog>
       </div>
 
-      <div className={styles.rightPanel}>
-        <Text size={500} weight="semibold">Stage Details</Text>
-        {selectedStage ? (
-          <>
-            <Text><strong>Stage:</strong> {selectedStage.Title}</Text>
-            <Text><strong>Status:</strong> {selectedStage.Status}</Text>
-            <Text><strong>Start Date:</strong> {selectedStage.StartDate}</Text>
-            <Text><strong>End Date:</strong> {selectedStage.EndDate}</Text>
-            <Text><strong>Notes:</strong> {selectedStage.Notes}</Text>
-          </>
-        ) : (
-          <Text>No stage selected.</Text>
-        )}
+      <div className={styles.stageList}>
+        {stages.map((stage) => (
+          <div
+            key={stage.Id}
+            className={styles.stageItem}
+            onClick={() => setSelectedStage(stage)}
+          >
+            <div
+              className={styles.colorDot}
+              style={{ backgroundColor: stage.StageColor || defaultColor }}
+            />
+            <Text>{stage.Title}</Text>
+          </div>
+        ))}
       </div>
+
+      {selectedStage && (
+        <div className={styles.stageDetails}>
+          <Text size={400} weight="semibold">{selectedStage.Title}</Text>
+          <Text>Start Date: {new Date(selectedStage.StartDate).toLocaleDateString()}</Text>
+          <Text>End Date: {new Date(selectedStage.EndDate).toLocaleDateString()}</Text>
+          <Text>Status: {selectedStage.Status}</Text>
+          {selectedStage.Notes && <Text>Notes: {selectedStage.Notes}</Text>}
+        </div>
+      )}
     </div>
   );
 };

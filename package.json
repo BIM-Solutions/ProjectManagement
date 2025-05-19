@@ -16,6 +16,8 @@
     "package-solution": "gulp clean && gulp build && gulp bundle --ship && gulp package-solution --ship"
   },
   "dependencies": {
+    "@fluentui/react-charting": "^5.23.88",
+    "@fluentui/react-charts": "^9.0.5",
     "@fluentui/react-components": "^9.63.0",
     "@fluentui/react-nav-preview": "^0.13.7",
     "@microsoft/microsoft-graph-client": "^3.0.2",
@@ -31,12 +33,15 @@
     "@pnp/odata": "^2.15.0",
     "@pnp/sp": "^4.12.0",
     "@pnp/spfx-controls-react": "^3.21.0",
+    "@types/recharts": "^1.8.29",
     "date-fns": "^4.1.0",
     "eventemitter3": "^5.0.1",
     "file-saver": "^2.0.5",
+    "office-ui-fabric-react": "^7.204.1",
     "react": "17.0.1",
     "react-big-calendar": "^1.18.0",
     "react-dom": "17.0.1",
+    "recharts": "^2.15.3",
     "tslib": "2.3.1"
   },
   "devDependencies": {
@@ -54,7 +59,7 @@
     "eslint": "8.57.0",
     "eslint-plugin-react-hooks": "4.3.0",
     "gulp": "^4.0.2",
-    "typescript": "4.7.4",
-    "spfx-fast-serve-helpers": "~1.20.0"
+    "spfx-fast-serve-helpers": "~1.20.0",
+    "typescript": "4.7.4"
   }
 }

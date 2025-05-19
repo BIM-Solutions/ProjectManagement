@@ -28,7 +28,9 @@ import Navigation from './common/Navigation';
 import { TaskItem } from './projectCalender/ProgrammeTab';
 import StagesTab from './projectStages/StagesTab';
 import DocumentsOverview from './projectDocuments/DocumentsOverview';
-import FeesTab from './projectFees/FeesTab';
+// import FeesTab from './projectFees/FeesTab';
+import FeeOverview from './projectFees/FeeOverview';
+import StageOverview from './projectStages/StageOverview';
 
 import { DocumentService } from '../services/DocumentService';
 import { TemplateService } from '../services/TemplateService';
@@ -103,6 +105,7 @@ const LandingPage: React.FC<ILandingPageProps> = ({ context, project }) => {
   const [tab, setTab] = useState<string>('overview');
   const [tasks, setTasks] = useState<TaskItem[]>([]);
   const [selectedTask, setSelectedTask] = useState<TaskItem | undefined>();
+  const [selectedStageId, setSelectedStageId] = useState<number>();
 
   const sp = spfi().using(SPFx(context));
 
@@ -113,7 +116,11 @@ const LandingPage: React.FC<ILandingPageProps> = ({ context, project }) => {
       case 'programme':
         return <TaskCalendar tasks={tasks} onTaskClick={setSelectedTask} />;
       case 'stages':
-        return <StagesTab project={project} context={context} />;
+        return <StageOverview 
+          project={selectedProject} 
+          context={context} 
+          onStageSelect={setSelectedStageId}
+        />;
       case 'documents':
         return <DocumentsOverview 
           sp={sp}
@@ -123,10 +130,35 @@ const LandingPage: React.FC<ILandingPageProps> = ({ context, project }) => {
           templateService={templateService}
         />;
       case 'fees':
-        return <FeesTab project={project} context={context} />;
+        return <FeeOverview />;
       default:
         return null;
     }
+  };
+
+  const renderRightPanel = (): JSX.Element | null => {
+    if (selectedProject) {
+      if (tab === 'stages' && selectedStageId) {
+        return (
+          <StagesTab
+            project={project}
+            context={context}
+            selectedStageId={selectedStageId}
+          />
+        );
+      }
+      return (
+        <ProjectDetails
+          context={context}
+          onTabChange={(newTab) => setTab(newTab)}
+          tasks={tasks}
+          setTasks={setTasks}
+          selectedTask={selectedTask}
+          setSelectedTask={setSelectedTask}
+        />
+      );
+    }
+    return null;
   };
 
   useEffect(() => {
@@ -200,11 +232,9 @@ const LandingPage: React.FC<ILandingPageProps> = ({ context, project }) => {
                   />
                 </DialogContent>
                 <DialogActions>
-                  
-                    <DialogTrigger disableButtonEnhancement>
-                      <Button appearance="secondary">Close</Button>
-                    </DialogTrigger>
-                  
+                  <DialogTrigger disableButtonEnhancement>
+                    <Button appearance="secondary">Close</Button>
+                  </DialogTrigger>
                 </DialogActions>
               </DialogBody>
             </DialogSurface>
@@ -214,16 +244,7 @@ const LandingPage: React.FC<ILandingPageProps> = ({ context, project }) => {
 
         {/* Right Panel - Project Details */}
         <div className={styles.rightPanel}>
-          {selectedProject && (
-            <ProjectDetails
-              context={context}
-              onTabChange={(newTab) => setTab(newTab)}
-              tasks={tasks}
-              setTasks={setTasks}
-              selectedTask={selectedTask}
-              setSelectedTask={setSelectedTask}
-            />
-          )}
+          {renderRightPanel()}
         </div>
       </div>
     </div>

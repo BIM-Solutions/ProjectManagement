@@ -72,6 +72,12 @@ export const projectStatusOptions: ComboboxOption[] = [
   { key: 'Inactive', value: 'Inactive' }
 ];
 
+export const projectStageStatusOptions: ComboboxOption[] = [
+  { key: 'Active', value: 'Active' },
+  { key: 'Completed', value: 'Completed' },
+  { key: 'Cancelled', value: 'Cancelled' }
+];
+
 
 export class ListService {
   private sp: SPFI;
@@ -441,5 +447,7 @@ export class ListService {
     await this.ensureTextField(list, "StageDescription");
     await this.ensureDateTimeField(list, "StartDate");
     await this.ensureDateTimeField(list, "EndDate");
+    await this.ensureTextField(list, "StageColor");
+    await this.ensureChoiceField(list, "Status",  { Choices: projectStageStatusOptions.map(option => option.value).filter((value): value is string => value !== undefined) });
   }
 }
