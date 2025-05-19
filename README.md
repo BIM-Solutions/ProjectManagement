@@ -4,9 +4,8 @@
 
 This SharePoint Framework (SPFx) web part provides a robust solution for managing projects directly within SharePoint and Microsoft Teams environments. The web part enables the creation, tracking, and management of project-related information leveraging SharePoint lists. It includes functionality such as advanced filtering, search, and a clean user interface for enhanced user experience.
 
-![Alt text](./assets/Screenshot 1.png)
-![Alt text](./assets/Screenshot 2.png)
-
+![alt text](<assets/Screenshot 1.png>)
+![alt text](<assets/Screenshot 2.png>)
 ## Used SharePoint Framework Version
 
 ![version](https://img.shields.io/badge/version-1.20.0-green.svg)
