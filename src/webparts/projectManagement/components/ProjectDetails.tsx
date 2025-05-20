@@ -6,7 +6,7 @@ import { Project, ProjectSelectionService } from '../services/ProjectSelectionSe
 import ProjectForm from './common/ProjectForm';
 import ProjectTabs from './projectInformation/ProjectTabs';
 import { DEBUG } from './common/DevVariables';
-import { EventService } from '../services/EventService';
+import { eventService } from '../services/EventService';
 import { TaskItem } from './projectCalender/ProgrammeTab';
 
 
@@ -62,7 +62,7 @@ const ProjectDetails: React.FC<ProjectDetailsProps> = ({ context, onEdit, onDele
     };
     service.subscribe(listener);
     listener(service.getSelectedProject());
-    const unsubscribe = EventService.subscribeToProjectUpdates(() => {
+    const unsubscribe = eventService.subscribeToProjectUpdates(() => {
       
       const latest = service.getSelectedProject();
       if (!DEBUG) console.log('ProjectDetails - updated project:', latest);

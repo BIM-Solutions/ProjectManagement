@@ -14,6 +14,8 @@ import {
   AddCurrencyProps
 } from '@pnp/sp/fields/types';
 import { DropdownProps } from "@fluentui/react-components";
+import { mappedDocuments } from '../components/projectDocuments/FolderStructure';
+
 export interface ComboboxOption {
   key: string;
   value: string;
@@ -108,6 +110,36 @@ export class ListService {
     return listCreated;
   }
 
+  public async populateDocumentTemplates(): Promise<void> {
+    const list = this.sp.web.lists.getByTitle("9719_ProjectDocumentTemplates");
+    
+    // Clear existing items
+    // const existingItems = await list.items();
+    // for (const item of existingItems) {
+    //   await item.delete();
+    // }
+
+    // Add new items from mappedDocuments
+    for (const doc of mappedDocuments) {
+      // Check if document template already exists
+      const existingItems = await list.items.filter(`DocumentType eq '${doc.name}'`)();
+      
+      if (existingItems.length === 0) {
+        // Only add if it doesn't exist
+        await list.items.add({
+          Title: doc.name,
+          DocumentType: doc.name,
+          uniclassCode1: doc.code1,
+          description1: doc.name,
+          uniclassCode2: doc.code2,
+          description2: doc.name,
+          uniclassCode3: doc.code3,
+          description3: doc.description3
+        });
+      }
+    }
+  }
+
   /**
    * Ensures that all the required lists and their fields are provisioned on the site.
    * @returns A promise that resolves when all the lists have been provisioned.
@@ -119,6 +151,7 @@ export class ListService {
     await this.ensureProjectDocuments();
     await this.ensureChangeControl();
     await this.ensureProjectStages();
+    await this.ensureProjectDocumentsTemplate();
   }
 
   /**
@@ -449,5 +482,17 @@ export class ListService {
     await this.ensureDateTimeField(list, "EndDate");
     await this.ensureTextField(list, "StageColor");
     await this.ensureChoiceField(list, "Status",  { Choices: projectStageStatusOptions.map(option => option.value).filter((value): value is string => value !== undefined) });
+  }
+
+
+  private async ensureProjectDocumentsTemplate(): Promise<void> {
+    const { list } = await this.sp.web.lists.ensure("9719_ProjectDocumentTemplates", "Stores document template metadata");
+    await this.ensureTextField(list, "DocumentType");
+    await this.ensureTextField(list, "uniclassCode1");
+    await this.ensureTextField(list, "description1");
+    await this.ensureTextField(list, "uniclassCode2");
+    await this.ensureTextField(list, "description2");
+    await this.ensureTextField(list, "uniclassCode3");
+    await this.ensureTextField(list, "description3");
   }
 }

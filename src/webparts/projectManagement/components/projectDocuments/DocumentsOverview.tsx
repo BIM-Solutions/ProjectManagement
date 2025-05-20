@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
   makeStyles,
   tokens,
@@ -23,12 +23,13 @@ import {
   Text,
   // DialogTrigger,
   Tooltip,
+  DialogTrigger,
 } from '@fluentui/react-components';
 import {
   Folder24Regular,
   Document24Regular,
   DocumentPdf24Regular,
-  ImageRegular,
+  Image32Regular,
   TextTRegular,
   DocumentRegular,
   Document24Filled,
@@ -40,8 +41,10 @@ import { WebPartContext } from '@microsoft/sp-webpart-base';
 import { Project } from '../../services/ProjectSelectionServices';
 import { DocumentService, IDocument } from '../../services/DocumentService';
 import { TemplateService } from '../../services/TemplateService';
-import { DocumentUpload } from './DocumentUpload';
+import { DocumentUpload, DocumentUploadHandle } from './DocumentUpload';
 import { SPFI } from '@pnp/sp';
+import { eventService } from '../../services/EventService';
+
 
 export interface IDocumentsTabProps {
   context: WebPartContext;
@@ -110,7 +113,7 @@ const getFileIcon = (fileName: string): JSX.Element => {
     case 'jpeg':
     case 'gif':
     case 'bmp':
-      return <ImageRegular />;
+      return <Image32Regular />;
     case 'doc':
     case 'docx':
       return <Document24Filled />;
@@ -137,15 +140,18 @@ export const DocumentsOverview: React.FC<IDocumentsTabProps> = ({
   project,
   sp,
   documentService,
-  templateService 
+  templateService,
 }) => {
   const styles = useStyles();
   const [documents, setDocuments] = useState<IDocument[]>([]);
   const [showNewFolderDialog, setShowNewFolderDialog] = useState(false);
   const [currentPath, setCurrentPath] = useState<string[]>([]);
   const [newFolderName, setNewFolderName] = useState('');
-  const [isUploadDialogOpen, setIsUploadDialogOpen] = useState(false);
+  // const [isUploadDialogOpen, setIsUploadDialogOpen] = useState(false);
+  const [uploadDialogKey, setUploadDialogKey] = useState(0);
   const documentsLibrary = 'Projects';
+  const uploadRef = useRef<DocumentUploadHandle>(null);
+  
 
   const getCurrentFolderPath = (): string => {
     if (!project) return '';
@@ -158,7 +164,7 @@ export const DocumentsOverview: React.FC<IDocumentsTabProps> = ({
     try {
       const path = getCurrentFolderPath();
       const docs = await documentService.getFolderContents(path);
-      console.log(docs);
+      //console.log(docs);
       setDocuments(docs);
     } catch (error) {
       console.error('Error loading documents:', error);
@@ -182,7 +188,8 @@ export const DocumentsOverview: React.FC<IDocumentsTabProps> = ({
       console.error('Error creating folder:', error);
     }
   };
-
+  
+  // const handleClose = (): void => setIsUploadDialogOpen(false);
   const handleDelete = async (document: IDocument): Promise<void> => {
     try {
       if (document.IsFolder) {
@@ -204,6 +211,17 @@ export const DocumentsOverview: React.FC<IDocumentsTabProps> = ({
     setCurrentPath(currentPath.slice(0, index));
   };
 
+  const handleUploadComplete = async (): Promise<void> => {
+    await loadFolderContents();
+    eventService.notifyDocumentUpload();
+  };
+  const handleViewDocument = (doc: IDocument): void => {
+    console.log('the doc is: ', doc);
+    if (doc.FileRef) {
+      window.open(doc.FileRef, '_blank');
+    }
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -212,9 +230,49 @@ export const DocumentsOverview: React.FC<IDocumentsTabProps> = ({
           <Button appearance="primary" onClick={() => setShowNewFolderDialog(true)}>
             New Folder
           </Button>
-          <Button appearance="primary" onClick={() => setIsUploadDialogOpen(true)}>
-            Upload Document
-          </Button>
+          <Dialog modalType="modal">
+            <DialogTrigger disableButtonEnhancement>
+              <Button appearance="primary" onClick={() => setUploadDialogKey(prev => prev + 1)}>
+                Upload Document
+              </Button>
+            </DialogTrigger>
+            <DialogSurface style={{ width: '100%' }} >
+              <DialogBody>
+                <DialogTitle>Upload Document</DialogTitle>
+                <DialogContent id="documentUpload">
+                  <DocumentUpload 
+                    ref={uploadRef}
+                    key={uploadDialogKey}
+                    sp={sp}
+                    projectId={project?.ProjectNumber}  
+                    libraryName={documentsLibrary}
+                    context={context}
+                    onUploadComplete={handleUploadComplete}
+                    onCancel={() => {
+                      setUploadDialogKey(prev => prev + 1);
+                    }}
+                  />
+                </DialogContent>
+                <DialogActions>
+                  <Button
+                    appearance="primary"
+                    onClick={() => uploadRef.current?.upload()}
+                  >
+                    Upload Document
+                  </Button>
+                  <Button
+                    appearance="secondary"
+                    onClick={() => uploadRef.current?.cancel()}
+                  >
+                    Cancel
+                  </Button>
+                  <DialogTrigger disableButtonEnhancement>
+                    <Button appearance="secondary">Close</Button>
+                  </DialogTrigger>
+                </DialogActions>
+              </DialogBody>
+            </DialogSurface>
+          </Dialog>
         </div>
       </div>
 
@@ -273,7 +331,7 @@ export const DocumentsOverview: React.FC<IDocumentsTabProps> = ({
               </TableCell>
               {!doc.IsFolder && (
                 <>
-                  <TableCell>{doc.Description || '-'}</TableCell>
+                  <TableCell>{doc.Title || '-'}</TableCell>
                   <TableCell>{doc.UniclassCode3 || '-'}</TableCell>
                   <TableCell>{doc.UniclassTitle3 || '-'}</TableCell>
                   <TableCell>{doc.Status || '-'}</TableCell>
@@ -288,7 +346,8 @@ export const DocumentsOverview: React.FC<IDocumentsTabProps> = ({
                         className={styles.actionButton}
                         appearance="subtle"
                         icon={<Eye24Regular />}
-                        onClick={() => window.open(doc.FileRef, '_blank')}
+                        onClick={() => doc && handleViewDocument(doc)}
+                        // onClick={() => window.open(doc.FileRef, '_blank')}
                       />
                     </Tooltip>
                   )}
@@ -306,27 +365,6 @@ export const DocumentsOverview: React.FC<IDocumentsTabProps> = ({
           ))}
         </TableBody>
       </Table>
-
-      {/* Upload Dialog */}
-      <Dialog open={isUploadDialogOpen}>
-        <DialogSurface>
-          <DialogBody>
-            <DialogTitle>Upload Document</DialogTitle>
-            <DialogContent>
-              <DocumentUpload 
-                sp={sp}
-                projectId={project?.ProjectNumber}  
-                libraryName={documentsLibrary}
-                context={context}
-                onUploadComplete={() => {
-                  setIsUploadDialogOpen(false);
-                  loadFolderContents().catch(console.error);
-                }}
-              />
-            </DialogContent>
-          </DialogBody>
-        </DialogSurface>
-      </Dialog>
 
       {/* New Folder Dialog */}
       <Dialog open={showNewFolderDialog}>

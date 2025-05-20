@@ -20,8 +20,8 @@ import { SPContext } from './SPContext';
 import { WebPartContext } from '@microsoft/sp-webpart-base';
 import { Project, ProjectSelectionService } from '../../services/ProjectSelectionServices';
 import { DEBUG } from './DevVariables';
-import { EventService } from '../../services/EventService';
 import { projectStatusOptions, sectorOptions } from '../..//services/ListService';
+import { eventService } from '../../services/EventService';
 
 
 interface IProjectFormProps {
@@ -225,7 +225,7 @@ const ProjectForm: React.FC<IProjectFormProps> = ({ context, mode, project, onSu
       }
       setMessage({ type: 'success', text: `Project ${mode === 'edit' ? 'updated' : 'created'} successfully!` });
       if (onSuccess) onSuccess();
-      EventService.publishProjectUpdated();
+      eventService.publishProjectUpdated();
     
       } catch (err: unknown) {
         if (err instanceof Error) {

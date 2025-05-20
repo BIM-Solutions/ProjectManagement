@@ -22,7 +22,7 @@ import { SPContext } from './common/SPContext';
 import { Project, ProjectSelectionService } from '../services/ProjectSelectionServices';
 import { useLoading } from '../services/LoadingContext';
 // import { DEBUG } from './common/DevVariables';
-import { EventService } from '../services/EventService';
+import { eventService } from '../services/EventService';
 import { projectStatusOptions, sectorOptions } from '../services/ListService';
 
 
@@ -190,7 +190,7 @@ const ProjectList: React.FC = () => {
       console.error("Error fetching items:", err);
       setIsLoading(false);
     });
-    const unsubscribe = EventService.subscribeToProjectUpdates(fetchItems);
+    const unsubscribe = eventService.subscribeToProjectUpdates(fetchItems);
     return () => unsubscribe();
   }, []);
 

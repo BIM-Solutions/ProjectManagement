@@ -214,6 +214,30 @@ export default class ProjectManagementWebPart extends BaseClientSideWebPart<IPro
                     if (loadingSetter) loadingSetter(false);
                     alert("List check and creation complete.");
                   }
+                }),
+                PropertyPaneButton('populateTemplates', {
+                  text: "Populate Standard Document Templates",
+                  buttonType: PropertyPaneButtonType.Primary,
+                  onClick: async () => {
+                    const sp = spfi().using(SPFx(this.context));
+                    const listService = new ListService(sp);
+
+                    interface CustomWindow extends Window {
+                      __setListLoading?: (isLoading: boolean) => void;
+                    }
+                    const loadingSetter = (window as CustomWindow).__setListLoading;
+                    if (loadingSetter) loadingSetter(true);
+
+                    try {
+                      await listService.populateDocumentTemplates();
+                      alert("Document templates populated successfully.");
+                    } catch (error) {
+                      console.error('Error populating templates:', error);
+                      alert("Error populating document templates. Check console for details.");
+                    }
+
+                    if (loadingSetter) loadingSetter(false);
+                  }
                 })
               ]
             }

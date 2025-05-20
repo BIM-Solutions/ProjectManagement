@@ -11,7 +11,7 @@ import "@pnp/sp/webs";
 export interface IDocument {
   Id: number;
   Title: string;
-  Description: string;
+  // Title: string;
   FileLeafRef: string;
   FileRef: string;
   ProjectId: string;
@@ -48,134 +48,197 @@ export class DocumentService {
   private sp: SPFI;
   private readonly documentsLibrary = "Projects";
   private readonly documentsLibraryPath = "Projects";
+  private libraryChecked: boolean = false;
+  private checkedFolders: Set<string> = new Set();
+  private documentCache: Map<string, { documents: IDocument[], timestamp: number }> = new Map();
+  private readonly CACHE_DURATION = 30000; // 30 seconds cache
 
   constructor(context: WebPartContext) {
     this.sp = spfi().using(SPFx(context));
   }
 
   private async ensureDocumentLibrary(): Promise<void> {
-    const listExists = await this.sp.web.lists.ensure(this.documentsLibrary, 'Documents Library', 101, true);
-    if (!listExists.created) {
-      console.log('Documents library does not exist');
-    }
-    try {
-      const list = this.sp.web.lists.getByTitle(this.documentsLibrary);
-      
-      // Get existing fields
-      const fields = await list.fields();
-      const existingFields = new Set(fields.map(f => f.InternalName));
+    if (this.libraryChecked) return;
+    
+    const maxRetries = 3;
+    let retryCount = 0;
 
-      // Define required fields
-      const requiredFields = [
-        { name: "ProjectId", required: true },
-        { name: "DocumentType", required: true },
-        { name: "Status", required: false },
-        { name: "UniclassCode1", required: false },
-        { name: "UniclassTitle1", required: false },
-        { name: "UniclassCode2", required: false },
-        { name: "UniclassTitle2", required: false },
-        { name: "UniclassCode3", required: false },
-        { name: "UniclassTitle3", required: false }
-      ];
+    while (retryCount < maxRetries) {
+      try {
+        // First check if the list exists by trying to get its properties
+        let listExists = false;
+        try {
+          await this.sp.web.lists.getByTitle(this.documentsLibrary).select('Id')();
+          listExists = true;
+        } catch {
+          listExists = false;
+        }
+        
+        if (!listExists) {
+          // Only try to create if it doesn't exist
+          await this.sp.web.lists.ensure(this.documentsLibrary, 'Documents Library', 101, true);
+        }
+        
+        const list = this.sp.web.lists.getByTitle(this.documentsLibrary);
+        
+        // Get existing fields
+        const fields = await list.fields();
+        const existingFields = new Set(fields.map(f => f.InternalName));
 
-      // Add only missing fields
-      for (const field of requiredFields) {
-        if (!existingFields.has(field.name)) {
-          try {
-            await list.fields.addText(field.name, { Required: field.required });
-            console.log(`Added field: ${field.name}`);
-          } catch (error) {
-            console.warn(`Error adding field ${field.name}:`, error);
+        // Define required fields
+        const requiredFields = [
+          { name: "ProjectId", required: true },
+          { name: "DocumentType", required: true },
+          { name: "Status", required: false },
+          { name: "UniclassCode1", required: false },
+          { name: "UniclassTitle1", required: false },
+          { name: "UniclassCode2", required: false },
+          { name: "UniclassTitle2", required: false },
+          { name: "UniclassCode3", required: false },
+          { name: "UniclassTitle3", required: false }
+        ];
+
+        // Add only missing fields
+        for (const field of requiredFields) {
+          if (!existingFields.has(field.name)) {
+            try {
+              await list.fields.addText(field.name, { Required: field.required });
+            } catch (error) {
+              console.warn(`Error adding field ${field.name}:`, error);
+            }
           }
         }
+        
+        this.libraryChecked = true;
+        return;
+      } catch (error) {
+        retryCount++;
+        if (retryCount === maxRetries) {
+          console.error('Error accessing document library after retries:', error);
+          throw new Error('Failed to access document library: ' + error.message);
+        }
+        // Wait before retrying (exponential backoff)
+        await new Promise(resolve => setTimeout(resolve, Math.pow(2, retryCount) * 1000));
       }
-    } catch (error) {
-      console.error('Error accessing document library:', error);
-      throw new Error('Failed to access document library: ' + error.message);
     }
   }
 
   private async ensureProjectFolder(projectId: string): Promise<void> {
-    try {
-      const web = this.sp.web;
-      const webData = await web.select('ServerRelativeUrl')();
-      const folderPath = `${webData.ServerRelativeUrl}/${this.documentsLibraryPath}/${projectId}`;
-      
-      // Check if folder exists
-      
-      const result = await web.getFolderByServerRelativePath(folderPath).select('Exists')();
-      console.log('Check if folder exists the result is: ', result);
-      
-      if (!result.Exists) {
-        // If folder doesn't exist, create it
-        console.log('folder doesnt exist, create it', folderPath);
-        const libraryPath = `${webData.ServerRelativeUrl}/${this.documentsLibraryPath}`;
-        await web.getFolderByServerRelativePath(libraryPath).addSubFolderUsingPath(projectId);
-        console.log('folder created', folderPath);
-      } else {
-        console.log('folder exists', folderPath);
+    if (this.checkedFolders.has(projectId)) return;
+
+    const maxRetries = 3;
+    let retryCount = 0;
+
+    while (retryCount < maxRetries) {
+      try {
+        const web = this.sp.web;
+        const webData = await web.select('ServerRelativeUrl')();
+        const folderPath = `${webData.ServerRelativeUrl}/${this.documentsLibraryPath}/${projectId}`;
+        
+        const result = await web.getFolderByServerRelativePath(folderPath).select('Exists')();
+        
+        if (!result.Exists) {
+          const libraryPath = `${webData.ServerRelativeUrl}/${this.documentsLibraryPath}`;
+          await web.getFolderByServerRelativePath(libraryPath).addSubFolderUsingPath(projectId);
+        }
+        
+        this.checkedFolders.add(projectId);
+        return;
+      } catch (error) {
+        retryCount++;
+        if (retryCount === maxRetries) {
+          console.error('Error ensuring project folder after retries:', error);
+          throw new Error('Failed to create project folder: ' + error.message);
+        }
+        // Wait before retrying (exponential backoff)
+        await new Promise(resolve => setTimeout(resolve, Math.pow(2, retryCount) * 1000));
       }
-    } catch (error) {
-      console.error('Error ensuring project folder:', error);
-      throw new Error('Failed to create project folder: ' + error.message);
     }
   }
 
   public async getProjectDocuments(projectId: string): Promise<IDocument[]> {
     try {
+      // Check cache first
+      const cached = this.documentCache.get(projectId);
+      if (cached && Date.now() - cached.timestamp < this.CACHE_DURATION) {
+        return cached.documents;
+      }
+
       await this.ensureDocumentLibrary();
-      console.log('Getting documents for project:', projectId);
       await this.ensureProjectFolder(projectId);
-      const list = this.sp.web.lists.getByTitle(this.documentsLibrary);
-      console.log('Got list reference', list);
       
-      const items = await list.items
-        .select(
-          "Id",
-          "Title",
-          "FileLeafRef",
-          "FileRef",
-          "ProjectId",
-          "DocumentType",
-          "Status",
-          "Editor/Title",
-          "Created",
-          "Modified",
-          "UniclassCode1",
-          "UniclassTitle1",
-          "UniclassCode2",
-          "UniclassTitle2",
-          "UniclassCode3",
-          "UniclassTitle3",
-          "Description"
-        )
-        .expand("Editor")
-        .filter(`ProjectId eq '${projectId}'`)();
-      
-      console.log('Retrieved items:', items);
-      
-      return items.map(item => ({
-        Id: item.Id,
-        Title: item.Title || item.FileLeafRef,
-        Description: item.Description || "",
-        FileLeafRef: item.FileLeafRef,
-        FileRef: item.FileRef,
-        ProjectId: item.ProjectId,
-        DocumentType: item.DocumentType,
-        Status: item.Status,
-        ModifiedBy: item.Editor ? item.Editor.Title : '',
-        Created: item.Created,
-        Modified: item.Modified,
-        UniclassCode1: item.UniclassCode1,
-        UniclassTitle1: item.UniclassTitle1,
-        UniclassCode2: item.UniclassCode2,
-        UniclassTitle2: item.UniclassTitle2,
-        UniclassCode3: item.UniclassCode3,
-        UniclassTitle3: item.UniclassTitle3,
-      }));
+      const maxRetries = 3;
+      let retryCount = 0;
+      let lastError: Error | null = null;
+
+      while (retryCount < maxRetries) {
+        try {
+          const list =  await this.sp.web.lists.getByTitle(this.documentsLibrary);
+          // console.log('the list is: ', list.items());
+          const items = await list.items
+            .select(
+              "Id",
+              "Title",
+              "FileLeafRef",
+              "FileRef",
+              "ProjectId",
+              "DocumentType",
+              "Status",
+              "Editor/Title",
+              "Created",
+              "Modified",
+              "UniclassCode1",
+              "UniclassTitle1",
+              "UniclassCode2",
+              "UniclassTitle2",
+              "UniclassCode3",
+              "UniclassTitle3"
+            )
+            .expand("Editor")
+            .filter(`ProjectId eq '${projectId}'`)();
+
+          const documents = items.map(item => ({
+            Id: item.Id,
+            Title: item.Title,
+            FileLeafRef: item.FileLeafRef,
+            FileRef: item.FileRef,
+            ProjectId: item.ProjectId,
+            DocumentType: item.DocumentType,
+            Status: item.Status,
+            ModifiedBy: item.Editor?.Title || '',
+            Created: item.Created,
+            Modified: item.Modified,
+            UniclassCode1: item.UniclassCode1,
+            UniclassTitle1: item.UniclassTitle1,
+            UniclassCode2: item.UniclassCode2,
+            UniclassTitle2: item.UniclassTitle2,
+            UniclassCode3: item.UniclassCode3,
+            UniclassTitle3: item.UniclassTitle3
+          }));
+
+          // Update cache
+          this.documentCache.set(projectId, {
+            documents,
+            timestamp: Date.now()
+          });
+
+          return documents;
+        } catch (error) {
+          lastError = error;
+          retryCount++;
+          if (retryCount === maxRetries) {
+            console.error('Error getting project documents after retries:', error);
+            throw new Error('Failed to get project documents: ' + error.message);
+          }
+          // Wait before retrying (exponential backoff)
+          await new Promise(resolve => setTimeout(resolve, Math.pow(2, retryCount) * 1000));
+        }
+      }
+
+      throw lastError || new Error('Failed to get project documents after retries');
     } catch (error) {
       console.error('Error getting project documents:', error);
-      throw new Error('Failed to retrieve project documents: ' + error.message);
+      throw new Error('Failed to get project documents: ' + error.message);
     }
   }
 

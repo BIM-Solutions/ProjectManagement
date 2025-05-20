@@ -81,6 +81,7 @@ interface ProjectTabsProps {
 const ProjectTabs: React.FC<ProjectTabsProps> = ({ context, project, onEdit, onDelete, onTabChange, tasks, setTasks, selectedTask, setSelectedTask }) => {
   const styles = useStyles();
   const [selectedValue, setSelectedValue] = React.useState<TabValue>('overview');
+  
 
   const renderTabContent = (): JSX.Element | null => {
     switch (selectedValue) {
@@ -99,7 +100,6 @@ const ProjectTabs: React.FC<ProjectTabsProps> = ({ context, project, onEdit, onD
               <div className={styles.rightPanel}>
                 <ProjectTeam project={project} context={context} />
               </div>
-
             </div>
             <div className={styles.buttonRow}>
               <Button icon={<Edit24Regular />} onClick={onEdit} appearance="primary">
@@ -112,7 +112,7 @@ const ProjectTabs: React.FC<ProjectTabsProps> = ({ context, project, onEdit, onD
           </>
         );
       case 'programme':
-        return <ProgrammeTab project={project} context={context}  tasks={tasks} setSelectedTask={setSelectedTask} setTasks={setTasks} selectedTask={selectedTask}/>;
+        return <ProgrammeTab project={project} context={context} tasks={tasks} setSelectedTask={setSelectedTask} setTasks={setTasks} selectedTask={selectedTask}/>;
       case 'stages':
         return <StagesTab project={project} context={context} />;
       case 'documents':

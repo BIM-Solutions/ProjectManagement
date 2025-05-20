@@ -100,7 +100,6 @@ const LandingPage: React.FC<ILandingPageProps> = ({ context, project }) => {
   const [selectedProject, setSelectedProject] = useState<Project | undefined>();
   const [documentService] = useState(() => new DocumentService(context));
   const [templateService] = useState(() => new TemplateService(context));
-
   const styles = useStyles();
   const [tab, setTab] = useState<string>('overview');
   const [tasks, setTasks] = useState<TaskItem[]>([]);
@@ -108,6 +107,8 @@ const LandingPage: React.FC<ILandingPageProps> = ({ context, project }) => {
   const [selectedStageId, setSelectedStageId] = useState<number>();
 
   const sp = spfi().using(SPFx(context));
+
+
 
   const renderTabContent = (): JSX.Element | null => {
     switch (tab) {

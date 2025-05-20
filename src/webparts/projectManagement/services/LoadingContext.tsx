@@ -13,7 +13,7 @@ export const LoadingProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
   // Wrapped version with logging
   const setIsLoading = (val: boolean): void => {
-    console.log('[LoadingContext] setIsLoading called with:', val);
+    // console.log('[LoadingContext] setIsLoading called with:', val);
     _setIsLoading(val);
   };
 
