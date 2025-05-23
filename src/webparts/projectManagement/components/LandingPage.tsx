@@ -26,7 +26,7 @@ import ProjectDetails from './ProjectDetails';
 import TaskCalendar from './projectCalender/TaskCalendar';
 import Navigation from './common/Navigation';
 import { TaskItem } from './projectCalender/ProgrammeTab';
-import StagesTab from './projectStages/StagesTab';
+// import StagesTab from './projectStages/StagesTab';
 import DocumentsOverview from './projectDocuments/DocumentsOverview';
 // import FeesTab from './projectFees/FeesTab';
 import FeeOverview from './projectFees/FeeOverview';
@@ -139,24 +139,18 @@ const LandingPage: React.FC<ILandingPageProps> = ({ context, project }) => {
 
   const renderRightPanel = (): JSX.Element | null => {
     if (selectedProject) {
-      if (tab === 'stages' && selectedStageId) {
-        return (
-          <StagesTab
-            project={project}
+      return (
+        <>
+          <ProjectDetails
             context={context}
+            onTabChange={(newTab) => setTab(newTab)}
+            tasks={tasks}
+            setTasks={setTasks}
+            selectedTask={selectedTask}
+            setSelectedTask={setSelectedTask}
             selectedStageId={selectedStageId}
           />
-        );
-      }
-      return (
-        <ProjectDetails
-          context={context}
-          onTabChange={(newTab) => setTab(newTab)}
-          tasks={tasks}
-          setTasks={setTasks}
-          selectedTask={selectedTask}
-          setSelectedTask={setSelectedTask}
-        />
+        </>
       );
     }
     return null;
@@ -165,13 +159,28 @@ const LandingPage: React.FC<ILandingPageProps> = ({ context, project }) => {
   useEffect(() => {
     const service = ProjectSelectionService;
     const listener = (selected: Project | undefined): void => {
-      setSelectedProject(selected);
+      if (selected) {
+        setSelectedProject(selected);
+      }
     };
     service.subscribe(listener);
+    // Initialize with current selection
+    const currentProject = service.getSelectedProject();
+    if (currentProject) {
+      setSelectedProject(currentProject);
+    }
     return () => {
       service.unsubscribe(listener);
     };
   }, []);
+
+  // Add effect to maintain project selection when tab changes
+  useEffect(() => {
+    const currentProject = ProjectSelectionService.getSelectedProject();
+    if (currentProject && !selectedProject) {
+      setSelectedProject(currentProject);
+    }
+  }, [tab, selectedProject]);
 
   useEffect(() => {
     (window as CustomWindow).__setListLoading = setIsLoading;

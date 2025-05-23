@@ -76,9 +76,11 @@ interface ProjectTabsProps {
   setTasks: React.Dispatch<React.SetStateAction<TaskItem[]>>;
   selectedTask: TaskItem | undefined;
   setSelectedTask: (task: TaskItem | undefined) => void;
+  selectedStageId: number | undefined;
+
 }
 
-const ProjectTabs: React.FC<ProjectTabsProps> = ({ context, project, onEdit, onDelete, onTabChange, tasks, setTasks, selectedTask, setSelectedTask }) => {
+const ProjectTabs: React.FC<ProjectTabsProps> = ({ context, project, onEdit, onDelete, onTabChange, tasks, setTasks, selectedTask, setSelectedTask, selectedStageId }) => {
   const styles = useStyles();
   const [selectedValue, setSelectedValue] = React.useState<TabValue>('overview');
   
@@ -114,7 +116,7 @@ const ProjectTabs: React.FC<ProjectTabsProps> = ({ context, project, onEdit, onD
       case 'programme':
         return <ProgrammeTab project={project} context={context} tasks={tasks} setSelectedTask={setSelectedTask} setTasks={setTasks} selectedTask={selectedTask}/>;
       case 'stages':
-        return <StagesTab project={project} context={context} />;
+        return <StagesTab project={project} context={context} selectedStageId={selectedStageId}/>;
       case 'documents':
         return <DocumentsTab project={project} context={context} />;
       case 'fees':

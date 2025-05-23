@@ -1,59 +1,79 @@
 import * as React from 'react';
-import { Text, Divider, Persona, makeStyles} from '@fluentui/react-components';
+import { 
+    Text, 
+    Persona, 
+    Card,
+} from '@fluentui/react-components';
 import { IUserField } from '../../services/ProjectSelectionServices';
+
 import { WebPartContext } from '@microsoft/sp-webpart-base';
+
 interface UserPanelProps {
     title: string;
     user: IUserField;
-    context: WebPartContext
+    context: WebPartContext;
+    onClick?: (user: IPersonProperties) => void;
 }
 
-const useStyles = makeStyles({
-    userPanel: {
-        gap: '20',
-        width: '100%'
-    }
-})
- const getUserPresence = async (email: string, context: WebPartContext): Promise<string> => {
+export interface IPersonProperties {
+    displayName: string;
+    jobTitle: string;
+    department: string;
+    presence: string;
+    email: string;
+    mail: string;
+    mobilePhone: string;
+    officeLocation: string;
+    title: string;
+  }
+
+
+ const getUserPresence = async (email: string, context: WebPartContext): Promise<{ presence: string, user: IPersonProperties }> => {
     const client = await context.msGraphClientFactory.getClient("3");
-    const presence = await client.api(`/users/${email}/presence`).get();
-    return presence.availability;
+    const user = await client.api(`/users/${email}`).get();
+    const presence = await client.api(`/users/${user.id}/presence`).get();
+    return { presence, user };
  }
 
-const UserPanel: React.FC<UserPanelProps> = ({ title, user, context }) => {
-    const styles = useStyles();
+const UserPanel: React.FC<UserPanelProps> = ({ title, user, context, onClick }) => {
     const [presence, setPresence] = React.useState<string | null>(null);
+    const [extendedUser, setExtendedUser] = React.useState<IPersonProperties | null>(null);
 
     React.useEffect(() => {
         const fetchPresence = async (): Promise<void> => {
             try {
                 if (!user?.Email) {
-                    // console.warn("User email is missing, cannot fetch presence.");
                     return;
                 }
-    
-                // console.log("Requesting presence for:", user.Email);
                 const userPresence = await getUserPresence(user.Email, context);
-                // console.log("Fetched presence:", userPresence);
-                setPresence(userPresence);
+                setPresence(userPresence.presence);
+                setExtendedUser(userPresence.user);
             } catch {
                 // Do nothing
             }
         };
-    
         fetchPresence().catch((error) => {
             console.error("Error occurred while fetching presence:", error);
         });
     }, [user.Email, context]);
-    
-    // console.log("the presence is2:", presence);
+
     return (
-        <div className={styles.userPanel}>
-        <Divider />
-        {user && (
-            <>
-                <Text size={400} weight='bold'>{title}</Text>
-                <Persona
+        <Card
+            style={{
+                margin: '12px 0',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+                borderRadius: 12,
+                cursor: onClick && extendedUser ? 'pointer' : 'default',
+                transition: 'box-shadow 0.2s',
+                padding: 16,
+                minWidth: 260,
+                maxWidth: 340,
+                background: '#fff',
+            }}
+            onClick={() => onClick && extendedUser && onClick(extendedUser)}
+        >
+            <Text size={400} weight='bold'>{title}</Text>
+            <Persona
                     size="extra-large"
                     name={user.Title}
                     presence={presence}
@@ -64,10 +84,7 @@ const UserPanel: React.FC<UserPanelProps> = ({ title, user, context }) => {
                         alt: user.Title,
                     }}}
                 />
-
-            </>
-        )}
-        </div>
+        </Card>
     );
 };
 

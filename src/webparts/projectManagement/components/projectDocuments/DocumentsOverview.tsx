@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import {
   makeStyles,
   tokens,
@@ -44,6 +44,8 @@ import { TemplateService } from '../../services/TemplateService';
 import { DocumentUpload, DocumentUploadHandle } from './DocumentUpload';
 import { SPFI } from '@pnp/sp';
 import { eventService } from '../../services/EventService';
+import { StandardsWorkflowDialog } from './StandardsWorkflowDialog';
+import { StandardsService } from '../../services/StandardsService';
 
 
 export interface IDocumentsTabProps {
@@ -149,8 +151,10 @@ export const DocumentsOverview: React.FC<IDocumentsTabProps> = ({
   const [newFolderName, setNewFolderName] = useState('');
   // const [isUploadDialogOpen, setIsUploadDialogOpen] = useState(false);
   const [uploadDialogKey, setUploadDialogKey] = useState(0);
+  const [showStandardsDialog, setShowStandardsDialog] = useState(false);
   const documentsLibrary = 'Projects';
   const uploadRef = useRef<DocumentUploadHandle>(null);
+  const standardsService = useMemo(() => new StandardsService(context, sp), [context, sp]);
   
 
   const getCurrentFolderPath = (): string => {
@@ -227,6 +231,9 @@ export const DocumentsOverview: React.FC<IDocumentsTabProps> = ({
       <div className={styles.header}>
         <h2>Project Documents</h2>
         <div className={styles.actions}>
+          <Button appearance="primary" onClick={() => setShowStandardsDialog(true)}>
+            Standards Workflow
+          </Button>
           <Button appearance="primary" onClick={() => setShowNewFolderDialog(true)}>
             New Folder
           </Button>
@@ -392,6 +399,16 @@ export const DocumentsOverview: React.FC<IDocumentsTabProps> = ({
           </DialogBody>
         </DialogSurface>
       </Dialog>
+
+      {/* Standards Workflow Dialog */}
+      <StandardsWorkflowDialog
+        isOpen={showStandardsDialog}
+        onDismiss={() => setShowStandardsDialog(false)}
+        context={context}
+        sp={sp}
+        projectNumber={project?.ProjectNumber || ''}
+        standardsService={standardsService}
+      />
     </div>
   );
 };

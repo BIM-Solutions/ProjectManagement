@@ -20,6 +20,8 @@ interface ProjectDetailsProps {
   setTasks: React.Dispatch<React.SetStateAction<TaskItem[]>>;
   selectedTask: TaskItem | undefined;
   setSelectedTask: (task: TaskItem | undefined) => void;
+  selectedStageId: number | undefined;
+
 }
 
 const useStyles = makeStyles({
@@ -49,7 +51,7 @@ const useStyles = makeStyles({
 
 })
 
-const ProjectDetails: React.FC<ProjectDetailsProps> = ({ context, onEdit, onDelete, onTabChange, tasks, setTasks, selectedTask, setSelectedTask }) => {
+const ProjectDetails: React.FC<ProjectDetailsProps> = ({ context, onEdit, onDelete, onTabChange, tasks, setTasks, selectedTask, setSelectedTask, selectedStageId}) => {
   const [project, setProject] = useState<Project | undefined>();
   const [isEditing, setIsEditing] = useState(false);
   const styles = useStyles();
@@ -90,6 +92,8 @@ const ProjectDetails: React.FC<ProjectDetailsProps> = ({ context, onEdit, onDele
           setTasks={setTasks}
           selectedTask={selectedTask}
           setSelectedTask={setSelectedTask}
+          selectedStageId={selectedStageId}
+
         />
       ) : (
         <div className={styles.projectForm}>

@@ -153,25 +153,32 @@ const StagesTab: React.FC<StagesTabProps> = ({ project, context, selectedStageId
 
   const fetchStages = async (): Promise<void> => {
     try {
+      if (!project?.ProjectNumber) {
+        console.log('No project selected');
+        return;
+      }
       await ensureProjectStage();
       const results = await sp.web.lists.getByTitle(listName).items
         .filter(`ProjectNumber eq '${project.ProjectNumber}'`).top(5000)();
       setStages(results);
-      
-      if (selectedStageId) {
-        const selected = results.find(stage => stage.Id === selectedStageId);
-        if (selected) {
-          setSelectedStage(selected);
-        }
-      }
     } catch (error) {
       console.error('Error fetching stages:', error);
     }
   };
 
+  // Effect to handle stage selection
+  useEffect(() => {
+    if (selectedStageId && stages.length > 0) {
+      const selected = stages.find(stage => stage.Id === selectedStageId);
+      if (selected) {
+        setSelectedStage(selected);
+      }
+    }
+  }, [selectedStageId, stages]);
+
   useEffect(() => {
     fetchStages().catch(console.error);
-  }, [project, selectedStageId]);
+  }, [project?.ProjectNumber]);
 
   const handleAddStage = async (): Promise<void> => {
     if (newStage.Title && newStage.StartDate && newStage.EndDate) {

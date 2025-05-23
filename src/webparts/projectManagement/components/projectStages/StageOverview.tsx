@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import {
   Text,
   makeStyles,
@@ -84,16 +84,6 @@ const useStyles = makeStyles({
     fontSize: '16px',
     color: tokens.colorNeutralForeground1,
   },
-  stageContainer: {
-    position: 'absolute',
-    top: '36px',
-    left: '8px',
-    right: '8px',
-    bottom: '8px',
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '8px',
-  },
   stageBar: {
     borderRadius: '16px',
     display: 'flex',
@@ -102,7 +92,6 @@ const useStyles = makeStyles({
     padding: '8px 12px',
     fontSize: '14px',
     color: 'white',
-    marginBottom: '4px',
     boxShadow: tokens.shadow2,
     cursor: 'pointer',
     transition: 'transform 0.1s, box-shadow 0.2s',
@@ -111,17 +100,35 @@ const useStyles = makeStyles({
       boxShadow: tokens.shadow8,
     },
   },
+  inline: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: '8px',
+    '& .stageTitle': {
+      marginBottom: 0,
+      fontSize: '13px',
+    },
+    '& .stageDates': {
+      fontSize: '11px',
+    },
+  },
   stageTitle: {
     fontWeight: 700,
     fontSize: '15px',
     marginBottom: '2px',
     lineHeight: 1.2,
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
   },
   stageDates: {
     fontWeight: 400,
     fontSize: '12px',
     opacity: 0.85,
     lineHeight: 1.2,
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
   },
   legend: {
     display: 'flex',
@@ -155,9 +162,6 @@ const StageOverview: React.FC<StageOverviewProps> = ({ project, context, onStage
     try {
       const results = await sp.web.lists.getByTitle(listName).items
         .filter(`ProjectNumber eq '${project?.ProjectNumber}'`).top(5000)();
-      // console.log('Project number:', project?.ProjectNumber);
-      // console.log('List Name:', listName);
-      // console.log('Fetched stages:', results);
       setStages(results);
     } catch (error) {
       console.error('Error fetching stages:', error);
@@ -168,110 +172,123 @@ const StageOverview: React.FC<StageOverviewProps> = ({ project, context, onStage
     fetchStages().catch(console.error);
   }, [project]);
 
-  // const getStagesForMonth = (year: number, month: number): StageItem[] => {
-  //   const monthStart = new Date(year, month, 1);
-  //   const monthEnd = new Date(year, month + 1, 0);
-
-  //   return stages.filter(stage => {
-  //     const stageStart = new Date(stage.StartDate);
-  //     const stageEnd = new Date(stage.EndDate);
-  //     return stageStart <= monthEnd && stageEnd >= monthStart;
-  //   });
-  // };
-
   const renderCalendar = (): React.ReactNode => {
-    const months = [];
-    const monthNames = [
-      'January', 'February', 'March', 'April',
-      'May', 'June', 'July', 'August',
-      'September', 'October', 'November', 'December'
-    ];
-    // Render empty month cells for the grid
-    for (let month = 0; month < 12; month++) {
-      months.push(
-        <div key={month} className={styles.calendarCell}>
-          <Text className={styles.monthName}>{monthNames[month]}</Text>
-        </div>
-      );
-    }
-
-    // Calculate bar positions for overlay
-    // const monthCount = 12;
     const columns = 4;
     const rows = 3;
-    const barHeight = 36;
-    const barStacking: { [row: number]: number } = {};
+    const monthNames = [
+      'January','February','March','April',
+      'May','June','July','August',
+      'September','October','November','December'
+    ];
 
-    // Helper to split a stage into row segments
-    function getRowSegments(startMonth: number, endMonth: number): { row: number, segStart: number, segEnd: number }[] {
-      const segments = [];
+    // cell sizing
+    const gridRef = useRef<HTMLDivElement>(null);
+    const [cellSize, setCellSize] = useState(140);
+    useEffect(() => {
+      const updateSize = (): void => {
+        if (gridRef.current && gridRef.current.children.length > 0) {
+          const firstCell = gridRef.current.children[0] as HTMLElement;
+          setCellSize(firstCell.offsetWidth);
+          // Optionally log for debugging
+          // console.log('cellSize', firstCell.offsetWidth);
+        }
+      };
+    
+      updateSize(); // Initial call
+    
+      window.addEventListener('resize', updateSize);
+    
+      // Optionally, update after a short delay to catch late renders
+      const timeout = setTimeout(updateSize, 100);
+    
+      return () => {
+        window.removeEventListener('resize', updateSize);
+        clearTimeout(timeout);
+      };
+    }, [gridRef]);
+
+    const rowHeight = cellSize;
+    const TOP_OFFSET = 32;
+    const BOTTOM_OFFSET = 8;
+    const ROW_GAP = 4;
+    const availableHeight = rowHeight - TOP_OFFSET - BOTTOM_OFFSET;
+
+    // split into segments
+    type Segment = { row: number; segStart: number; segEnd: number; stage: StageItem };
+    const segments: Segment[] = [];
+    const yearStart = new Date(currentYear,0,1);
+    const yearEnd   = new Date(currentYear,11,31);
+
+    // helper to split across grid rows
+    const getRowSegments = (startMonth: number, endMonth: number): { row: number; segStart: number; segEnd: number }[] => {
+      const segs: { row:number; segStart:number; segEnd:number }[] = [];
       const row = Math.floor(startMonth / columns);
       const endRow = Math.floor(endMonth / columns);
       for (let r = row; r <= endRow; r++) {
-        const rowStartMonth = r * columns;
-        const rowEndMonth = rowStartMonth + columns - 1;
-        const segStart = r === row ? startMonth : rowStartMonth;
-        const segEnd = r === endRow ? endMonth : rowEndMonth;
-        segments.push({ row: r, segStart, segEnd });
+        const rowStart = r * columns;
+        const rowEnd   = rowStart + columns - 1;
+        segs.push({
+          row: r,
+          segStart: r===row   ? startMonth : rowStart,
+          segEnd:   r===endRow? endMonth   : rowEnd
+        });
       }
-      return segments;
-    }
+      return segs;
+    };
 
-    // For stacking bars within a row
-    function getStackIndex(row: number): number {
-      if (barStacking[row] === undefined) barStacking[row] = 0;
-      return barStacking[row]++;
-    }
-
-    // Only render bars for stages that overlap the current year
-    const yearStart = new Date(currentYear, 0, 1);
-    const yearEnd = new Date(currentYear, 11, 31);
-    // Get the width of a cell to use for rowHeight (square cells)
-    const gridRef = React.useRef<HTMLDivElement>(null);
-    const [cellSize, setCellSize] = React.useState(140);
-    React.useEffect(() => {
-      function updateCellSize(): void {
-        if (gridRef.current) {
-          const firstCell = gridRef.current.querySelector('div');
-          if (firstCell) {
-            setCellSize((firstCell as HTMLElement).offsetWidth);
-          }
-        }
-      }
-      updateCellSize();
-      window.addEventListener('resize', updateCellSize);
-      return () => window.removeEventListener('resize', updateCellSize);
-    }, [gridRef, months.length]);
-
-    const rowHeight = cellSize;
-    const bars = stages.reduce((acc: JSX.Element[], stage: StageItem) => {
+    // collect segments
+    stages.forEach(stage => {
       const start = new Date(stage.StartDate);
-      const end = new Date(stage.EndDate);
-      if (end < yearStart || start > yearEnd) return acc; // skip if not overlapping
-      // Clamp to current year for display
-      const startMonth = Math.max(0, start.getFullYear() === currentYear ? start.getMonth() : 0);
-      const endMonth = Math.min(11, end.getFullYear() === currentYear ? end.getMonth() : 11);
-      const segments = getRowSegments(startMonth, endMonth);
-      segments.forEach(({ row, segStart, segEnd }) => {
-        const left = ((segStart % columns) / columns) * 100;
-        const widthPercent = ((segEnd - segStart + 1) / columns) * 100;
-        const stackIdx = getStackIndex(row);
-        acc.push(
+      const end   = new Date(stage.EndDate);
+      if (end < yearStart || start > yearEnd) return;
+      const sm = start.getFullYear()===currentYear? start.getMonth(): 0;
+      const em = end  .getFullYear()===currentYear? end  .getMonth(): 11;
+      getRowSegments(sm, em).forEach(({ row, segStart, segEnd }) => {
+        segments.push({ row, segStart, segEnd, stage });
+      });
+    });
+
+    // Group segments by row
+    const rowSegments: Record<number, Segment[]> = {};
+    segments.forEach(seg => {
+      if (!rowSegments[seg.row]) rowSegments[seg.row] = [];
+      rowSegments[seg.row].push(seg);
+    });
+
+    // render month cells
+    const months = monthNames.map((name, i) => (
+      <div key={i} className={styles.calendarCell}>
+        <Text className={styles.monthName}>{name}</Text>
+      </div>
+    ));
+
+    // Calculate heights and assign stack index per row
+    const bars: React.ReactNode[] = [];
+    Object.entries(rowSegments).forEach(([rowStr, segs]) => {
+      const row = +rowStr;
+      const count = segs.length;
+      // Calculate bar height with a max of 36px
+      const barHeight = Math.min(36, ((availableHeight - (count - 1) * ROW_GAP) / count)-16);
+      segs.forEach((seg, idx) => {
+        const { segStart, segEnd, stage } = seg;
+        const leftPct = ((segStart % columns) / columns) * 100;
+        const widthPct = ((segEnd - segStart + 1) / columns) * 100;
+        bars.push(
           <div
-            key={`${stage.Id}-r${row}`}
-            className={styles.stageBar}
+            key={`${stage.Id}-${row}-${idx}`}
+            className={`${styles.stageBar} ${barHeight < 36 ? styles.inline : ''}`}
             style={{
               backgroundColor: stage.StageColor || defaultColor,
               position: 'absolute',
-              left: `calc(${left}% + 2px)`,
-              width: `calc(${widthPercent}% - 28px)`,
-              top: `${row * rowHeight + 32 + stackIdx * (barHeight + 20)}px`,
+              left: `calc(${leftPct}% + 2px)`,
+              width: `calc(${widthPct}% - 28px)`,
+              top: `${row * rowHeight + TOP_OFFSET + idx * (barHeight + 15 + ROW_GAP)}px`,
               height: `${barHeight}px`,
-              zIndex: 2,
               pointerEvents: 'auto',
+              zIndex: 2,
             }}
-            onClick={() => onStageSelect?.(stage.Id)}
-            title={`${stage.Title}\nStart: ${new Date(stage.StartDate).toLocaleDateString()}\nEnd: ${new Date(stage.EndDate).toLocaleDateString()}`}
+            onClick={e => { e.stopPropagation(); onStageSelect?.(stage.Id); }}
+            title={`${stage.Title}\n${new Date(stage.StartDate).toLocaleDateString()} - ${new Date(stage.EndDate).toLocaleDateString()}`}
           >
             <span className={styles.stageTitle}>{stage.Title}</span>
             <span className={styles.stageDates}>
@@ -280,30 +297,19 @@ const StageOverview: React.FC<StageOverviewProps> = ({ project, context, onStage
           </div>
         );
       });
-      return acc;
-    }, [] as JSX.Element[]);
+    });
 
     return (
-      <div className={styles.calendar} style={{ position: 'relative', minHeight: `${rowHeight * rows + 48}px` }}>
+      <div className={styles.calendar} style={{ position: 'relative', minHeight: `${rowHeight*rows + 48}px` }}>
         <div className={styles.calendarHeader}>
-          <Button
-            appearance="primary"
-            onClick={() => setCurrentYear(currentYear - 1)}
-          >
-            {currentYear - 1}
-          </Button>
+          <Button appearance="primary" onClick={() => setCurrentYear(currentYear-1)}>{currentYear - 1}</Button>
           <Text size={400} weight="semibold">{currentYear}</Text>
-          <Button
-            appearance="primary"
-            onClick={() => setCurrentYear(currentYear + 1)}
-          >
-            {currentYear + 1}
-          </Button>
+          <Button appearance="primary" onClick={() => setCurrentYear(currentYear+1)}>{currentYear + 1}</Button>
         </div>
         <div className={styles.calendarGrid} ref={gridRef} style={{ position: 'relative', zIndex: 1 }}>
           {months}
         </div>
-        <div style={{ position: 'absolute', left: 0, right: 0, top: 48, height: 'calc(100% - 48px)', pointerEvents: 'none' }}>
+        <div style={{ position: 'absolute', top: 48, left: 0, right: 0, height: `calc(100% - 48px)`, pointerEvents: 'none' }}>
           {bars}
         </div>
       </div>
@@ -313,14 +319,13 @@ const StageOverview: React.FC<StageOverviewProps> = ({ project, context, onStage
   return (
     <div className={styles.root}>
       {renderCalendar()}
-      {/* Legend for stage colors */}
       <div className={styles.legend}>
-        {Array.from(new Set(stages.map(s => s.StageColor))).map((color, idx) => {
-          const stage = stages.find(s => s.StageColor === color);
+        {Array.from(new Set(stages.map(s => s.StageColor))).map(color => {
+          const st = stages.find(s=>s.StageColor===color);
           return (
             <div key={color} className={styles.legendItem}>
               <span className={styles.legendColor} style={{ backgroundColor: color }} />
-              <span>{stage?.Title}</span>
+              <span>{st?.Title}</span>
             </div>
           );
         })}
@@ -329,4 +334,4 @@ const StageOverview: React.FC<StageOverviewProps> = ({ project, context, onStage
   );
 };
 
-export default StageOverview; 
+export default StageOverview;
