@@ -1,0 +1,16 @@
+@import "~@fluentui/react/dist/sass/References.scss";
+
+.taskCard {
+  padding: 15px;
+  margin-bottom: 10px;
+  border: 1px solid "[theme:neutralLight, default: #edebe9]";
+  border-radius: 2px;
+  background-color: "[theme:white, default: #ffffff]";
+  box-shadow: 0 1.6px 3.6px 0 rgba(0, 0, 0, 0.132),
+    0 0.3px 0.9px 0 rgba(0, 0, 0, 0.108);
+
+  &:hover {
+    box-shadow: 0 3.2px 7.2px 0 rgba(0, 0, 0, 0.132),
+      0 0.6px 1.8px 0 rgba(0, 0, 0, 0.108);
+  }
+}

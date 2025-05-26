@@ -1,7 +1,7 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/spfx/client-side-web-part-manifest.schema.json",
-  "id": "5188bfa2-06c7-4582-a0a9-a3c47ae003c3",
-  "alias": "ProjectManagementWebPart",
+  "id": "68958bce-c61e-496b-95d8-94c4c6252f24",
+  "alias": "ResourcingWebPart",
   "componentType": "WebPart",
 
   "version": "*",
@@ -17,15 +17,28 @@
   ],
   "supportsThemeVariants": true,
 
+  "webApiPermissionRequests": [
+    {
+      "resource": "Microsoft Graph",
+      "scope": "Calendars.Read"
+    },
+    {
+      "resource": "Microsoft Graph",
+      "scope": "Group.Read.All"
+    }
+  ],
+
   "preconfiguredEntries": [
     {
       "groupId": "5c03119e-3074-46fd-976b-c60198311f70",
       "group": { "default": "BakerHicks" },
-      "title": { "default": "01 Project Toolbox" },
-      "description": { "default": "project_Management description" },
-      "officeFabricIconFontName": "PageListFilter",
+      "title": { "default": "02 Resourcing" },
+      "description": {
+        "default": "Combined task management and calendar view for project resources"
+      },
+      "officeFabricIconFontName": "Calendar",
       "properties": {
-        "description": "project_Management"
+        "description": "Resourcing"
       }
     }
   ]

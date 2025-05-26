@@ -1,7 +1,7 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
   "solution": {
-    "name": "project-management-client-side-solution_proof of concept",
+    "name": "Project Management Toolbox",
     "id": "053276ca-380e-44ae-b168-6d9c9bcc9ed8",
     "version": "1.2.1.6",
     "includeClientSideAssets": true,

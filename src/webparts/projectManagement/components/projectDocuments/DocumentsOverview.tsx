@@ -1,5 +1,5 @@
-import * as React from 'react';
-import { useState, useEffect, useRef, useMemo } from 'react';
+import * as React from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   makeStyles,
   tokens,
@@ -24,7 +24,7 @@ import {
   // DialogTrigger,
   Tooltip,
   DialogTrigger,
-} from '@fluentui/react-components';
+} from "@fluentui/react-components";
 import {
   Folder24Regular,
   Document24Regular,
@@ -36,17 +36,17 @@ import {
   Archive24Regular,
   Eye24Regular,
   Delete24Regular,
-} from '@fluentui/react-icons';
-import { WebPartContext } from '@microsoft/sp-webpart-base';
-import { Project } from '../../services/ProjectSelectionServices';
-import { DocumentService, IDocument } from '../../services/DocumentService';
-import { TemplateService } from '../../services/TemplateService';
-import { DocumentUpload, DocumentUploadHandle } from './DocumentUpload';
-import { SPFI } from '@pnp/sp';
-import { eventService } from '../../services/EventService';
-import { StandardsWorkflowDialog } from './StandardsWorkflowDialog';
-import { StandardsService } from '../../services/StandardsService';
-
+} from "@fluentui/react-icons";
+import { WebPartContext } from "@microsoft/sp-webpart-base";
+import { Project } from "../../services/ProjectSelectionServices";
+import { DocumentService, IDocument } from "../../services/DocumentService";
+import { TemplateService } from "../../services/TemplateService";
+import { DocumentUpload, DocumentUploadHandle } from "./DocumentUpload";
+import { SPFI } from "@pnp/sp";
+import { eventService } from "../../services/EventService";
+// import { StandardsWorkflowDialog } from './StandardsWorkflowDialog';
+// import { StandardsService } from '../../services/StandardsService';
+import { StandardsManagementDialog } from "./StandardsManagementDialog";
 
 export interface IDocumentsTabProps {
   context: WebPartContext;
@@ -58,40 +58,40 @@ export interface IDocumentsTabProps {
 
 const useStyles = makeStyles({
   container: {
-    display: 'flex',
-    flexDirection: 'column',
+    display: "flex",
+    flexDirection: "column",
     gap: tokens.spacingVerticalM,
   },
   header: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   table: {
-    width: '100%',
+    width: "100%",
   },
   actions: {
-    display: 'flex',
+    display: "flex",
     gap: tokens.spacingHorizontalS,
   },
   breadcrumb: {
-    display: 'flex',
+    display: "flex",
     gap: tokens.spacingHorizontalS,
-    alignItems: 'center',
+    alignItems: "center",
     padding: tokens.spacingVerticalS,
   },
   breadcrumbItem: {
-    cursor: 'pointer',
-    '&:hover': {
-      textDecoration: 'underline',
+    cursor: "pointer",
+    "&:hover": {
+      textDecoration: "underline",
     },
   },
   icon: {
     marginRight: tokens.spacingHorizontalS,
   },
   actionButton: {
-    minWidth: 'auto',
-    padding: '4px 8px',
+    minWidth: "auto",
+    padding: "4px 8px",
   },
 });
 
@@ -105,39 +105,39 @@ const useStyles = makeStyles({
 // ];
 
 const getFileIcon = (fileName: string): JSX.Element => {
-  const extension = fileName.split('.').pop()?.toLowerCase();
-  
+  const extension = fileName.split(".").pop()?.toLowerCase();
+
   switch (extension) {
-    case 'pdf':
+    case "pdf":
       return <DocumentPdf24Regular />;
-    case 'png':
-    case 'jpg':
-    case 'jpeg':
-    case 'gif':
-    case 'bmp':
+    case "png":
+    case "jpg":
+    case "jpeg":
+    case "gif":
+    case "bmp":
       return <Image32Regular />;
-    case 'doc':
-    case 'docx':
+    case "doc":
+    case "docx":
       return <Document24Filled />;
-    case 'xls':
-    case 'xlsx':
+    case "xls":
+    case "xlsx":
       return <DocumentRegular />;
-    case 'ppt':
-    case 'pptx':
+    case "ppt":
+    case "pptx":
       return <DocumentRegular />;
-    case 'txt':
-    case 'rtf':
+    case "txt":
+    case "rtf":
       return <TextTRegular />;
-    case 'zip':
-    case 'rar':
-    case '7z':
+    case "zip":
+    case "rar":
+    case "7z":
       return <Archive24Regular />;
     default:
       return <Document24Regular />;
   }
 };
 
-export const DocumentsOverview: React.FC<IDocumentsTabProps> = ({ 
+export const DocumentsOverview: React.FC<IDocumentsTabProps> = ({
   context,
   project,
   sp,
@@ -148,19 +148,22 @@ export const DocumentsOverview: React.FC<IDocumentsTabProps> = ({
   const [documents, setDocuments] = useState<IDocument[]>([]);
   const [showNewFolderDialog, setShowNewFolderDialog] = useState(false);
   const [currentPath, setCurrentPath] = useState<string[]>([]);
-  const [newFolderName, setNewFolderName] = useState('');
+  const [newFolderName, setNewFolderName] = useState("");
   // const [isUploadDialogOpen, setIsUploadDialogOpen] = useState(false);
   const [uploadDialogKey, setUploadDialogKey] = useState(0);
-  const [showStandardsDialog, setShowStandardsDialog] = useState(false);
-  const documentsLibrary = 'Projects';
+  // const [showStandardsDialog, setShowStandardsDialog] = useState(false);
+  const [showStandardsManagementDialog, setShowStandardsManagementDialog] =
+    useState(false);
+  const documentsLibrary = "Projects";
   const uploadRef = useRef<DocumentUploadHandle>(null);
-  const standardsService = useMemo(() => new StandardsService(context, sp), [context, sp]);
-  
+  // const standardsService = useMemo(() => new StandardsService(context, sp), [context, sp]);
 
   const getCurrentFolderPath = (): string => {
-    if (!project) return '';
+    if (!project) return "";
     const basePath = `${documentsLibrary}/${project.ProjectNumber}`;
-    return currentPath.length > 0 ? `${basePath}/${currentPath.join('/')}` : basePath;
+    return currentPath.length > 0
+      ? `${basePath}/${currentPath.join("/")}`
+      : basePath;
   };
 
   const loadFolderContents = async (): Promise<void> => {
@@ -171,7 +174,7 @@ export const DocumentsOverview: React.FC<IDocumentsTabProps> = ({
       //console.log(docs);
       setDocuments(docs);
     } catch (error) {
-      console.error('Error loading documents:', error);
+      console.error("Error loading documents:", error);
     }
   };
 
@@ -186,13 +189,13 @@ export const DocumentsOverview: React.FC<IDocumentsTabProps> = ({
       const currentFolder = getCurrentFolderPath();
       await documentService.createFolder(`${currentFolder}/${newFolderName}`);
       setShowNewFolderDialog(false);
-      setNewFolderName('');
+      setNewFolderName("");
       await loadFolderContents();
     } catch (error) {
-      console.error('Error creating folder:', error);
+      console.error("Error creating folder:", error);
     }
   };
-  
+
   // const handleClose = (): void => setIsUploadDialogOpen(false);
   const handleDelete = async (document: IDocument): Promise<void> => {
     try {
@@ -203,7 +206,7 @@ export const DocumentsOverview: React.FC<IDocumentsTabProps> = ({
       }
       await loadFolderContents();
     } catch (error) {
-      console.error('Error deleting item:', error);
+      console.error("Error deleting item:", error);
     }
   };
 
@@ -220,9 +223,9 @@ export const DocumentsOverview: React.FC<IDocumentsTabProps> = ({
     eventService.notifyDocumentUpload();
   };
   const handleViewDocument = (doc: IDocument): void => {
-    console.log('the doc is: ', doc);
+    console.log("the doc is: ", doc);
     if (doc.FileRef) {
-      window.open(doc.FileRef, '_blank');
+      window.open(doc.FileRef, "_blank");
     }
   };
 
@@ -231,32 +234,38 @@ export const DocumentsOverview: React.FC<IDocumentsTabProps> = ({
       <div className={styles.header}>
         <h2>Project Documents</h2>
         <div className={styles.actions}>
-          <Button appearance="primary" onClick={() => setShowStandardsDialog(true)}>
+          {/* <Button appearance="primary" onClick={() => setShowStandardsDialog(true)}>
             Standards Workflow
-          </Button>
-          <Button appearance="primary" onClick={() => setShowNewFolderDialog(true)}>
-            New Folder
+          </Button> */}
+          <Button
+            appearance="primary"
+            onClick={() => setShowStandardsManagementDialog(true)}
+          >
+            Standards Management
           </Button>
           <Dialog modalType="modal">
             <DialogTrigger disableButtonEnhancement>
-              <Button appearance="primary" onClick={() => setUploadDialogKey(prev => prev + 1)}>
+              <Button
+                appearance="primary"
+                onClick={() => setUploadDialogKey((prev) => prev + 1)}
+              >
                 Upload Document
               </Button>
             </DialogTrigger>
-            <DialogSurface style={{ width: '100%' }} >
+            <DialogSurface style={{ width: "100%" }}>
               <DialogBody>
                 <DialogTitle>Upload Document</DialogTitle>
                 <DialogContent id="documentUpload">
-                  <DocumentUpload 
+                  <DocumentUpload
                     ref={uploadRef}
                     key={uploadDialogKey}
                     sp={sp}
-                    projectId={project?.ProjectNumber}  
+                    projectId={project?.ProjectNumber}
                     libraryName={documentsLibrary}
                     context={context}
                     onUploadComplete={handleUploadComplete}
                     onCancel={() => {
-                      setUploadDialogKey(prev => prev + 1);
+                      setUploadDialogKey((prev) => prev + 1);
                     }}
                   />
                 </DialogContent>
@@ -284,8 +293,8 @@ export const DocumentsOverview: React.FC<IDocumentsTabProps> = ({
       </div>
 
       <div className={styles.breadcrumb}>
-        <Text 
-          className={styles.breadcrumbItem} 
+        <Text
+          className={styles.breadcrumbItem}
           onClick={() => setCurrentPath([])}
         >
           Root
@@ -293,7 +302,7 @@ export const DocumentsOverview: React.FC<IDocumentsTabProps> = ({
         {currentPath.map((folder, index) => (
           <React.Fragment key={index}>
             <Text>/</Text>
-            <Text 
+            <Text
               className={styles.breadcrumbItem}
               onClick={() => navigateToBreadcrumb(index + 1)}
             >
@@ -307,7 +316,7 @@ export const DocumentsOverview: React.FC<IDocumentsTabProps> = ({
         <TableHeader>
           <TableRow>
             <TableHeaderCell>Name</TableHeaderCell>
-            {documents.some(doc => !doc.IsFolder) && (
+            {documents.some((doc) => !doc.IsFolder) && (
               <>
                 <TableHeaderCell>Title</TableHeaderCell>
                 <TableHeaderCell>Uniclass</TableHeaderCell>
@@ -324,27 +333,37 @@ export const DocumentsOverview: React.FC<IDocumentsTabProps> = ({
             <TableRow key={doc.FileRef}>
               <TableCell>
                 {doc.IsFolder ? (
-                  <div style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}
-                       onClick={() => navigateToFolder(doc.Title)}>
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      cursor: "pointer",
+                    }}
+                    onClick={() => navigateToFolder(doc.Title)}
+                  >
                     <Folder24Regular className={styles.icon} />
                     {doc.Title}
                   </div>
                 ) : (
-                  <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <div style={{ display: "flex", alignItems: "center" }}>
                     {getFileIcon(doc.Title)}
-                    <span style={{ marginLeft: tokens.spacingHorizontalS }}>{doc.Title}</span>
+                    <span style={{ marginLeft: tokens.spacingHorizontalS }}>
+                      {doc.Title}
+                    </span>
                   </div>
                 )}
               </TableCell>
               {!doc.IsFolder && (
                 <>
-                  <TableCell>{doc.Title || '-'}</TableCell>
-                  <TableCell>{doc.UniclassCode3 || '-'}</TableCell>
-                  <TableCell>{doc.UniclassTitle3 || '-'}</TableCell>
-                  <TableCell>{doc.Status || '-'}</TableCell>
+                  <TableCell>{doc.Title || "-"}</TableCell>
+                  <TableCell>{doc.UniclassCode3 || "-"}</TableCell>
+                  <TableCell>{doc.UniclassTitle3 || "-"}</TableCell>
+                  <TableCell>{doc.Status || "-"}</TableCell>
                 </>
               )}
-              <TableCell>{new Date(doc.Modified).toLocaleDateString()}</TableCell>
+              <TableCell>
+                {new Date(doc.Modified).toLocaleDateString()}
+              </TableCell>
               <TableCell>
                 <div className={styles.actions}>
                   {!doc.IsFolder && (
@@ -389,10 +408,17 @@ export const DocumentsOverview: React.FC<IDocumentsTabProps> = ({
               </div>
             </DialogContent>
             <DialogActions>
-              <Button appearance="secondary" onClick={() => setShowNewFolderDialog(false)}>
+              <Button
+                appearance="secondary"
+                onClick={() => setShowNewFolderDialog(false)}
+              >
                 Cancel
               </Button>
-              <Button appearance="primary" onClick={handleCreateFolder} disabled={!newFolderName}>
+              <Button
+                appearance="primary"
+                onClick={handleCreateFolder}
+                disabled={!newFolderName}
+              >
                 Create
               </Button>
             </DialogActions>
@@ -401,16 +427,27 @@ export const DocumentsOverview: React.FC<IDocumentsTabProps> = ({
       </Dialog>
 
       {/* Standards Workflow Dialog */}
-      <StandardsWorkflowDialog
+      {/* <StandardsWorkflowDialog
         isOpen={showStandardsDialog}
         onDismiss={() => setShowStandardsDialog(false)}
         context={context}
         sp={sp}
         projectNumber={project?.ProjectNumber || ''}
         standardsService={standardsService}
+        clientName={project?.Client || ''}
+      /> */}
+
+      {/* Standards Management Wizard Dialog */}
+      <StandardsManagementDialog
+        context={context}
+        sp={sp}
+        isOpen={showStandardsManagementDialog}
+        onDismiss={() => setShowStandardsManagementDialog(false)}
+        selectedProject={project}
+        onUploadComplete={handleUploadComplete}
       />
     </div>
   );
 };
 
-export default DocumentsOverview; 
+export default DocumentsOverview;

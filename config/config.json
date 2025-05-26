@@ -9,11 +9,20 @@
           "manifest": "./src/webparts/projectManagement/ProjectManagementWebPart.manifest.json"
         }
       ]
+    },
+    "resourcing-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/resourcing/ResourcingWebPart.js",
+          "manifest": "./src/webparts/resourcing/ResourcingWebPart.manifest.json"
+        }
+      ]
     }
   },
   "externals": {},
   "localizedResources": {
     "ProjectManagementWebPartStrings": "lib/webparts/projectManagement/loc/{locale}.js",
-    "ControlStrings": "node_modules/@pnp/spfx-controls-react/lib/loc/{locale}.js"
+    "ControlStrings": "node_modules/@pnp/spfx-controls-react/lib/loc/{locale}.js",
+    "ResourcingWebPartStrings": "lib/webparts/resourcing/loc/{locale}.js"
   }
 }

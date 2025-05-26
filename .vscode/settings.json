@@ -10,6 +10,15 @@
     "**/lib-amd": true,
     "src/**/*.scss.ts": true
   },
+  
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "[javascript]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+  
   "typescript.tsdk": ".\\node_modules\\typescript\\lib",
-  "npm-scripts.showStartNotification": false
+  "npm-scripts.showStartNotification": false,
+  "editor.formatOnSave": true,
+  "editor.fontWeight": "normal"
+  
 }

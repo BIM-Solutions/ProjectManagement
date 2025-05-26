@@ -1,14 +1,16 @@
-import * as React from 'react';
-import { useEffect, useState } from 'react';
-import { Text,  makeStyles } from '@fluentui/react-components';
-import { WebPartContext } from '@microsoft/sp-webpart-base';
-import { Project, ProjectSelectionService } from '../services/ProjectSelectionServices';
-import ProjectForm from './common/ProjectForm';
-import ProjectTabs from './projectInformation/ProjectTabs';
-import { DEBUG } from './common/DevVariables';
-import { eventService } from '../services/EventService';
-import { TaskItem } from './projectCalender/ProgrammeTab';
-
+import * as React from "react";
+import { useEffect, useState } from "react";
+import { Text, makeStyles } from "@fluentui/react-components";
+import { WebPartContext } from "@microsoft/sp-webpart-base";
+import {
+  Project,
+  ProjectSelectionService,
+} from "../services/ProjectSelectionServices";
+import ProjectForm from "./common/ProjectForm";
+import ProjectTabs from "./projectInformation/ProjectTabs";
+import { DEBUG } from "./common/DevVariables";
+import { eventService } from "../services/EventService";
+import { TaskItem } from "./projectCalender/ProgrammeTab";
 
 interface ProjectDetailsProps {
   context: WebPartContext;
@@ -21,37 +23,45 @@ interface ProjectDetailsProps {
   selectedTask: TaskItem | undefined;
   setSelectedTask: (task: TaskItem | undefined) => void;
   selectedStageId: number | undefined;
-
+  stagesChanged?: () => void;
 }
 
 const useStyles = makeStyles({
   root: {
-    gap: '20',
-    padding: '20',
-    marginTop: '20',
-    height: 'auto', 
-    minHeight: '50vh', 
-    overflowY: 'auto', 
-    backgroundColor: '#f1f0ef'
+    gap: "20",
+    padding: "20",
+    marginTop: "20",
+    height: "auto",
+    minHeight: "50vh",
+    overflowY: "auto",
+    backgroundColor: "#f1f0ef",
   },
 
-  projectForm:{
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '20',
-    padding: '50',
-    margin: '50',
-    height: 'auto', 
-    minHeight: '50vh', 
-    overflowY: 'auto', 
-    backgroundColor: '#f1f0ef'
-  }
+  projectForm: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "20",
+    padding: "50",
+    margin: "50",
+    height: "auto",
+    minHeight: "50vh",
+    overflowY: "auto",
+    backgroundColor: "#f1f0ef",
+  },
+});
 
-
-
-})
-
-const ProjectDetails: React.FC<ProjectDetailsProps> = ({ context, onEdit, onDelete, onTabChange, tasks, setTasks, selectedTask, setSelectedTask, selectedStageId}) => {
+const ProjectDetails: React.FC<ProjectDetailsProps> = ({
+  context,
+  onEdit,
+  onDelete,
+  onTabChange,
+  tasks,
+  setTasks,
+  selectedTask,
+  setSelectedTask,
+  selectedStageId,
+  stagesChanged,
+}) => {
   const [project, setProject] = useState<Project | undefined>();
   const [isEditing, setIsEditing] = useState(false);
   const styles = useStyles();
@@ -59,16 +69,16 @@ const ProjectDetails: React.FC<ProjectDetailsProps> = ({ context, onEdit, onDele
     const service = ProjectSelectionService;
     const listener = (selected: Project | undefined): void => {
       if (!selected) return setProject(undefined);
-      if (!DEBUG) console.log('ProjectDetails listener - selected project:', selected);
+      if (!DEBUG)
+        console.log("ProjectDetails listener - selected project:", selected);
       setProject({ ...selected });
     };
     service.subscribe(listener);
     listener(service.getSelectedProject());
     const unsubscribe = eventService.subscribeToProjectUpdates(() => {
-      
       const latest = service.getSelectedProject();
-      if (!DEBUG) console.log('ProjectDetails - updated project:', latest);
-      setProject(latest? { ...latest } : undefined);
+      if (!DEBUG) console.log("ProjectDetails - updated project:", latest);
+      setProject(latest ? { ...latest } : undefined);
     });
     return () => {
       service.unsubscribe(listener);
@@ -77,7 +87,7 @@ const ProjectDetails: React.FC<ProjectDetailsProps> = ({ context, onEdit, onDele
   }, []);
 
   if (!project) return <Text>Select a project to view details.</Text>;
-  if (!DEBUG) console.log('ProjectDetails - project:', project);
+  if (!DEBUG) console.log("ProjectDetails - project:", project);
 
   return (
     <div className={styles.root}>
@@ -93,11 +103,11 @@ const ProjectDetails: React.FC<ProjectDetailsProps> = ({ context, onEdit, onDele
           selectedTask={selectedTask}
           setSelectedTask={setSelectedTask}
           selectedStageId={selectedStageId}
-
+          stagesChanged={stagesChanged}
         />
       ) : (
         <div className={styles.projectForm}>
-          <ProjectForm 
+          <ProjectForm
             context={context}
             mode="edit"
             project={project}
@@ -106,7 +116,6 @@ const ProjectDetails: React.FC<ProjectDetailsProps> = ({ context, onEdit, onDele
               if (onEdit) {
                 onEdit();
               }
-
             }}
             onCancel={() => setIsEditing(false)}
           />
