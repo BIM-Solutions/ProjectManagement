@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState, useEffect, useRef, useMemo } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
   makeStyles,
   tokens,
@@ -44,8 +44,9 @@ import { TemplateService } from '../../services/TemplateService';
 import { DocumentUpload, DocumentUploadHandle } from './DocumentUpload';
 import { SPFI } from '@pnp/sp';
 import { eventService } from '../../services/EventService';
-import { StandardsWorkflowDialog } from './StandardsWorkflowDialog';
-import { StandardsService } from '../../services/StandardsService';
+// import { StandardsWorkflowDialog } from './StandardsWorkflowDialog';
+// import { StandardsService } from '../../services/StandardsService';
+import { StandardsManagementDialog } from './StandardsManagementDialog';
 
 
 export interface IDocumentsTabProps {
@@ -151,10 +152,11 @@ export const DocumentsOverview: React.FC<IDocumentsTabProps> = ({
   const [newFolderName, setNewFolderName] = useState('');
   // const [isUploadDialogOpen, setIsUploadDialogOpen] = useState(false);
   const [uploadDialogKey, setUploadDialogKey] = useState(0);
-  const [showStandardsDialog, setShowStandardsDialog] = useState(false);
+  // const [showStandardsDialog, setShowStandardsDialog] = useState(false);
+  const [showStandardsManagementDialog, setShowStandardsManagementDialog] = useState(false);
   const documentsLibrary = 'Projects';
   const uploadRef = useRef<DocumentUploadHandle>(null);
-  const standardsService = useMemo(() => new StandardsService(context, sp), [context, sp]);
+  // const standardsService = useMemo(() => new StandardsService(context, sp), [context, sp]);
   
 
   const getCurrentFolderPath = (): string => {
@@ -231,11 +233,11 @@ export const DocumentsOverview: React.FC<IDocumentsTabProps> = ({
       <div className={styles.header}>
         <h2>Project Documents</h2>
         <div className={styles.actions}>
-          <Button appearance="primary" onClick={() => setShowStandardsDialog(true)}>
+          {/* <Button appearance="primary" onClick={() => setShowStandardsDialog(true)}>
             Standards Workflow
-          </Button>
-          <Button appearance="primary" onClick={() => setShowNewFolderDialog(true)}>
-            New Folder
+          </Button> */}
+          <Button appearance="primary" onClick={() => setShowStandardsManagementDialog(true)}>
+            Standards Management
           </Button>
           <Dialog modalType="modal">
             <DialogTrigger disableButtonEnhancement>
@@ -401,13 +403,23 @@ export const DocumentsOverview: React.FC<IDocumentsTabProps> = ({
       </Dialog>
 
       {/* Standards Workflow Dialog */}
-      <StandardsWorkflowDialog
+      {/* <StandardsWorkflowDialog
         isOpen={showStandardsDialog}
         onDismiss={() => setShowStandardsDialog(false)}
         context={context}
         sp={sp}
         projectNumber={project?.ProjectNumber || ''}
         standardsService={standardsService}
+        clientName={project?.Client || ''}
+      /> */}
+
+      {/* Standards Management Wizard Dialog */}
+      <StandardsManagementDialog
+        context={context}
+        sp={sp}
+        isOpen={showStandardsManagementDialog}
+        onDismiss={() => setShowStandardsManagementDialog(false)}
+        selectedProject={project}
       />
     </div>
   );

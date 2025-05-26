@@ -1,3 +1,4 @@
+// Import required PnP JS and SharePoint dependencies
 import { spfi, SPFx } from "@pnp/sp/presets/all";
 import { WebPartContext } from "@microsoft/sp-webpart-base";
 import { SPFI } from "@pnp/sp";
@@ -8,56 +9,62 @@ import "@pnp/sp/lists";
 import "@pnp/sp/items";
 import "@pnp/sp/webs";
 
+// Interface defining document metadata structure
 export interface IDocument {
   Id: number;
   Title: string;
   // Title: string;
-  FileLeafRef: string;
-  FileRef: string;
-  ProjectId: string;
-  DocumentType: string;
-  Status: string;
-  Version?: string;
-  ModifiedBy: string;
-  Created: string;
-  Modified: string;
-  IsFolder?: boolean;
-  ServerRelativeUrl?: string;
-  Children?: IDocument[];
-  UniclassCode1?: string;
-  UniclassTitle1?: string;
-  UniclassCode2?: string;
-  UniclassTitle2?: string;
-  UniclassCode3?: string;
-  UniclassTitle3?: string;
+  FileLeafRef: string; // Name of file without path
+  FileRef: string; // Full server relative path
+  ProjectId: string; // Associated project identifier
+  DocumentType: string; // Type of document
+  Status: string; // Document status
+  Version?: string; // Optional version number
+  ModifiedBy: string; // Last modified by user
+  Created: string; // Creation date
+  Modified: string; // Last modified date
+  IsFolder?: boolean; // Flag indicating if item is folder
+  ServerRelativeUrl?: string; // Server relative URL
+  Children?: IDocument[]; // Optional nested documents
+  UniclassCode1?: string; // Level 1 Uniclass code
+  UniclassTitle1?: string; // Level 1 Uniclass title
+  UniclassCode2?: string; // Level 2 Uniclass code
+  UniclassTitle2?: string; // Level 2 Uniclass title
+  UniclassCode3?: string; // Level 3 Uniclass code
+  UniclassTitle3?: string; // Level 3 Uniclass title
 }
 
+// Interface for folder information
 export interface IFolderInfo {
-  Name: string;
-  ServerRelativeUrl: string;
-  ItemCount: number;
-  TimeCreated: string;
-  TimeLastModified: string;
+  Name: string; // Folder name
+  ServerRelativeUrl: string; // Server relative path
+  ItemCount: number; // Number of items in folder
+  TimeCreated: string; // Creation timestamp
+  TimeLastModified: string; // Last modified timestamp
 }
 
+// Interface for upload progress callback function
 export interface IUploadProgressCallback {
   (progress: number, file: File): void;
 }
 
+// Main service class for document management operations
 export class DocumentService {
-  private sp: SPFI;
-  private readonly documentsLibrary = "Projects";
-  private readonly documentsLibraryPath = "Projects";
-  private libraryChecked: boolean = false;
-  private checkedFolders: Set<string> = new Set();
-  private documentCache: Map<string, { documents: IDocument[], timestamp: number }> = new Map();
-  private readonly CACHE_DURATION = 30000; // 30 seconds cache
+  private sp: SPFI; // SharePoint Framework instance
+  private readonly documentsLibrary = "Projects"; // Library name
+  private readonly documentsLibraryPath = "Projects"; // Library path
+  private libraryChecked: boolean = false; // Flag to track library verification
+  private checkedFolders: Set<string> = new Set(); // Cache of verified folders
+  private documentCache: Map<string, { documents: IDocument[], timestamp: number }> = new Map(); // Cache for documents
+  private readonly CACHE_DURATION = 30000; // Cache duration in milliseconds (30s)
 
+  // Initialize service with SharePoint context
   constructor(context: WebPartContext) {
     this.sp = spfi().using(SPFx(context));
   }
 
-  private async ensureDocumentLibrary(): Promise<void> {
+  // Ensures document library exists with required fields
+  public async ensureDocumentLibrary(documentLibrary: string): Promise<void> {
     if (this.libraryChecked) return;
     
     const maxRetries = 3;
@@ -65,27 +72,27 @@ export class DocumentService {
 
     while (retryCount < maxRetries) {
       try {
-        // First check if the list exists by trying to get its properties
+        // Check if library exists
         let listExists = false;
         try {
-          await this.sp.web.lists.getByTitle(this.documentsLibrary).select('Id')();
+          await this.sp.web.lists.getByTitle(documentLibrary).select('Id')();
           listExists = true;
         } catch {
           listExists = false;
         }
         
+        // Create library if it doesn't exist
         if (!listExists) {
-          // Only try to create if it doesn't exist
-          await this.sp.web.lists.ensure(this.documentsLibrary, 'Documents Library', 101, true);
+          await this.sp.web.lists.ensure(documentLibrary, 'Documents Library', 101, true);
         }
         
-        const list = this.sp.web.lists.getByTitle(this.documentsLibrary);
+        const list = this.sp.web.lists.getByTitle(documentLibrary);
         
         // Get existing fields
         const fields = await list.fields();
         const existingFields = new Set(fields.map(f => f.InternalName));
 
-        // Define required fields
+        // Define required metadata fields
         const requiredFields = [
           { name: "ProjectId", required: true },
           { name: "DocumentType", required: true },
@@ -98,7 +105,7 @@ export class DocumentService {
           { name: "UniclassTitle3", required: false }
         ];
 
-        // Add only missing fields
+        // Add missing fields to library
         for (const field of requiredFields) {
           if (!existingFields.has(field.name)) {
             try {
@@ -117,12 +124,13 @@ export class DocumentService {
           console.error('Error accessing document library after retries:', error);
           throw new Error('Failed to access document library: ' + error.message);
         }
-        // Wait before retrying (exponential backoff)
+        // Exponential backoff retry delay
         await new Promise(resolve => setTimeout(resolve, Math.pow(2, retryCount) * 1000));
       }
     }
   }
 
+  // Ensures project folder exists in document library
   private async ensureProjectFolder(projectId: string): Promise<void> {
     if (this.checkedFolders.has(projectId)) return;
 
@@ -135,8 +143,10 @@ export class DocumentService {
         const webData = await web.select('ServerRelativeUrl')();
         const folderPath = `${webData.ServerRelativeUrl}/${this.documentsLibraryPath}/${projectId}`;
         
+        // Check if folder exists
         const result = await web.getFolderByServerRelativePath(folderPath).select('Exists')();
         
+        // Create folder if it doesn't exist
         if (!result.Exists) {
           const libraryPath = `${webData.ServerRelativeUrl}/${this.documentsLibraryPath}`;
           await web.getFolderByServerRelativePath(libraryPath).addSubFolderUsingPath(projectId);
@@ -150,21 +160,22 @@ export class DocumentService {
           console.error('Error ensuring project folder after retries:', error);
           throw new Error('Failed to create project folder: ' + error.message);
         }
-        // Wait before retrying (exponential backoff)
+        // Exponential backoff retry delay
         await new Promise(resolve => setTimeout(resolve, Math.pow(2, retryCount) * 1000));
       }
     }
   }
 
+  // Retrieves all documents for a specific project
   public async getProjectDocuments(projectId: string): Promise<IDocument[]> {
     try {
-      // Check cache first
+      // Check cache before making API call
       const cached = this.documentCache.get(projectId);
       if (cached && Date.now() - cached.timestamp < this.CACHE_DURATION) {
         return cached.documents;
       }
 
-      await this.ensureDocumentLibrary();
+      await this.ensureDocumentLibrary(this.documentsLibrary);
       await this.ensureProjectFolder(projectId);
       
       const maxRetries = 3;
@@ -173,8 +184,8 @@ export class DocumentService {
 
       while (retryCount < maxRetries) {
         try {
+          // Fetch documents with metadata
           const list =  await this.sp.web.lists.getByTitle(this.documentsLibrary);
-          // console.log('the list is: ', list.items());
           const items = await list.items
             .select(
               "Id",
@@ -197,6 +208,7 @@ export class DocumentService {
             .expand("Editor")
             .filter(`ProjectId eq '${projectId}'`)();
 
+          // Map SharePoint items to IDocument interface
           const documents = items.map(item => ({
             Id: item.Id,
             Title: item.Title,
@@ -216,7 +228,7 @@ export class DocumentService {
             UniclassTitle3: item.UniclassTitle3
           }));
 
-          // Update cache
+          // Update cache with fresh data
           this.documentCache.set(projectId, {
             documents,
             timestamp: Date.now()
@@ -230,7 +242,7 @@ export class DocumentService {
             console.error('Error getting project documents after retries:', error);
             throw new Error('Failed to get project documents: ' + error.message);
           }
-          // Wait before retrying (exponential backoff)
+          // Exponential backoff retry delay
           await new Promise(resolve => setTimeout(resolve, Math.pow(2, retryCount) * 1000));
         }
       }
@@ -242,6 +254,7 @@ export class DocumentService {
     }
   }
 
+  // Uploads a document with metadata to a project folder
   public async uploadDocument(
     projectId: string,
     file: File,
@@ -249,7 +262,7 @@ export class DocumentService {
     onProgress?: IUploadProgressCallback
   ): Promise<IDocument> {
     try {
-      await this.ensureDocumentLibrary();
+      await this.ensureDocumentLibrary(this.documentsLibrary);
       const result = await this.ensureProjectFolder(projectId);
       console.log('the result is: ', result);
       
@@ -259,19 +272,19 @@ export class DocumentService {
       console.log('the project  id is: ', projectId);
       console.log('Uploading to path:', folderPath);
       
-      // For large files (> 10MB), use chunked upload
+      // Use chunked upload for large files
       if (file.size > 10 * 1024 * 1024) {
         return await this.uploadLargeFile(folderPath, file, metadata, projectId, onProgress);
       }
 
-      // For smaller files, use regular upload
+      // Regular upload for smaller files
       console.log('Attempting to upload file:', file.name);
       const fileResult = await this.sp.web.getFolderByServerRelativePath(folderPath)
         .files.addUsingPath(file.name, file, { Overwrite: true });
 
       console.log('File uploaded successfully:', fileResult.ServerRelativeUrl);
 
-      // Update metadata
+      // Update file metadata
       const item = await this.sp.web.getFileByServerRelativePath(fileResult.ServerRelativeUrl).getItem();
       await item.update({
         ...metadata,
@@ -286,6 +299,7 @@ export class DocumentService {
     }
   }
 
+  // Handles chunked upload for large files
   private async uploadLargeFile(
     folderPath: string,
     file: File,
@@ -296,7 +310,7 @@ export class DocumentService {
     try {
       const totalSize = file.size;
 
-      // Start chunked upload with progress tracking
+      // Upload file in chunks with progress tracking
       const result = await this.sp.web.getFolderByServerRelativePath(folderPath)
         .files.addChunked(file.name, file, {
           progress: (data: IFileUploadProgressData) => {
@@ -306,7 +320,7 @@ export class DocumentService {
           }
         });
 
-      // Update metadata
+      // Update metadata after upload
       const item = await this.sp.web.getFileByServerRelativePath(result.ServerRelativeUrl).getItem();
       await item.update({
         ...metadata,
@@ -321,9 +335,10 @@ export class DocumentService {
     }
   }
 
+  // Deletes a document by ID
   public async deleteDocument(documentId: number): Promise<void> {
     try {
-      await this.ensureDocumentLibrary();
+      await this.ensureDocumentLibrary(this.documentsLibrary);
       await this.sp.web.lists
         .getByTitle(this.documentsLibrary)
         .items.getById(documentId)
@@ -334,9 +349,10 @@ export class DocumentService {
     }
   }
 
+  // Checks out a document for editing
   public async checkoutDocument(documentId: number): Promise<void> {
     try {
-      await this.ensureDocumentLibrary();
+      await this.ensureDocumentLibrary(this.documentsLibrary);
       const item = await this.sp.web.lists
         .getByTitle(this.documentsLibrary)
         .items.getById(documentId)();
@@ -348,9 +364,10 @@ export class DocumentService {
     }
   }
 
+  // Checks in a document with comment
   public async checkinDocument(documentId: number, comment: string): Promise<void> {
     try {
-      await this.ensureDocumentLibrary();
+      await this.ensureDocumentLibrary(this.documentsLibrary);
       const item = await this.sp.web.lists
         .getByTitle(this.documentsLibrary)
         .items.getById(documentId)();
@@ -362,9 +379,10 @@ export class DocumentService {
     }
   }
 
+  // Gets version history for a document
   public async getDocumentVersions(documentId: number): Promise<IFileInfo[]> {
     try {
-      await this.ensureDocumentLibrary();
+      await this.ensureDocumentLibrary(this.documentsLibrary);
       const item = await this.sp.web.lists
         .getByTitle(this.documentsLibrary)
         .items.getById(documentId)();
@@ -376,12 +394,13 @@ export class DocumentService {
     }
   }
 
+  // Gets contents of a folder including files and subfolders
   public async getFolderContents(folderPath: string): Promise<IDocument[]> {
     try {
       const web = this.sp.web;
       const folder = web.getFolderByServerRelativePath(folderPath);
       
-      // Get folders
+      // Get folders and map to IDocument structure
       const folders = await folder.folders();
       const folderItems = await Promise.all(folders.map(async (f) => {
         return {
@@ -408,7 +427,7 @@ export class DocumentService {
         };
       }));
 
-      // Get files
+      // Get files and map to IDocument structure
       const files = await folder.files();
       const fileItems = await Promise.all(files.map(async (f) => {
         const item = await this.sp.web.getFileByServerRelativePath(f.ServerRelativeUrl).listItemAllFields();
@@ -442,10 +461,18 @@ export class DocumentService {
     }
   }
 
-  public async createFolder(folderPath: string): Promise<IFolderInfo> {
+  // Creates a new folder at specified path
+  public async createFolder(folderPath: string): Promise<IFolderInfo | undefined> {
     try {
       const web = this.sp.web;
-      const folder = await web.folders.addUsingPath(folderPath);
+      let folder;
+      try {
+        folder = await web.getFolderByServerRelativePath(folderPath)();
+        // Folder exists, use it
+      } catch {
+        // Folder doesn't exist, create it
+        folder = await web.folders.addUsingPath(folderPath);
+      }
       return {
         Name: folder.Name,
         ServerRelativeUrl: folder.ServerRelativeUrl,
@@ -453,9 +480,8 @@ export class DocumentService {
         TimeCreated: new Date().toISOString(),
         TimeLastModified: new Date().toISOString()
       };
-    } catch (error) {
-      console.error('Error creating folder:', error);
-      throw new Error('Failed to create folder: ' + error.message);
+    } catch {
+      // Silently handle errors
     }
   }
 } 
