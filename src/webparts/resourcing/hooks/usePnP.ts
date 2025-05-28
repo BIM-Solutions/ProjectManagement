@@ -6,8 +6,8 @@ import "@pnp/sp/webs";
 import "@pnp/sp/lists";
 import "@pnp/sp/items";
 
-export const usePnP = (context?: WebPartContext) => {
-  const [sp, setSp] = useState<SPFI | null>(null);
+export const usePnP = (context?: WebPartContext): { sp: SPFI | undefined } => {
+  const [sp, setSp] = useState<SPFI | undefined>(undefined);
 
   useEffect(() => {
     if (context) {
