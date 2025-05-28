@@ -206,13 +206,13 @@ export const DocumentUpload = forwardRef<
 
     try {
       const folderPath = getFolderPath();
-      // console.log('Upload folderPath:', folderPath);
+      console.log("Upload folderPath:", folderPath);
 
       // Create folder structure
-      await sp.web.lists.ensure(libraryName);
-      // console.log('docLib', docLib);
+      const docLib = await sp.web.lists.ensure(libraryName);
+      console.log("docLib", docLib);
       const relativeFolderPath = folderPath.replace(`${libraryName}/`, "");
-      // console.log('relativeFolderPath:', relativeFolderPath);
+      console.log("relativeFolderPath:", relativeFolderPath);
 
       // Create each folder level if it doesn't exist
       const folderParts = relativeFolderPath.split("/");
