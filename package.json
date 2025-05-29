@@ -16,10 +16,18 @@
     "package-solution": "gulp clean && gulp build && gulp bundle --ship && gulp package-solution --ship"
   },
   "dependencies": {
+    "@fluentui/react": "^8.106.4",
     "@fluentui/react-charting": "^5.23.88",
     "@fluentui/react-charts": "^9.0.5",
     "@fluentui/react-components": "^9.63.0",
     "@fluentui/react-nav-preview": "^0.13.7",
+    "@fullcalendar/core": "^6.1.17",
+    "@fullcalendar/daygrid": "^6.1.17",
+    "@fullcalendar/interaction": "^6.1.17",
+    "@fullcalendar/list": "^6.1.17",
+    "@fullcalendar/multimonth": "^6.1.17",
+    "@fullcalendar/react": "^6.1.17",
+    "@fullcalendar/timegrid": "^6.1.17",
     "@microsoft/mgt": "^4.6.0",
     "@microsoft/microsoft-graph-client": "^3.0.2",
     "@microsoft/sp-component-base": "1.20.0",
@@ -39,13 +47,13 @@
     "date-fns-tz": "2.0.0",
     "eventemitter3": "^5.0.1",
     "file-saver": "^2.0.5",
+    "fullcalendar": "^6.1.17",
     "office-ui-fabric-react": "^7.204.1",
     "react": "17.0.1",
     "react-big-calendar": "^1.18.0",
     "react-dom": "17.0.1",
     "recharts": "^2.15.3",
-    "tslib": "2.3.1",
-    "@fluentui/react": "^8.106.4"
+    "tslib": "2.3.1"
   },
   "devDependencies": {
     "@microsoft/eslint-config-spfx": "1.20.2",

@@ -71,8 +71,8 @@ const Navigation: React.FC<INavigationProps> = ({ context }) => {
   }, []);
 
   const linkHome = siteRoot;
-  const linkResource = siteRoot;
-  const linkCofw = siteRoot;
+  const linkResource = siteRoot + "/SitePages/resourcing.aspx";
+  const linkCofw = siteRoot + "/SitePages/cofw.aspx";
 
   return (
     <div>

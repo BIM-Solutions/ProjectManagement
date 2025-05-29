@@ -15,19 +15,9 @@ import {
   MessageBar,
   MessageBarType,
 } from "@fluentui/react";
-// import { usePnP } from "../hooks/usePnP";
 import styles from "./TasksList.module.scss";
 import { WebPartContext } from "@microsoft/sp-webpart-base";
-import { spfi } from "@pnp/sp";
-import { SPFx } from "@pnp/sp/presets/all";
-interface ITask {
-  Id: number;
-  Title: string;
-  DueDate: string;
-  Priority: string;
-  Status: string;
-  Project: string;
-}
+import TasksService, { ITask } from "../services/TasksService";
 
 interface ITasksListProps {
   listName: string;
@@ -46,7 +36,7 @@ export const TasksList: React.FC<ITasksListProps> = (props) => {
   const [isAddTaskDialogOpen, setIsAddTaskDialogOpen] = useState(false);
   const [newTask, setNewTask] = useState<Partial<ITask>>({});
 
-  const sp = spfi().using(SPFx(props.context));
+  const tasksService = TasksService.getInstance(props.context);
 
   const statusOptions: IDropdownOption[] = [
     { key: "all", text: "All Statuses" },
@@ -65,12 +55,10 @@ export const TasksList: React.FC<ITasksListProps> = (props) => {
   const loadTasks = async (): Promise<void> => {
     try {
       setIsLoading(true);
-      if (!sp) {
-        throw new Error("SP client not initialized");
-      }
-      const items = await sp.web.lists
-        .getByTitle(props.listName)
-        .items.filter(`AssignedTo/Title eq '${props.userDisplayName}'`)();
+      const items = await tasksService.getTasks(
+        props.listName,
+        props.userDisplayName
+      );
       setTasks(items);
     } catch (err) {
       setError(err.message);
@@ -107,18 +95,11 @@ export const TasksList: React.FC<ITasksListProps> = (props) => {
 
   const handleAddTask = async (): Promise<void> => {
     try {
-      if (!sp) {
-        throw new Error("SP client not initialized");
-      }
-      await sp.web.lists.getByTitle(props.listName).items.add({
-        Title: newTask.Title,
-        DueDate: newTask.DueDate,
-        Priority: newTask.Priority,
-        Status: "Not Started",
-        Project: newTask.Project,
-        AssignedTo: { Title: props.userDisplayName },
-      });
-
+      await tasksService.addTask(
+        props.listName,
+        newTask,
+        props.userDisplayName
+      );
       setIsAddTaskDialogOpen(false);
       setNewTask({});
       loadTasks().catch(console.error);

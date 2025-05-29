@@ -1,13 +1,110 @@
 @import "~@fluentui/react/dist/sass/References.scss";
 
+// Event card styling for the right panel
 .eventCard {
-  padding: 10px;
-  margin: 5px 0;
+  padding: 12px 16px;
+  margin: 8px 0;
   border-left: 4px solid "[theme:themePrimary, default: #0078d4]";
-  background-color: "[theme:neutralLighter, default: #f3f2f1]";
-  border-radius: 2px;
+  background-color: #fff;
+  border-radius: 4px;
+  box-shadow: none;
+  transition: background 0.2s;
+  cursor: pointer;
 
   &:hover {
     background-color: "[theme:neutralLight, default: #edebe9]";
+  }
+}
+
+// FullCalendar theming overrides
+:global {
+  .fc {
+    // font-family: "[theme:fontFamily, default: 'Segoe UI', Arial, sans-serif]";
+    background: #fff;
+    color: "[theme:neutralPrimary, default: #323130]";
+    .fc-button-primary {
+      background-color: "[theme:themePrimary, default: #0078d4]";
+    }
+    .fc-button-primary:hover {
+      background-color: "[theme:themeDark, default: #005a9e]";
+    }
+  }
+
+  .fc-toolbar-title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: "[theme:neutralPrimary, default: #323130]";
+    letter-spacing: -0.5px;
+  }
+
+  .fc-button-primary {
+    background-color: "[theme:themePrimary, default: #0078d4]";
+  }
+
+  .fc-button {
+    background: #fff;
+    background-color: "[theme:themePrimary, default: #0078d4]";
+    color: #0078d4;
+    border: 1px solid "[theme:neutralTertiaryAlt, default: #c8c6c4]";
+    border-radius: 4px;
+    padding: 0.25rem 0.75rem;
+    font-size: 1rem;
+    font-weight: 500;
+    box-shadow: none;
+    transition: background 0.2s, color 0.2s;
+
+    &:hover,
+    &:focus {
+      background: "[theme:themeLighter, default: #c7e0f4]";
+      color: "[theme:themeDark, default: #005a9e]";
+      border-color: "[theme:themePrimary, default: #0078d4]";
+    }
+  }
+
+  .fc-daygrid-event,
+  .fc-timegrid-event {
+    background: "[theme:themePrimary, default: #0078d4]";
+    border: none;
+    color: #fff;
+    border-radius: 4px;
+    font-size: 1rem;
+    padding: 2px 8px;
+    font-weight: 500;
+    box-shadow: none;
+    transition: background 0.2s;
+
+    &:hover {
+      background: "[theme:themeDark, default: #005a9e]";
+      color: #fff;
+    }
+  }
+  .fc-scrollgrid {
+    background: "[theme:neutralLighter, default: #f3f2f1]";
+  }
+  .fc-cell-header-cell,
+  .fc-col-header-cell-cushion {
+    border-color: "[theme:themePrimary,, default: #c8c6c4]";
+  }
+  .fc-day-today {
+    background: "[theme:themePrimary, default: #f3f2f1]";
+  }
+
+  .fc-daygrid-day-number {
+    color: "[theme:neutralPrimary, default: #323130]";
+    font-weight: 600;
+    font-size: 1rem;
+  }
+
+  .fc-scrollgrid,
+  .fc-scrollgrid-section,
+  .fc-scrollgrid-sync-table,
+  .fc-scrollgrid-sync-inner {
+    border-color: "[theme:neutralTertiaryAlt, default: #c8c6c4]" !important;
+    background: #fff;
+  }
+
+  .fc-scrollgrid td,
+  .fc-scrollgrid th {
+    border-color: "[theme:neutralTertiaryAlt, default: #c8c6c4]" !important;
   }
 }

@@ -572,9 +572,9 @@ const StagesTab: React.FC<StagesTabProps> = ({
             <DialogBody>
               <DialogContent>
                 <Text>
-                  Are you sure you want to delete the stage "
+                  Are you sure you want to delete the stage &quot;
                   {deleteStage?.Title}
-                  "?
+                  &quot;?
                 </Text>
               </DialogContent>
               <DialogActions>

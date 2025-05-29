@@ -1,15 +1,16 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
 import {
-  Pivot,
-  PivotItem,
-  Stack,
-  Text,
+  makeStyles,
+  tokens,
+  IdPrefixProvider,
+  webLightTheme,
+  FluentProvider,
+  Title1,
   Spinner,
-  SpinnerSize,
-  MessageBar,
-  MessageBarType,
-} from "@fluentui/react";
+  TabList,
+  Tab,
+} from "@fluentui/react-components";
 // import { Calendar, DateRangeType } from "@fluentui/react-calendar-compat";
 import { TasksList } from "./TasksList";
 import { CalendarView } from "./CalendarView";
@@ -22,7 +23,7 @@ import type { IResourcingProps } from "./IResourcingProps";
 import { SPFx } from "@pnp/sp/presets/all";
 import { spfi, SPFI } from "@pnp/sp";
 import Navigation from "../../common/components/Navigation";
-import { makeStyles, tokens } from "@fluentui/react-components";
+import { SPProvider } from "../../common/components/SPContext";
 
 const useStyles = makeStyles({
   root: {
@@ -32,22 +33,45 @@ const useStyles = makeStyles({
     minHeight: 0,
     backgroundColor: tokens.colorNeutralBackground1,
     color: tokens.colorNeutralForeground1,
+    width: "100vw",
+    height: "100vh",
   },
   nav: {
     height: "100vh",
     borderRight: `1px solid ${tokens.colorNeutralStroke1}`,
-    padding: "12px",
+    padding: tokens.spacingVerticalL,
     backgroundColor: tokens.colorNeutralBackground2,
+    minWidth: "220px",
+    boxSizing: "border-box",
   },
   content: {
     flex: "1 1 0",
     minWidth: "400px",
-    padding: "24px",
+    padding: tokens.spacingVerticalXXL,
     display: "flex",
     flexDirection: "column",
-    gap: "16px",
+    gap: tokens.spacingVerticalXL,
     overflowX: "auto",
     height: "100vh",
+    boxSizing: "border-box",
+  },
+  header: {
+    marginBottom: tokens.spacingVerticalL,
+  },
+  tabList: {
+    marginBottom: tokens.spacingVerticalL,
+    width: "100%",
+    maxWidth: "600px",
+  },
+  error: {
+    color: tokens.colorPaletteRedForeground1,
+    backgroundColor: tokens.colorPaletteRedBackground1,
+    padding: tokens.spacingVerticalM,
+    borderRadius: tokens.borderRadiusMedium,
+    marginBottom: tokens.spacingVerticalL,
+    fontWeight: 500,
+    maxWidth: "600px",
+    width: "100%",
   },
 });
 
@@ -83,67 +107,58 @@ export default function Resourcing(
   }, []);
 
   if (isLoading) {
-    return <Spinner size={SpinnerSize.large} label="Loading..." />;
+    return <Spinner size="large" label="Loading..." />;
   }
 
   if (error) {
-    return (
-      <MessageBar messageBarType={MessageBarType.error}>{error}</MessageBar>
-    );
+    return <div className={styles.error}>{error}</div>;
   }
 
   return (
-    <div className={styles.root}>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "top",
-          alignItems: "top",
-          flexWrap: "wrap",
-          flexDirection: "row",
-          width: "100%",
-          height: "100vh",
-          boxSizing: "border-box",
-          padding: "20px",
-          overflowY: "auto",
-          overflowX: "auto",
-        }}
-      >
-        {/* Left Panel - Navigation Drawer */}
-        <nav className={styles.nav}>
-          <Navigation context={props.context} />
-        </nav>
+    <IdPrefixProvider value={`month-picker-${props.context.instanceId}-`}>
+      <FluentProvider theme={webLightTheme}>
+        <SPProvider context={props.context}>
+          <div className={styles.root}>
+            {/* Left Panel - Navigation Drawer */}
+            <nav className={styles.nav}>
+              <Navigation context={props.context} />
+            </nav>
 
-        {/* Center Panel */}
-        <div className={styles.content}>
-          <Stack tokens={{ childrenGap: 15 }}>
-            <Text variant="xLarge">Resource Management</Text>
-
-            <Pivot
-              selectedKey={selectedView}
-              onLinkClick={(item) =>
-                setSelectedView(item?.props.itemKey as "tasks" | "calendar")
-              }
-            >
-              <PivotItem headerText="Tasks" itemKey="tasks">
+            {/* Center Panel */}
+            <div className={styles.content}>
+              <div className={styles.header}>
+                <Title1>Resource Management</Title1>
+              </div>
+              <TabList
+                selectedValue={selectedView}
+                onTabSelect={(_, data) =>
+                  setSelectedView(data.value as "tasks" | "calendar")
+                }
+                className={styles.tabList}
+              >
+                <Tab value="tasks">Tasks</Tab>
+                <Tab value="calendar">Calendar</Tab>
+              </TabList>
+              {selectedView === "tasks" && (
                 <TasksList
                   listName={props.tasksListName}
                   userDisplayName={props.userDisplayName}
                   context={props.context}
                 />
-              </PivotItem>
-
-              <PivotItem headerText="Calendar" itemKey="calendar">
+              )}
+              {selectedView === "calendar" && (
                 <CalendarView
                   showTeamCalendar={props.showTeamCalendar}
                   groupId={props.groupId}
                   context={props.context}
+                  userDisplayName={props.userDisplayName}
+                  listName={props.tasksListName}
                 />
-              </PivotItem>
-            </Pivot>
-          </Stack>
-        </div>
-      </div>
-    </div>
+              )}
+            </div>
+          </div>
+        </SPProvider>
+      </FluentProvider>
+    </IdPrefixProvider>
   );
 }

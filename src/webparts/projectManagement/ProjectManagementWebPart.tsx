@@ -1,38 +1,37 @@
-import * as React from 'react';
-import * as ReactDom from 'react-dom';
-import { Version } from '@microsoft/sp-core-library';
+import * as React from "react";
+import * as ReactDom from "react-dom";
+import { Version } from "@microsoft/sp-core-library";
 import {
   IPropertyPaneConfiguration,
-  PropertyPaneTextField
-} from '@microsoft/sp-property-pane';
-import { BaseClientSideWebPart } from '@microsoft/sp-webpart-base';
-import { IReadonlyTheme } from '@microsoft/sp-component-base';
-import * as strings from 'ProjectManagementWebPartStrings';
+  PropertyPaneTextField,
+} from "@microsoft/sp-property-pane";
+import { BaseClientSideWebPart } from "@microsoft/sp-webpart-base";
+import { IReadonlyTheme } from "@microsoft/sp-component-base";
+import * as strings from "ProjectManagementWebPartStrings";
 import { spfi } from "@pnp/sp";
 import { SPFx } from "@pnp/sp/presets/all";
-import { ListService } from './services/ListService';
-import { SPProvider } from './components/common/SPContext';
-import LandingPage from './components/LandingPage';
-import { PropertyPaneButton, PropertyPaneButtonType } from '@microsoft/sp-property-pane';
-import { LoadingProvider } from './services/LoadingContext';
+import { ListService } from "./services/ListService";
+import { SPProvider } from "../common/components/SPContext";
+import LandingPage from "./components/LandingPage";
+import {
+  PropertyPaneButton,
+  PropertyPaneButtonType,
+} from "@microsoft/sp-property-pane";
+import { LoadingProvider } from "./services/LoadingContext";
 import {
   FluentProvider,
   webLightTheme,
   IdPrefixProvider,
 } from "@fluentui/react-components";
 
-
-
 export interface IProjectManagementWebPartProps {
   description: string;
 }
 
 export default class ProjectManagementWebPart extends BaseClientSideWebPart<IProjectManagementWebPartProps> {
-
   public _isDarkTheme: boolean = false;
-  public _environmentMessage: string = '';
+  public _environmentMessage: string = "";
 
-  
   /**
    * Lifecycle method that is called when the web part is initialized.
    * It ensures that all the required lists and their fields are provisioned on the site.
@@ -48,7 +47,7 @@ export default class ProjectManagementWebPart extends BaseClientSideWebPart<IPro
       // Optionally store this in a global flag or react state via a context or callback to LandingPage
     }
 
-    return this._getEnvironmentMessage().then(message => {
+    return this._getEnvironmentMessage().then((message) => {
       this._environmentMessage = message;
     });
   }
@@ -66,25 +65,25 @@ export default class ProjectManagementWebPart extends BaseClientSideWebPart<IPro
         <FluentProvider theme={webLightTheme}>
           <SPProvider context={this.context}>
             <LoadingProvider>
-              <LandingPage 
-                context={this.context} 
+              <LandingPage
+                context={this.context}
                 project={{
                   id: 0,
-                  ProjectNumber: '',
-                  ProjectName: '',
-                  Status: '',
-                  Client: '',
-                  ClientContact: '',
-                  ProjectDescription: '',
-                  DeltekSubCodes: '',
-                  SubCodes: '',
-                  Sector: '',
+                  ProjectNumber: "",
+                  ProjectName: "",
+                  Status: "",
+                  Client: "",
+                  ClientContact: "",
+                  ProjectDescription: "",
+                  DeltekSubCodes: "",
+                  SubCodes: "",
+                  Sector: "",
                   PM: undefined,
                   Manager: undefined,
                   Checker: undefined,
                   Approver: undefined,
-                  ProjectImage: ''
-                }} 
+                  ProjectImage: "",
+                }}
               />
             </LoadingProvider>
           </SPProvider>
@@ -106,19 +105,26 @@ export default class ProjectManagementWebPart extends BaseClientSideWebPart<IPro
 
   private _getEnvironmentMessage(): Promise<string> {
     if (!!this.context.sdks.microsoftTeams) {
-      return this.context.sdks.microsoftTeams.teamsJs.app.getContext()
-        .then(context => {
-          let environmentMessage: string = '';
+      return this.context.sdks.microsoftTeams.teamsJs.app
+        .getContext()
+        .then((context) => {
+          let environmentMessage: string = "";
           switch (context.app.host.name) {
-            case 'Office':
-              environmentMessage = this.context.isServedFromLocalhost ? strings.AppLocalEnvironmentOffice : strings.AppOfficeEnvironment;
+            case "Office":
+              environmentMessage = this.context.isServedFromLocalhost
+                ? strings.AppLocalEnvironmentOffice
+                : strings.AppOfficeEnvironment;
               break;
-            case 'Outlook':
-              environmentMessage = this.context.isServedFromLocalhost ? strings.AppLocalEnvironmentOutlook : strings.AppOutlookEnvironment;
+            case "Outlook":
+              environmentMessage = this.context.isServedFromLocalhost
+                ? strings.AppLocalEnvironmentOutlook
+                : strings.AppOutlookEnvironment;
               break;
-            case 'Teams':
-            case 'TeamsModern':
-              environmentMessage = this.context.isServedFromLocalhost ? strings.AppLocalEnvironmentTeams : strings.AppTeamsTabEnvironment;
+            case "Teams":
+            case "TeamsModern":
+              environmentMessage = this.context.isServedFromLocalhost
+                ? strings.AppLocalEnvironmentTeams
+                : strings.AppTeamsTabEnvironment;
               break;
             default:
               environmentMessage = strings.UnknownEnvironment;
@@ -127,7 +133,11 @@ export default class ProjectManagementWebPart extends BaseClientSideWebPart<IPro
         });
     }
 
-    return Promise.resolve(this.context.isServedFromLocalhost ? strings.AppLocalEnvironmentSharePoint : strings.AppSharePointEnvironment);
+    return Promise.resolve(
+      this.context.isServedFromLocalhost
+        ? strings.AppLocalEnvironmentSharePoint
+        : strings.AppSharePointEnvironment
+    );
   }
 
   /**
@@ -142,17 +152,23 @@ export default class ProjectManagementWebPart extends BaseClientSideWebPart<IPro
     this._isDarkTheme = !!currentTheme.isInverted;
     const semanticColors = currentTheme.semanticColors;
     if (semanticColors) {
-      this.domElement.style.setProperty('--bodyText', semanticColors.bodyText || null);
-      this.domElement.style.setProperty('--link', semanticColors.link || null);
-      this.domElement.style.setProperty('--linkHovered', semanticColors.linkHovered || null);
+      this.domElement.style.setProperty(
+        "--bodyText",
+        semanticColors.bodyText || null
+      );
+      this.domElement.style.setProperty("--link", semanticColors.link || null);
+      this.domElement.style.setProperty(
+        "--linkHovered",
+        semanticColors.linkHovered || null
+      );
     }
   }
 
-/**
- * Lifecycle method that is called when the web part is disposed.
- * It unmounts the React component from the DOM element to clean up
- * resources and avoid memory leaks when the web part is removed from the page.
- */
+  /**
+   * Lifecycle method that is called when the web part is disposed.
+   * It unmounts the React component from the DOM element to clean up
+   * resources and avoid memory leaks when the web part is removed from the page.
+   */
 
   protected onDispose(): void {
     ReactDom.unmountComponentAtNode(this.domElement);
@@ -167,7 +183,7 @@ export default class ProjectManagementWebPart extends BaseClientSideWebPart<IPro
    * a fixed version number.
    */
   protected get dataVersion(): Version {
-    return Version.parse('1.0');
+    return Version.parse("1.0");
   }
 
   /**
@@ -186,16 +202,16 @@ export default class ProjectManagementWebPart extends BaseClientSideWebPart<IPro
       pages: [
         {
           header: {
-            description: strings.PropertyPaneDescription
+            description: strings.PropertyPaneDescription,
           },
           groups: [
             {
               groupName: strings.BasicGroupName,
               groupFields: [
-                PropertyPaneTextField('description', {
-                  label: strings.DescriptionFieldLabel
+                PropertyPaneTextField("description", {
+                  label: strings.DescriptionFieldLabel,
                 }),
-                PropertyPaneButton('verifyLists', {
+                PropertyPaneButton("verifyLists", {
                   text: "Check & Create Lists",
                   buttonType: PropertyPaneButtonType.Primary,
                   onClick: async () => {
@@ -206,16 +222,17 @@ export default class ProjectManagementWebPart extends BaseClientSideWebPart<IPro
                     interface CustomWindow extends Window {
                       __setListLoading?: (isLoading: boolean) => void;
                     }
-                    const loadingSetter = (window as CustomWindow).__setListLoading;
+                    const loadingSetter = (window as CustomWindow)
+                      .__setListLoading;
                     if (loadingSetter) loadingSetter(true);
 
                     await listService.ensureListSchema();
 
                     if (loadingSetter) loadingSetter(false);
                     alert("List check and creation complete.");
-                  }
+                  },
                 }),
-                PropertyPaneButton('populateTemplates', {
+                PropertyPaneButton("populateTemplates", {
                   text: "Populate Standard Document Templates",
                   buttonType: PropertyPaneButtonType.Primary,
                   onClick: async () => {
@@ -225,25 +242,28 @@ export default class ProjectManagementWebPart extends BaseClientSideWebPart<IPro
                     interface CustomWindow extends Window {
                       __setListLoading?: (isLoading: boolean) => void;
                     }
-                    const loadingSetter = (window as CustomWindow).__setListLoading;
+                    const loadingSetter = (window as CustomWindow)
+                      .__setListLoading;
                     if (loadingSetter) loadingSetter(true);
 
                     try {
                       await listService.populateDocumentTemplates();
                       alert("Document templates populated successfully.");
                     } catch (error) {
-                      console.error('Error populating templates:', error);
-                      alert("Error populating document templates. Check console for details.");
+                      console.error("Error populating templates:", error);
+                      alert(
+                        "Error populating document templates. Check console for details."
+                      );
                     }
 
                     if (loadingSetter) loadingSetter(false);
-                  }
-                })
-              ]
-            }
-          ]
-        }
-      ]
+                  },
+                }),
+              ],
+            },
+          ],
+        },
+      ],
     };
   }
 }
