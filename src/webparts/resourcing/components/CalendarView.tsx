@@ -10,6 +10,13 @@ import {
   // Option,
   Switch,
   Persona,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+  DialogSurface,
+  DialogBody,
 } from "@fluentui/react-components";
 // import { DateRangeType } from "@fluentui/react-calendar-compat";
 import { WebPartContext } from "@microsoft/sp-webpart-base";
@@ -33,7 +40,12 @@ import multiMonthPlugin from "@fullcalendar/multimonth";
 // import "@fullcalendar/core/index.css";
 // import "@fullcalendar/daygrid/index.css";
 // import "@fullcalendar/timegrid/index.css";
-import { EventContentArg, EventChangeArg } from "@fullcalendar/core";
+import {
+  EventContentArg,
+  EventChangeArg,
+  EventClickArg,
+  EventApi,
+} from "@fullcalendar/core";
 import styles from "./CalendarView.module.scss";
 import TasksService from "../services/TasksService";
 
@@ -143,6 +155,7 @@ interface TaskItem {
 type CalendarEventForDisplay = Omit<ICalendarEvent, "start" | "end"> & {
   start: Date;
   end: Date;
+  eventType: string;
 };
 
 type FullCalendarEvent = {
@@ -154,6 +167,7 @@ type FullCalendarEvent = {
   extendedProps?: {
     resource?: TaskItem;
     organizer?: { emailAddress: { name: string; address: string } };
+    eventType?: string;
   };
 };
 
@@ -161,12 +175,17 @@ export const CalendarView: React.FC<ICalendarViewProps> = (props) => {
   const [events, setEvents] = useState<CalendarEventForDisplay[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [includeTasks, setIncludeTasks] = useState(false);
-  const [showWeekends, setShowWeekends] = useState(true);
+  const [includeTasks, setIncludeTasks] = useState(true);
+  const [showWeekends, setShowWeekends] = useState(false);
   const [graphClient, setGraphClient] = useState<MSGraphClientV3 | null>(null);
   const [calendarKey, setCalendarKey] = useState<number>(Date.now());
   const stylesFluent = useStyles();
   const tasksService = TasksService.getInstance(props.context);
+  // const [selectedEvent, setSelectedEvent] = useState<FullCalendarEvent | null>(
+  //   null
+  // );
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState<EventApi | null>(null);
 
   useEffect(() => {
     props.context.msGraphClientFactory
@@ -175,10 +194,14 @@ export const CalendarView: React.FC<ICalendarViewProps> = (props) => {
       .catch(console.error);
   }, [props.context]);
 
-  const mapEvent = (event: ICalendarEvent): CalendarEventForDisplay => ({
+  const mapEvent = (
+    event: ICalendarEvent,
+    eventType: string
+  ): CalendarEventForDisplay => ({
     ...event,
     start: new Date(event.start.dateTime),
     end: new Date(event.end.dateTime),
+    eventType: eventType,
   });
 
   const mapTaskToEvent = (task: TaskItem): CalendarEventForDisplay | null => {
@@ -188,6 +211,7 @@ export const CalendarView: React.FC<ICalendarViewProps> = (props) => {
     const end = new Date(start);
     end.setDate(start.getDate() + 1);
     return {
+      eventType: "Task",
       id: `task-${task.Id}`,
       subject: task.Title || "",
       title: task.Title || "",
@@ -217,7 +241,7 @@ export const CalendarView: React.FC<ICalendarViewProps> = (props) => {
       if (!graphClient) setGraphClient(client);
       const personalResponse = await client.api("/me/calendar/events").get();
       calendarEvents = personalResponse.value.map((event: ICalendarEvent) => ({
-        ...mapEvent(event),
+        ...mapEvent(event, "Calender"),
         title: event.subject,
       }));
 
@@ -255,9 +279,11 @@ export const CalendarView: React.FC<ICalendarViewProps> = (props) => {
     color: ev.resource
       ? tokens.colorPaletteBlueBackground2
       : tokens.colorPaletteGreenBackground2,
+
     extendedProps: {
       resource: ev.resource,
       organizer: ev.organizer,
+      eventType: ev.eventType,
     },
   }));
 
@@ -304,45 +330,83 @@ export const CalendarView: React.FC<ICalendarViewProps> = (props) => {
     changeInfo: EventChangeArg
   ): Promise<void> => {
     const { event } = changeInfo;
-    const task = event.extendedProps.resource as TaskItem | undefined;
+    const eventType = event.extendedProps.eventType;
+    if (eventType === "Task") {
+      const task = event.extendedProps.resource as TaskItem | undefined;
+      console.log("event", event);
+      if (task) {
+        try {
+          // Update the task in SharePoint
+          await tasksService.updateTask(props.listName, {
+            ...task,
+            StartDate: event.start?.toISOString() || new Date().toISOString(),
+            DueDate: event.end?.toISOString() || new Date().toISOString(),
+            Priority: task.Priority || "Medium",
+            Status: task.Status || "Not Started",
+            Project: task.Project || "",
+          });
 
-    if (task) {
-      try {
-        // Update the task in SharePoint
-        await tasksService.updateTask(props.listName, {
-          ...task,
-          StartDate: event.start?.toISOString() || new Date().toISOString(),
-          DueDate: event.end?.toISOString() || new Date().toISOString(),
-          Priority: task.Priority || "Medium",
-          Status: task.Status || "Not Started",
-          Project: task.Project || "",
-        });
+          // Force a complete reload of events
+          // await loadEvents();
+          // Update the events state with the new task dates
+          setEvents((prevEvents) => {
+            return prevEvents.map((evt) => {
+              if (evt.id === event.id) {
+                return {
+                  ...evt,
+                  start: event.start || evt.start,
+                  end: event.end || evt.end,
+                };
+              }
+              return evt;
+            });
+          });
 
-        // Force a complete reload of events
-        // await loadEvents();
-        // Update the events state with the new task dates
-        setEvents((prevEvents) => {
-          return prevEvents.map((evt) => {
-            if (evt.id === event.id) {
-              return {
+          // Force calendar to re-render by updating the key
+          const calendarKey = Date.now();
+          setCalendarKey(calendarKey);
+        } catch (err) {
+          setError(err.message);
+          // Revert the event if there was an error
+          changeInfo.revert();
+        }
+      }
+    } else if (eventType === "Calender") {
+      // This is a calendar event (Outlook/Graph)
+      // TODO: Add your update logic for Graph events here, e.g. PATCH to /me/events/{id}
+      const client =
+        graphClient ||
+        (await props.context.msGraphClientFactory.getClient("3"));
+      if (!graphClient) setGraphClient(client);
+      if (!event.start || !event.end) {
+        changeInfo.revert();
+        return;
+      }
+      await client.api(`/me/events/${event.id}`).patch({
+        start: { dateTime: event.start.toISOString(), timeZone: "UTC" },
+        end: { dateTime: event.end.toISOString(), timeZone: "UTC" },
+      });
+      // Then update state as needed
+      // For now, just update the state locally:
+      setEvents((prevEvents) =>
+        prevEvents.map((evt) =>
+          evt.id === event.id
+            ? {
                 ...evt,
                 start: event.start || evt.start,
                 end: event.end || evt.end,
-              };
-            }
-            return evt;
-          });
-        });
-
-        // Force calendar to re-render by updating the key
-        const calendarKey = Date.now();
-        setCalendarKey(calendarKey);
-      } catch (err) {
-        setError(err.message);
-        // Revert the event if there was an error
-        changeInfo.revert();
-      }
+              }
+            : evt
+        )
+      );
+      setCalendarKey(Date.now());
     }
+  };
+
+  const handleEventClick = (clickInfo: EventClickArg): void => {
+    console.log("clickInfo", clickInfo);
+    setSelectedEvent(clickInfo.event);
+    setIsModalOpen(true);
   };
 
   if (isLoading) {
@@ -358,114 +422,172 @@ export const CalendarView: React.FC<ICalendarViewProps> = (props) => {
   }
 
   return (
-    <div className={stylesFluent.main}>
-      <div className={stylesFluent.calendarContainer}>
-        <div className={stylesFluent.controls}>
-          <Switch
-            label="Include SharePoint Tasks"
-            checked={includeTasks}
-            onChange={(_, data) => setIncludeTasks(data.checked)}
-          />
-          <Switch
-            label="Show Weekends"
-            checked={showWeekends}
-            onChange={(_, data) => setShowWeekends(data.checked)}
+    <>
+      <div className={stylesFluent.main}>
+        <div className={stylesFluent.calendarContainer}>
+          <div className={stylesFluent.controls}>
+            <Switch
+              label="Include SharePoint Tasks"
+              checked={includeTasks}
+              onChange={(_, data) => setIncludeTasks(data.checked)}
+            />
+            <Switch
+              label="Show Weekends"
+              checked={showWeekends}
+              onChange={(_, data) => setShowWeekends(data.checked)}
+            />
+          </div>
+          <FullCalendar
+            key={calendarKey}
+            plugins={[
+              dayGridPlugin,
+              timeGridPlugin,
+              interactionPlugin,
+              listPlugin,
+              multiMonthPlugin,
+            ]}
+            initialView="dayGridMonth"
+            weekends={showWeekends}
+            events={fullCalendarEvents}
+            height={600}
+            eventContent={renderEventContent}
+            editable={true}
+            droppable={true}
+            eventDrop={handleEventChange}
+            eventResize={handleEventChange}
+            navLinks={true}
+            businessHours={true}
+            eventClick={handleEventClick}
+            views={{
+              dayGridMonth: {},
+              dayGridWeek: {},
+              dayGridDay: {},
+              timeGridWeek: {},
+              timeGridDay: {},
+              listYear: {},
+              listMonth: {},
+              listWeek: {},
+              listDay: {},
+              multiMonthYear: {},
+              multiMonth: {},
+            }}
+            headerToolbar={{
+              left: "prev,next today",
+              center: "title",
+              right: "dayGridMonth,timeGridWeek,timeGridDay,listWeek",
+            }}
           />
         </div>
-        <FullCalendar
-          key={calendarKey}
-          plugins={[
-            dayGridPlugin,
-            timeGridPlugin,
-            interactionPlugin,
-            listPlugin,
-            multiMonthPlugin,
-          ]}
-          initialView="dayGridMonth"
-          weekends={showWeekends}
-          events={fullCalendarEvents}
-          height={600}
-          eventContent={renderEventContent}
-          editable={true}
-          droppable={true}
-          eventDrop={handleEventChange}
-          eventResize={handleEventChange}
-          views={{
-            dayGridMonth: {},
-            dayGridWeek: {},
-            dayGridDay: {},
-            timeGridWeek: {},
-            timeGridDay: {},
-            listYear: {},
-            listMonth: {},
-            listWeek: {},
-            listDay: {},
-            multiMonthYear: {},
-            multiMonth: {},
-          }}
-          headerToolbar={{
-            left: "prev,next today",
-            center: "title",
-            right: "dayGridMonth,timeGridWeek,timeGridDay,listWeek",
-          }}
-        />
-      </div>
-      <div className={stylesFluent.rightPanel}>
-        <Text size={400}>Calendar Events</Text>
+        <div className={stylesFluent.rightPanel}>
+          <Text size={400}>Calendar Events</Text>
 
-        {/* Upcoming Events */}
-        <Text size={300}>Upcoming Events</Text>
-        {events
-          .filter((event) => event.start > new Date())
-          .sort((a, b) => a.start.getTime() - b.start.getTime())
-          .map((event) => (
-            <Tooltip
-              content={`${event.subject}\nOrganizer: ${event.organizer.emailAddress.name}`}
-              relationship="label"
-              key={event.id}
-            >
-              <div className={styles.eventCard}>
-                <Text size={200}>{event.title || event.subject}</Text>
-                <div>
-                  <Text size={200}>{event.start.toDateString()}</Text>
+          {/* Upcoming Events */}
+          <Text size={300}>Upcoming Events</Text>
+          {events
+            .filter((event) => event.start > new Date())
+            .sort((a, b) => a.start.getTime() - b.start.getTime())
+            .map((event) => (
+              <Tooltip
+                content={`${event.subject}\nOrganizer: ${event.organizer.emailAddress.name}`}
+                relationship="label"
+                key={event.id}
+              >
+                <div className={styles.eventCard}>
+                  <Text size={200}>{event.title || event.subject}</Text>
+                  <div>
+                    <Text size={200}>{event.start.toDateString()}</Text>
+                  </div>
+                  <div>
+                    <Text size={200}>
+                      {event.start.toLocaleTimeString()} -{" "}
+                      {event.end.toLocaleTimeString()}
+                    </Text>
+                  </div>
                 </div>
-                <div>
-                  <Text size={200}>
-                    {event.start.toLocaleTimeString()} -{" "}
-                    {event.end.toLocaleTimeString()}
-                  </Text>
-                </div>
-              </div>
-            </Tooltip>
-          ))}
+              </Tooltip>
+            ))}
 
-        {/* Past Events */}
-        <Text size={300}>Past Events</Text>
-        {events
-          .filter((event) => event.start <= new Date())
-          .sort((a, b) => b.start.getTime() - a.start.getTime()) // Reverse chronological
-          .map((event) => (
-            <Tooltip
-              content={`${event.subject}\nOrganizer: ${event.organizer.emailAddress.name}`}
-              relationship="label"
-              key={event.id}
-            >
-              <div className={styles.eventCard}>
-                <Text size={200}>{event.title || event.subject}</Text>
-                <div>
-                  <Text size={200}>{event.start.toDateString()}</Text>
+          {/* Past Events */}
+          <Text size={300}>Past Events</Text>
+          {events
+            .filter((event) => event.start <= new Date())
+            .sort((a, b) => b.start.getTime() - a.start.getTime()) // Reverse chronological
+            .map((event) => (
+              <Tooltip
+                content={`${event.subject}\nOrganizer: ${event.organizer.emailAddress.name}`}
+                relationship="label"
+                key={event.id}
+              >
+                <div className={styles.eventCard}>
+                  <Text size={200}>{event.title || event.subject}</Text>
+                  <div>
+                    <Text size={200}>{event.start.toDateString()}</Text>
+                  </div>
+                  <div>
+                    <Text size={200}>
+                      {event.isAllDay
+                        ? "All Day"
+                        : `${event.start.toLocaleTimeString()} - ${event.end.toLocaleTimeString()}`}
+                    </Text>
+                  </div>
                 </div>
-                <div>
-                  <Text size={200}>
-                    {event.isAllDay
-                      ? "All Day"
-                      : `${event.start.toLocaleTimeString()} - ${event.end.toLocaleTimeString()}`}
-                  </Text>
-                </div>
-              </div>
-            </Tooltip>
-          ))}
+              </Tooltip>
+            ))}
+        </div>
       </div>
-    </div>
+      {/* Move Dialog here, outside the main layout */}
+      <Dialog
+        open={isModalOpen}
+        onOpenChange={(_, data) => setIsModalOpen(data.open)}
+      >
+        <DialogSurface>
+          <DialogBody>
+            <DialogTitle>{selectedEvent?.title}</DialogTitle>
+            <DialogContent>
+              <div>
+                <strong>Start:</strong> {selectedEvent?.start?.toLocaleString()}
+              </div>
+              <div>
+                <strong>End:</strong> {selectedEvent?.end?.toLocaleString()}
+              </div>
+              {selectedEvent?.extendedProps?.resource && (
+                <>
+                  <div>
+                    <strong>Assigned To:</strong>{" "}
+                    {selectedEvent.extendedProps.resource.AssignedTo?.Title}
+                  </div>
+                  <div>
+                    <strong>Status:</strong>{" "}
+                    {selectedEvent.extendedProps.resource.Status}
+                  </div>
+                  <div>
+                    <strong>Priority:</strong>{" "}
+                    {selectedEvent.extendedProps.resource.Priority}
+                  </div>
+                  <div>
+                    <strong>Project:</strong>{" "}
+                    {selectedEvent.extendedProps.resource.Project}
+                  </div>
+                </>
+              )}
+              {selectedEvent?.extendedProps?.organizer && (
+                <div>
+                  <strong>Organizer:</strong>{" "}
+                  {selectedEvent.extendedProps.organizer.emailAddress.name}
+                </div>
+              )}
+            </DialogContent>
+            <DialogActions>
+              <Button
+                appearance="primary"
+                onClick={() => setIsModalOpen(false)}
+              >
+                Close
+              </Button>
+            </DialogActions>
+          </DialogBody>
+        </DialogSurface>
+      </Dialog>
+    </>
   );
 };

@@ -14,6 +14,7 @@ export interface ITask {
     Title: string;
     EMail: string;
   };
+  Description?: string;
 }
 
 class TasksService {
@@ -117,6 +118,29 @@ class TasksService {
       this.lastFetchTime.delete(cacheKey);
     } catch (error) {
       console.error("Error updating task:", error);
+      throw error;
+    }
+  }
+
+  public async updateTaskStatus(
+    listName: string,
+    taskId: number,
+    newStatus: string,
+    assignedTo?: string
+  ): Promise<void> {
+    try {
+      await this.sp.web.lists
+        .getByTitle(listName)
+        .items.getById(taskId)
+        .update({
+          Status: newStatus,
+        });
+      // Invalidate cache for this user
+      const cacheKey = this.getCacheKey(listName, assignedTo || "");
+      this.tasksCache.delete(cacheKey);
+      this.lastFetchTime.delete(cacheKey);
+    } catch (error) {
+      console.error("Error updating task status:", error);
       throw error;
     }
   }

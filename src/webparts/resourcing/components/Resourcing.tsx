@@ -121,7 +121,7 @@ export default function Resourcing(
           <div className={styles.root}>
             {/* Left Panel - Navigation Drawer */}
             <nav className={styles.nav}>
-              <Navigation context={props.context} />
+              <Navigation context={props.context} currentPage="2" />
             </nav>
 
             {/* Center Panel */}

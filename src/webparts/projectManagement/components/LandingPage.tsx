@@ -208,7 +208,7 @@ const LandingPage: React.FC<ILandingPageProps> = ({ context, project }) => {
       >
         {/* Left Panel - Navigation Drawer */}
         <nav className={styles.nav}>
-          <Navigation context={context} />
+          <Navigation context={context} currentPage="1" />
         </nav>
 
         {/* Center Panel */}

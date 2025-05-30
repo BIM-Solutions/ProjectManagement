@@ -21,6 +21,7 @@ import { SPFx } from "@pnp/sp";
 import { WebPartContext } from "@microsoft/sp-webpart-base";
 interface INavigationProps {
   context: WebPartContext;
+  currentPage: string;
   // Define any props you need for the Navigation component here
 }
 
@@ -51,7 +52,7 @@ const useStyles = makeStyles({
   },
 });
 
-const Navigation: React.FC<INavigationProps> = ({ context }) => {
+const Navigation: React.FC<INavigationProps> = ({ context, currentPage }) => {
   const [isOpen, setIsOpen] = React.useState(true);
   const Dashboard = bundleIcon(Board20Filled, Board20Regular);
   const Person = bundleIcon(PersonClock20Filled, PersonClock20Regular);
@@ -78,7 +79,7 @@ const Navigation: React.FC<INavigationProps> = ({ context }) => {
     <div>
       {isOpen && (
         <NavDrawer
-          defaultSelectedValue="1"
+          defaultSelectedValue={currentPage}
           defaultSelectedCategoryValue=""
           open={isOpen}
           type="inline"
