@@ -38,7 +38,11 @@
       },
       "officeFabricIconFontName": "Calendar",
       "properties": {
-        "description": "Resourcing"
+        "description": "Resourcing",
+        "tasksListName": "9719_ProjectTasks",
+        "groupId": "5c03119e-3074-46fd-976b-c60198311f70",
+        "defaultView": "tasks",
+        "showTeamCalendar": false
       }
     }
   ]

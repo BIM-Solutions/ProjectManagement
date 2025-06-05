@@ -10,13 +10,13 @@ import {
   // Option,
   Switch,
   Persona,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Button,
-  DialogSurface,
-  DialogBody,
+  // Dialog,
+  // DialogTitle,
+  // DialogContent,
+  // DialogActions,
+  // Button,
+  // DialogSurface,
+  // DialogBody,
 } from "@fluentui/react-components";
 // import { DateRangeType } from "@fluentui/react-calendar-compat";
 import { WebPartContext } from "@microsoft/sp-webpart-base";
@@ -47,8 +47,8 @@ import {
   EventApi,
 } from "@fullcalendar/core";
 import styles from "./CalendarView.module.scss";
-import TasksService from "../services/TasksService";
-
+import TasksService, { ITask } from "../../services/TasksService";
+import { TaskAddEditDialog } from "../../../common/components/Event/TaskAddEditDialog";
 // const localizer = momentLocalizer(moment);
 
 const useStyles = makeStyles({
@@ -149,13 +149,14 @@ interface TaskItem {
   };
   Priority?: string;
   Status?: string;
-  Project?: string;
+  ProjectID?: string;
 }
 
 type CalendarEventForDisplay = Omit<ICalendarEvent, "start" | "end"> & {
   start: Date;
   end: Date;
   eventType: string;
+  ProjectID?: string;
 };
 
 type FullCalendarEvent = {
@@ -168,6 +169,7 @@ type FullCalendarEvent = {
     resource?: TaskItem;
     organizer?: { emailAddress: { name: string; address: string } };
     eventType?: string;
+    ProjectID?: string;
   };
 };
 
@@ -177,6 +179,7 @@ export const CalendarView: React.FC<ICalendarViewProps> = (props) => {
   const [error, setError] = useState<string | null>(null);
   const [includeTasks, setIncludeTasks] = useState(true);
   const [showWeekends, setShowWeekends] = useState(false);
+  const [showBusinessHours, setShowBusinessHours] = useState(false);
   const [graphClient, setGraphClient] = useState<MSGraphClientV3 | null>(null);
   const [calendarKey, setCalendarKey] = useState<number>(Date.now());
   const stylesFluent = useStyles();
@@ -225,6 +228,7 @@ export const CalendarView: React.FC<ICalendarViewProps> = (props) => {
       },
       resource: task,
       isAllDay: true,
+      ProjectID: task.ProjectID || "",
     };
   };
 
@@ -279,7 +283,7 @@ export const CalendarView: React.FC<ICalendarViewProps> = (props) => {
     color: ev.resource
       ? tokens.colorPaletteBlueBackground2
       : tokens.colorPaletteGreenBackground2,
-
+    allDay: ev.isAllDay,
     extendedProps: {
       resource: ev.resource,
       organizer: ev.organizer,
@@ -343,7 +347,7 @@ export const CalendarView: React.FC<ICalendarViewProps> = (props) => {
             DueDate: event.end?.toISOString() || new Date().toISOString(),
             Priority: task.Priority || "Medium",
             Status: task.Status || "Not Started",
-            Project: task.Project || "",
+            ProjectID: task.ProjectID || "",
           });
 
           // Force a complete reload of events
@@ -421,6 +425,51 @@ export const CalendarView: React.FC<ICalendarViewProps> = (props) => {
     );
   }
 
+  function eventCard(event: CalendarEventForDisplay): JSX.Element {
+    return (
+      <Tooltip
+        content={`${event.subject}\nOrganizer: ${event.organizer.emailAddress.name}`}
+        relationship="label"
+        key={event.id}
+      >
+        <div className={styles.eventCard}>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              width: "100%",
+            }}
+          >
+            {event.ProjectID ? (
+              <Text size={300} weight="semibold">
+                Project: {event.ProjectID}
+              </Text>
+            ) : (
+              <span />
+            )}
+            {event.eventType && <Text size={200}>Type: {event.eventType}</Text>}
+          </div>
+          <div>
+            <Text size={300} weight="bold">
+              {event.title || event.subject}
+            </Text>
+          </div>
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <Text size={200}>Start: {event.start.toDateString()}</Text>
+            <Text size={200}>End: {event.end.toDateString()}</Text>
+          </div>
+          <div>
+            <Text size={200}>
+              {event.isAllDay
+                ? "All Day"
+                : `Time: ${event.start.toLocaleTimeString()} - ${event.end.toLocaleTimeString()}`}
+            </Text>
+          </div>
+        </div>
+      </Tooltip>
+    );
+  }
+
   return (
     <>
       <div className={stylesFluent.main}>
@@ -435,6 +484,11 @@ export const CalendarView: React.FC<ICalendarViewProps> = (props) => {
               label="Show Weekends"
               checked={showWeekends}
               onChange={(_, data) => setShowWeekends(data.checked)}
+            />
+            <Switch
+              label="Show Business Hours (8am-6pm)"
+              checked={showBusinessHours}
+              onChange={(_, data) => setShowBusinessHours(data.checked)}
             />
           </div>
           <FullCalendar
@@ -456,7 +510,13 @@ export const CalendarView: React.FC<ICalendarViewProps> = (props) => {
             eventDrop={handleEventChange}
             eventResize={handleEventChange}
             navLinks={true}
-            businessHours={true}
+            businessHours={{
+              daysOfWeek: [1, 2, 3, 4, 5],
+              startTime: "08:00",
+              endTime: "18:00",
+            }}
+            slotMinTime={showBusinessHours ? "08:00" : "00:00"}
+            slotMaxTime={showBusinessHours ? "18:00" : "23:59"}
             eventClick={handleEventClick}
             views={{
               dayGridMonth: {},
@@ -486,108 +546,26 @@ export const CalendarView: React.FC<ICalendarViewProps> = (props) => {
           {events
             .filter((event) => event.start > new Date())
             .sort((a, b) => a.start.getTime() - b.start.getTime())
-            .map((event) => (
-              <Tooltip
-                content={`${event.subject}\nOrganizer: ${event.organizer.emailAddress.name}`}
-                relationship="label"
-                key={event.id}
-              >
-                <div className={styles.eventCard}>
-                  <Text size={200}>{event.title || event.subject}</Text>
-                  <div>
-                    <Text size={200}>{event.start.toDateString()}</Text>
-                  </div>
-                  <div>
-                    <Text size={200}>
-                      {event.start.toLocaleTimeString()} -{" "}
-                      {event.end.toLocaleTimeString()}
-                    </Text>
-                  </div>
-                </div>
-              </Tooltip>
-            ))}
-
+            .map((event) => eventCard(event))}
           {/* Past Events */}
           <Text size={300}>Past Events</Text>
           {events
             .filter((event) => event.start <= new Date())
             .sort((a, b) => b.start.getTime() - a.start.getTime()) // Reverse chronological
-            .map((event) => (
-              <Tooltip
-                content={`${event.subject}\nOrganizer: ${event.organizer.emailAddress.name}`}
-                relationship="label"
-                key={event.id}
-              >
-                <div className={styles.eventCard}>
-                  <Text size={200}>{event.title || event.subject}</Text>
-                  <div>
-                    <Text size={200}>{event.start.toDateString()}</Text>
-                  </div>
-                  <div>
-                    <Text size={200}>
-                      {event.isAllDay
-                        ? "All Day"
-                        : `${event.start.toLocaleTimeString()} - ${event.end.toLocaleTimeString()}`}
-                    </Text>
-                  </div>
-                </div>
-              </Tooltip>
-            ))}
+            .map((event) => eventCard(event))}
         </div>
       </div>
       {/* Move Dialog here, outside the main layout */}
-      <Dialog
-        open={isModalOpen}
-        onOpenChange={(_, data) => setIsModalOpen(data.open)}
-      >
-        <DialogSurface>
-          <DialogBody>
-            <DialogTitle>{selectedEvent?.title}</DialogTitle>
-            <DialogContent>
-              <div>
-                <strong>Start:</strong> {selectedEvent?.start?.toLocaleString()}
-              </div>
-              <div>
-                <strong>End:</strong> {selectedEvent?.end?.toLocaleString()}
-              </div>
-              {selectedEvent?.extendedProps?.resource && (
-                <>
-                  <div>
-                    <strong>Assigned To:</strong>{" "}
-                    {selectedEvent.extendedProps.resource.AssignedTo?.Title}
-                  </div>
-                  <div>
-                    <strong>Status:</strong>{" "}
-                    {selectedEvent.extendedProps.resource.Status}
-                  </div>
-                  <div>
-                    <strong>Priority:</strong>{" "}
-                    {selectedEvent.extendedProps.resource.Priority}
-                  </div>
-                  <div>
-                    <strong>Project:</strong>{" "}
-                    {selectedEvent.extendedProps.resource.Project}
-                  </div>
-                </>
-              )}
-              {selectedEvent?.extendedProps?.organizer && (
-                <div>
-                  <strong>Organizer:</strong>{" "}
-                  {selectedEvent.extendedProps.organizer.emailAddress.name}
-                </div>
-              )}
-            </DialogContent>
-            <DialogActions>
-              <Button
-                appearance="primary"
-                onClick={() => setIsModalOpen(false)}
-              >
-                Close
-              </Button>
-            </DialogActions>
-          </DialogBody>
-        </DialogSurface>
-      </Dialog>
+      {selectedEvent && (
+        <TaskAddEditDialog
+          context={props.context}
+          open={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          onSave={() => {}} // <-- no-op function TO DO: Add save logic
+          mode="view"
+          task={selectedEvent?.extendedProps?.resource as ITask}
+        />
+      )}
     </>
   );
 };

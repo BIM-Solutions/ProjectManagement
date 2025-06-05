@@ -16,11 +16,15 @@
     "package-solution": "gulp clean && gulp build && gulp bundle --ship && gulp package-solution --ship"
   },
   "dependencies": {
+    "@dnd-kit/accessibility": "^3.1.1",
+    "@dnd-kit/core": "^6.3.1",
+    "@dnd-kit/sortable": "^10.0.0",
     "@fluentui/react": "^8.106.4",
     "@fluentui/react-charting": "^5.23.88",
     "@fluentui/react-charts": "^9.0.5",
     "@fluentui/react-components": "^9.64.0",
     "@fluentui/react-nav-preview": "^0.13.7",
+    "@fluentui/react-timepicker-compat": "^0.3.11",
     "@fullcalendar/core": "^6.1.17",
     "@fullcalendar/daygrid": "^6.1.17",
     "@fullcalendar/interaction": "^6.1.17",

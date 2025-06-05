@@ -12,8 +12,9 @@ import {
   Tab,
 } from "@fluentui/react-components";
 // import { Calendar, DateRangeType } from "@fluentui/react-calendar-compat";
-import { TasksList } from "./TasksList";
-import { CalendarView } from "./CalendarView";
+// import { TasksList } from "./TasksList";
+import { TaskBoard } from "./Tasks/TaskBoard";
+import { CalendarView } from "./Calendar/CalendarView";
 import { useGraph } from "../hooks/useGraph";
 // import { usePnP } from "../hooks/usePnP";
 // import styles from "./Resourcing.module.scss";
@@ -140,7 +141,7 @@ export default function Resourcing(
                 <Tab value="calendar">Calendar</Tab>
               </TabList>
               {selectedView === "tasks" && (
-                <TasksList
+                <TaskBoard
                   listName={props.tasksListName}
                   userDisplayName={props.userDisplayName}
                   context={props.context}

@@ -7,9 +7,10 @@ export interface ITask {
   Title: string;
   DueDate: string;
   StartDate?: string;
+  StartTime?: string;
   Priority: string;
   Status: string;
-  Project: string;
+  ProjectID: string;
   AssignedTo?: {
     Title: string;
     EMail: string;
@@ -60,7 +61,7 @@ class TasksService {
       const items = await this.sp.web.lists
         .getByTitle(listName)
         .items.filter(`AssignedTo/Title eq '${userDisplayName}'`)();
-
+      console.log(items);
       // Update cache
       this.tasksCache.set(cacheKey, items);
       this.lastFetchTime.set(cacheKey, Date.now());
@@ -83,7 +84,7 @@ class TasksService {
         DueDate: task.DueDate,
         Priority: task.Priority,
         Status: "Not Started",
-        Project: task.Project,
+        ProjectID: task.ProjectID,
         AssignedTo: { Title: userDisplayName },
       });
 
@@ -109,7 +110,7 @@ class TasksService {
           StartDate: task.StartDate,
           Priority: task.Priority,
           Status: task.Status,
-          ProjectID: task.Project,
+          ProjectID: task.ProjectID,
         });
 
       // Invalidate cache for this user

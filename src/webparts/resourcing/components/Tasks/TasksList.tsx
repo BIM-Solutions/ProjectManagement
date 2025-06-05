@@ -17,7 +17,7 @@ import {
 } from "@fluentui/react";
 import styles from "./TasksList.module.scss";
 import { WebPartContext } from "@microsoft/sp-webpart-base";
-import TasksService, { ITask } from "../services/TasksService";
+import TasksService, { ITask } from "../../services/TasksService";
 
 interface ITasksListProps {
   listName: string;
@@ -83,7 +83,7 @@ export const TasksList: React.FC<ITasksListProps> = (props) => {
     }
 
     if (projectFilter !== "all") {
-      filtered = filtered.filter((task) => task.Project === projectFilter);
+      filtered = filtered.filter((task) => task.ProjectID === projectFilter);
     }
 
     setFilteredTasks(filtered);
@@ -137,7 +137,7 @@ export const TasksList: React.FC<ITasksListProps> = (props) => {
           label="Project"
           options={[
             { key: "all", text: "All Projects" },
-            ...Array.from(new Set(tasks.map((t) => t.Project))).map((p) => ({
+            ...Array.from(new Set(tasks.map((t) => t.ProjectID))).map((p) => ({
               key: p,
               text: p,
             })),
@@ -159,7 +159,7 @@ export const TasksList: React.FC<ITasksListProps> = (props) => {
               <Text>Due: {new Date(task.DueDate).toLocaleDateString()}</Text>
               <Text>Priority: {task.Priority}</Text>
               <Text>Status: {task.Status}</Text>
-              <Text>Project: {task.Project}</Text>
+              <Text>Project: {task.ProjectID}</Text>
             </Stack>
           </Stack>
         ))}
@@ -196,8 +196,10 @@ export const TasksList: React.FC<ITasksListProps> = (props) => {
           />
           <TextField
             label="Project"
-            value={newTask.Project || ""}
-            onChange={(_, value) => setNewTask({ ...newTask, Project: value })}
+            value={newTask.ProjectID || ""}
+            onChange={(_, value) =>
+              setNewTask({ ...newTask, ProjectID: value })
+            }
           />
         </Stack>
         <DialogFooter>

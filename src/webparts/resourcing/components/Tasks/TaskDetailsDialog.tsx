@@ -7,7 +7,7 @@ import {
   DialogActions,
   Button,
 } from "@fluentui/react-components";
-import { ITask } from "../services/TasksService";
+import { ITask } from "../../services/TasksService";
 
 export interface TaskDetailsDialogProps {
   task: ITask;
@@ -50,7 +50,7 @@ export const TaskDetailsDialog: React.FC<TaskDetailsDialogProps> = ({
             <strong>Status:</strong> {task.Status}
           </div>
           <div>
-            <strong>Project:</strong> {task.Project}
+            <strong>Project:</strong> {task.ProjectID}
           </div>
           <div>
             <strong>Assigned To:</strong> {task.AssignedTo?.Title || "-"}
